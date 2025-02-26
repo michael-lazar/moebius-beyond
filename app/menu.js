@@ -509,7 +509,8 @@ function view_menu_template(win) {
             { type: "separator" },
             { label: "Show Status Bar", id: "show_status_bar", accelerator: "CmdorCtrl+/", click(item) { win.send("show_statusbar", item.checked); }, type: "checkbox", checked: true },
             { label: "Show Tool Bar", id: "show_tool_bar", accelerator: "CmdorCtrl+T", click(item) { win.send("show_toolbar", item.checked); }, type: "checkbox", checked: true },
-            { label: "Hide Preview", id: "show_preview", accelerator: "CmdorCtrl+Alt+P", click(item) { win.send("show_preview", item.checked); }, type: "checkbox", checked: false },
+            { label: "Show Character Palette", id: "show_charlist", accelerator: "CmdorCtrl+Alt+L", click(item) { win.send("show_charlist", item.checked); }, type: "checkbox", checked: true },
+            { label: "Show Preview", id: "show_preview", accelerator: "CmdorCtrl+Alt+P", click(item) { win.send("show_preview", item.checked); }, type: "checkbox", checked: true },
             { type: "separator" },
             { label: "Previous Character Set", id: "previous_character_set", accelerator: "Ctrl+,", click(item) { win.send("previous_character_set"); }, enabled: true },
             { label: "Next Character Set", id: "next_character_set", accelerator: "Ctrl+.", click(item) { win.send("next_character_set"); }, enabled: true },
@@ -525,6 +526,8 @@ function view_menu_template(win) {
             { label: "Actual Size", id: "actual_size", accelerator: "CmdorCtrl+Alt+0", click(item) { win.send("actual_size"); }, type: "checkbox", checked: false },
             { label: "Zoom In", id: "zoom_in", accelerator: "CmdorCtrl+=", click(item) { win.send("zoom_in"); } },
             { label: "Zoom Out", id: "zoom_out", accelerator: "CmdorCtrl+-", click(item) { win.send("zoom_out"); } },
+            { type: "separator" },
+            { label: "View character palette at 200%", id: "charlist_zoom_toggle", click(item) { win.send("charlist_zoom_toggle"); }, type: "checkbox", checked: false },
             { type: "separator" },
             {
                 label: "Guides", submenu: [
@@ -562,8 +565,6 @@ function font_menu_template(win) {
     return {
         label: "&Font",
         submenu: [
-            { label: "Show Character List", id: "show_charlist", accelerator: "CmdorCtrl+Alt+L", click(item) { win.send("show_charlist", item.checked); }, type: "checkbox", checked: true },
-            { type: "separator" },
             { label: "Change Font", submenu: font_menu_items(win) },
             { label: "Viler's VGA textmode fonts", submenu: viler_font_menu_items(win) },
             { label: "Load Custom Font\u2026", id: "loadcustomfont", click(item) { win.send("load_custom_font"); } },

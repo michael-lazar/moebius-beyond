@@ -6,7 +6,9 @@ const keyboard = require("../input/keyboard");
 const events = require("events");
 const chat = require("./chat")
 let interval, guide_columns, guide_rows, grid_columns;
+
 let canvas_zoom_toggled = false;
+let charlist_zoom_toggled = false;
 
 function $(name) {
     return document.getElementById(name);
@@ -320,7 +322,7 @@ function show_statusbar(visible) {
 }
 
 function show_preview(visible) {
-    set_var("preview-width", visible ? "1px" : "300px");
+    set_var("preview-width", visible ? "300px" : "1px");
 }
 
 function use_pixel_aliasing(value) {
@@ -333,7 +335,8 @@ function hide_scrollbars(value) {
 }
 
 function show_charlist(visible) {
-    set_var("charlist-width", visible ? "128px" : "1px");
+    const width = charlist_zoom_toggled ? "256px" : "128px";
+    set_var("charlist-width", visible ? width : "1px");
 }
 
 function current_zoom_factor() {
@@ -374,6 +377,19 @@ function canvas_zoom_toggle() {
     }
     chat.emit("update_frame");
     send("update_menu_checkboxes", { canvas_zoom_toggle: canvas_zoom_toggled });
+}
+
+function charlist_zoom_toggle() {
+    charlist_zoom_toggled = !charlist_zoom_toggled;
+    if (charlist_zoom_toggled) {
+        set_var("charlist-width", "256px");
+    } else {
+        set_var("charlist-width", "128px");
+    }
+
+    toolbar.redraw_charlist();
+
+    send("update_menu_checkboxes", { charlist_zoom_toggle: charlist_zoom_toggled });
 }
 
 function ice_colors(value) {
@@ -446,6 +462,7 @@ on("zoom_in", (event) => zoom_in());
 on("canvas_zoom_toggle", (event) => canvas_zoom_toggle());
 on("zoom_out", (event) => zoom_out());
 on("actual_size", (event) => actual_size());
+on("charlist_zoom_toggle", (event) => charlist_zoom_toggle());
 
 document.addEventListener("DOMContentLoaded", (event) => {
     $("use_9px_font_toggle").addEventListener("mousedown", (event) => doc.use_9px_font = !doc.use_9px_font, true);
@@ -572,12 +589,13 @@ class Toolbar extends events.EventEmitter {
     draw_charlist() {
         const font = doc.font;
         const { fg, bg } = palette;
+        const scale = charlist_zoom_toggled ? 2 : 1
         const canvas = document.createElement("canvas");
         const charlist = document.getElementById("charlist");
         canvas.width = font.width * 16;
         canvas.height = font.height * 16;
-        canvas.style.width = `${canvas.width}px`;
-        canvas.style.height = `${canvas.height}px`;
+        canvas.style.width = `${canvas.width * scale}px`;
+        canvas.style.height = `${canvas.height * scale}px`;
         if (charlist.contains(charlist.getElementsByTagName('canvas')[0])) {
             charlist.removeChild(charlist.getElementsByTagName('canvas')[0]);
         }
@@ -586,7 +604,7 @@ class Toolbar extends events.EventEmitter {
             const rect = event.target.getBoundingClientRect();
             this.charlist_x = event.clientX - rect.left;
             this.charlist_y = event.clientY - rect.top;
-            this.char_index = Math.floor(this.charlist_y / font.height) * 16 + Math.floor(this.charlist_x / 8);
+            this.char_index = Math.floor(this.charlist_y / font.height / scale) * 16 + Math.floor(this.charlist_x / 8 / scale);
             this.draw_charlist_cursor(this.char_index);
             this.custom_block_index = this.char_index;
             this.draw_custom_block();
@@ -601,10 +619,12 @@ class Toolbar extends events.EventEmitter {
 
     draw_charlist_cursor(index) {
         const font = doc.font;
+        const scale = charlist_zoom_toggled ? 2 : 1
         let selector = document.getElementById("charlist_selector");
-        selector.style.top = `${Math.floor(this.char_index / 16) * font.height}px`;
-        selector.style.left = `${(this.char_index % 16) * 8}px`;
-        selector.style.height = `${font.height}px`;
+        selector.style.top = `${Math.floor(this.char_index / 16) * font.height * scale}px`;
+        selector.style.left = `${(this.char_index % 16) * font.width * scale}px`;
+        selector.style.height = `${font.height * scale}px`;
+        selector.style.width = `${font.width * scale}px`;
         this.custom_block_index = this.char_index;
         this.draw_custom_block();
         this.draw_fkeys();
@@ -903,14 +923,17 @@ class Toolbar extends events.EventEmitter {
     }
 }
 
+const toolbar = new Toolbar()
+
 module.exports = {
     statusbar: new StatusBar(),
     tools: new Tools(),
-    toolbar: new Toolbar(),
+    toolbar,
     zoom_in,
     zoom_out,
     actual_size,
     canvas_zoom_toggle,
+    charlist_zoom_toggle,
     increase_reference_image_opacity,
     decrease_reference_image_opacity,
     open_reference_image
