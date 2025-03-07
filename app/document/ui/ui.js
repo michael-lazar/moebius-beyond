@@ -335,7 +335,7 @@ function hide_scrollbars(value) {
 }
 
 function show_charlist(visible) {
-    const width = charlist_zoom_toggled ? "256px" : "128px";
+    const width = charlist_zoom_toggled ? "288px" : "144px";
     set_var("charlist-width", visible ? width : "1px");
 }
 
@@ -382,9 +382,9 @@ function canvas_zoom_toggle() {
 function charlist_zoom_toggle() {
     charlist_zoom_toggled = !charlist_zoom_toggled;
     if (charlist_zoom_toggled) {
-        set_var("charlist-width", "256px");
+        set_var("charlist-width", "288px");
     } else {
-        set_var("charlist-width", "128px");
+        set_var("charlist-width", "144px");
     }
 
     toolbar.redraw_charlist();
@@ -592,8 +592,11 @@ class Toolbar extends events.EventEmitter {
         const scale = charlist_zoom_toggled ? 2 : 1
         const canvas = document.createElement("canvas");
         const charlist = document.getElementById("charlist");
-        canvas.width = font.width * 16;
-        canvas.height = font.height * 16;
+        const cell_width = font.width + 1;
+        const cell_height = font.height + 1;
+
+        canvas.width = cell_width * 16;
+        canvas.height = cell_height * 16;
         canvas.style.width = `${canvas.width * scale}px`;
         canvas.style.height = `${canvas.height * scale}px`;
         if (charlist.contains(charlist.getElementsByTagName('canvas')[0])) {
@@ -604,7 +607,7 @@ class Toolbar extends events.EventEmitter {
             const rect = event.target.getBoundingClientRect();
             this.charlist_x = event.clientX - rect.left;
             this.charlist_y = event.clientY - rect.top;
-            this.char_index = Math.floor(this.charlist_y / font.height / scale) * 16 + Math.floor(this.charlist_x / 8 / scale);
+            this.char_index = Math.floor(this.charlist_y / cell_height / scale) * 16 + Math.floor(this.charlist_x / cell_width / scale);
             this.draw_charlist_cursor(this.char_index);
             this.custom_block_index = this.char_index;
             this.draw_custom_block();
@@ -612,7 +615,7 @@ class Toolbar extends events.EventEmitter {
         const ctx = canvas.getContext("2d");
         for (let y = 0, code = 0; y < 16; y++) {
             for (let x = 0; x < 16; x++, code++) {
-                font.draw(ctx, { code, fg, bg }, x * 8, y * font.height);
+                font.draw(ctx, { code, fg, bg }, x * cell_width, y * cell_height);
             }
         }
     }
@@ -620,9 +623,12 @@ class Toolbar extends events.EventEmitter {
     draw_charlist_cursor(index) {
         const font = doc.font;
         const scale = charlist_zoom_toggled ? 2 : 1
+        const cell_width = font.width + 1;
+        const cell_height = font.height + 1;
+
         let selector = document.getElementById("charlist_selector");
-        selector.style.top = `${Math.floor(this.char_index / 16) * font.height * scale}px`;
-        selector.style.left = `${(this.char_index % 16) * font.width * scale}px`;
+        selector.style.top = `${Math.floor(this.char_index / 16) * cell_height * scale}px`;
+        selector.style.left = `${(this.char_index % 16) * cell_width * scale}px`;
         selector.style.height = `${font.height * scale}px`;
         selector.style.width = `${font.width * scale}px`;
         this.custom_block_index = this.char_index;
