@@ -1,39 +1,39 @@
+# Moebius XBIN ✨Ultimate✨ Edition
 
-# Moebius XBIN GJ Edition (fork)
-Moebius XBIN is an XBIN Editor for MacOS, Linux and Windows. This is a forked version of [Moebius XBIN](https://github.com/hlotvonen/moebius) which itself is a fork of [Moebius](https://github.com/blocktronics/moebius). 
+Moebius is an ANSI Art Editor for MacOS, Linux and Windows.
 
-- `Moebius` is the original program.
-- `Moebius XBIN` extends the original and contains support for custom colors and character sets and saving and loading xbin files (hence the name)
-- `Moebius XBIN GJ Edition` which originally was just me wanting to stop the function keys from re-mapping -- but now has become a bit more.
+This repo is a fork of the original project. The timeline is roughly as follows...
 
-## Moebius XBIN GJ Edition:
-- Stops the function keys from being remapped when clicking in the character list.
-- Makes default font IBM VGA instead of TOPAZ 437 (preference)
-- Lets you use the character list picker to load the custom paint brush block.
-- Adds opacity adjustment for the reference image with `SHIFT+Mouse Wheel`
-- Adds opacity adjustment for drawing grids and guides with `ALT+Mouse Wheel`
-- Adds a 1x1 drawing grid
-- Adds character code to status bar
-- Smaller character list (actual size of font vs 2x zoom previously)
-- ... more things to come perhaps!
+- **2019** - andyh develops and releases [Moebius](https://github.com/blocktronics/moebius) as a modern, cross-platform alternative to [PabloDraw](https://github.com/blocktronics/pablodraw) for creating ANSI Art.
+- **2021** - hlotvonen forks as [Moebius XBIN](https://github.com/hlotvonen/moebius) in order to add support for custom fonts and colors.
+- **2023** - grymmjack forks as [Moebius XBIN GJ! Edition](https://github.com/grymmjack/moebius) in order to add various quality of life improvements.
+- **2025** - michael-lazar forks as [Moebius XBIN Ultimate Edition](https://github.com/michael-lazar/moebius-xbin-ultimate) in order to add even more quality of life improvements.
+
+If you're only interested in making [Code Page 437](https://en.wikipedia.org/wiki/Code_page_437) ANSI art, you may prefer the original Moebius project over this fork. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
+
+If you're interested in using other textmode VGA fonts such as Amiga Topaz, this fork is what you want.
+
+Please note this is a half-hearted personal fork in order to facilitate my own use. Bug reports are graciously welcome. Pull requests are open, but I'm not interested in making any large, sweeping changes to the existing codebase at this time. Let's keep it chugging along together.
+
+## New features
+
+(compared to Moebius XBIN GJ! Edition)
+
+- Adds a new sidebar tool for fine-tuning the size/position of the reference image.
+- Adds the ability to open a reference image in a separate, always-on-top window.
+- Adds support for drag-and-drop files from the desktop.
+- Adds an outline to the cursor when using the brush tool.
+- Adds a visual grid to the character palette.
+- Adds a toggle for zooming the character palette to 200%.
+- Various bug fixes.
 
 ## Download packages
-- Original Moebius: https://github.com/blocktronics/moebius
-- Moebius XBIN: https://github.com/hlotvonen/moebius/releases
-- Moebius XBIN GJ Edition: https://github.com/grymmjack/moebius/releases
 
-## Acknowledgements
-* This fork is a fork of a fork so the original authors get all the credit
-* Uses modified Google's Material Icons. https://material.io/icons/
-* Contains XBIN by LMN (Impure)
-* Included fonts:
-  * GJSCI-3, GJSCI-4 and GJSCI-X appears courtesy of [GrymmJack](https://www.youtube.com/channel/UCrp_r9aomBi4mryxSxLq24Q) 
-  * [FROGBLOCK](https://polyducks.itch.io/frogblock) appears courtesy of [PolyDucks](http://polyducks.co.uk/)
-  * Topaz originally appeared in Amiga Workbench, courtesy of Commodore Int.
-  * P0t-NOoDLE appears courtesy of Leo 'Nudel' Davidson
-  * mO'sOul appears courtesy of Desoto/Mo'Soul
+Packaged binaries are available through [Github Releases](https://github.com/michael-lazar/moebius-xbin-ultimate/releases).
 
 ## License
+
+Copyright 2025 Michael Lazar<br>
 Copyright 2021 Andy Herbert
 
 Licensed under the [Apache License, version 2.0](https://github.com/blocktronics/moebius/blob/master/LICENSE.txt)
