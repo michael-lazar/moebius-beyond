@@ -9,9 +9,9 @@ This repo is a fork of the original project. The timeline is roughly as follows.
 - **2023** - grymmjack forks as [Moebius XBIN GJ! Edition](https://github.com/grymmjack/moebius) in order to add various quality of life improvements.
 - **2025** - michael-lazar forks as [Moebius XBIN Ultimate Edition](https://github.com/michael-lazar/moebius-xbin-ultimate) in order to add even more quality of life improvements.
 
-If you're only interested in making [Code Page 437](https://en.wikipedia.org/wiki/Code_page_437) ANSI art, you may prefer the original Moebius project over this fork. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
+If you're only interested in making [Code Page 437](https://en.wikipedia.org/wiki/Code_page_437) ANSI art, you may prefer the original Moebius over this fork. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
 
-If you're interested in using other textmode VGA fonts such as Amiga Topaz, this fork is what you want.
+If you're interested in using other textmode VGA fonts such as Amiga Topaz, this fork is probably what you want.
 
 Please note this is a half-hearted personal fork in order to facilitate my own use. Bug reports are graciously welcome. Pull requests are open, but I'm not interested in making any large, sweeping changes to the existing codebase at this time. Let's keep it chugging along together.
 
