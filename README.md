@@ -27,7 +27,7 @@ Let's keep it chugging along, together.
 - Adds an outline to the cursor when using the brush tool.
 - Adds a visual grid to the character palette.
 - Adds a toggle for zooming the character palette to 200%.
-- Various bug fixes.
+- Lots of bug fixes.
 
 ## Download packages
 
