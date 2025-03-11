@@ -25,7 +25,7 @@ function set_var_px(name, value) {
 function open_reference_image({ file }) {
     if (!file) {
         const files = open_box({ filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }] });
-        if (files.length === 0) return;
+        if (files === undefined || files.length === 0) return;
         file = files[0]
     }
 

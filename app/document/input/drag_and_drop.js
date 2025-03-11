@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         event.preventDefault();
 
         const files = event.dataTransfer.files;
-        if (files.length === 0) return;
+        if (files === undefined || files.length === 0) return;
 
         const file = files[0];
         const ext = path.extname(file.name).toLowerCase();

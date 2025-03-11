@@ -1171,7 +1171,7 @@ class TextModeDoc extends events.EventEmitter {
                     ]
                 }]
             });
-            if (files.length === 0) return;
+            if (files === undefined || files.length === 0) return;
             file = files[0]
         }
 
