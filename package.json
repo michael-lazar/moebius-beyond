@@ -11,7 +11,7 @@
     "start": "electron --no-sandbox --inspect=5858 .",
     "build-script": "browserify app/web_client/script.js -o server/script.js",
     "build": "node_modules/.bin/electron-builder -mwl",
-    "build-mac": "node_modules/.bin/electron-builder -m",
+    "build-mac": "node_modules/.bin/electron-builder -m --x64",
     "build-win": "node_modules/.bin/electron-builder -w",
     "build-linux": "node_modules/.bin/electron-builder -l"
   },
