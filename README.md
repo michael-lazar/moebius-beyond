@@ -2,20 +2,20 @@
 
 Moebius is an ANSI Art Editor for MacOS, Linux and Windows.
 
-This repo is a fork of the original project. The timeline is roughly as follows...
+This repo is a fork of the original project. The rough timeline is as follows...
 
-- **2019** - andyh develops and releases [Moebius](https://github.com/blocktronics/moebius) as a modern, cross-platform alternative to [PabloDraw](https://github.com/blocktronics/pablodraw) for creating ANSI Art.
+- **2019** - andyh develops [Moebius](https://github.com/blocktronics/moebius) as a modern, cross-platform alternative to [PabloDraw](https://github.com/blocktronics/pablodraw) for creating ANSI Art.
 - **2021** - hlotvonen forks as [Moebius XBIN](https://github.com/hlotvonen/moebius) in order to add support for custom fonts and colors.
 - **2023** - grymmjack forks as [Moebius XBIN GJ! Edition](https://github.com/grymmjack/moebius) in order to add various quality of life improvements.
 - **2025** - michael-lazar forks as [Moebius XBIN Ultimate Edition](https://github.com/michael-lazar/moebius-xbin-ultimate) in order to add even more quality of life improvements.
 
-If you're only interested in making [cp437](https://en.wikipedia.org/wiki/Code_page_437) ANSI art, you may prefer the original Moebius. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
+There was an early version of Moebius that ran directly in a web browser. This was *also* forked, and is maintained over at [moebius-web](https://github.com/xero/moebius-web) by xero.
 
-If you're interested in using other textmode VGA fonts such as Amiga Topaz, this fork is probably what you want.
+If you're only interested in Code Page 437, you may prefer the original Moebius. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
 
-Please note this is a half-hearted personal fork in order to facilitate my own use. Bug reports are graciously welcome. Pull requests are open, but I'm not interested in making any large, sweeping changes to the existing codebase at this time.
+If you're interested in other textmode VGA fonts such as Amiga Topaz, this fork is probably for you.
 
-Let's keep it chugging along, together.
+Please note this is a half-hearted personal fork in order to facilitate my own use. Bug reports are graciously welcome. Pull requests are open, but I'm not interested in making any large, sweeping changes to the existing codebase at this time. Let's keep it chugging along together.
 
 ## New features
 
