@@ -11,9 +11,7 @@ This repo is a fork of the original project. The rough timeline is as follows...
 
 There was an early version of Moebius that ran directly in a web browser. This was *also* forked, and is maintained over at [moebius-web](https://github.com/xero/moebius-web) by xero.
 
-If you're only interested in Code Page 437, you may prefer the original Moebius. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
-
-If you're interested in other textmode VGA fonts such as Amiga Topaz, this fork is probably for you.
+If you're only interested in traditional "scene" ANSI Art, you may prefer the original Moebius. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
 
 Please note this is a half-hearted personal fork in order to facilitate my own use. Bug reports are graciously welcome. Pull requests are open, but I'm not interested in making any large, sweeping changes to the existing codebase at this time. Let's keep it chugging along together.
 
