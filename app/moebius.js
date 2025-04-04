@@ -170,17 +170,6 @@ async function open_reference_window(win) {
 }
 menu.on("open_reference_window", open_reference_window);
 
-async function show_new_connection() {
-    const new_connection = await window.static("app/html/new_connection.html", { width: 480, height: 340 }, touchbar.new_connection);
-    const server = prefs.get("server");
-    const pass = prefs.get("pass");
-    const saved_servers = prefs.get("saved_servers");
-    if (server) {
-        new_connection.send("saved_servers", { server, pass, saved_servers });
-    }
-}
-menu.on("show_new_connection_window", show_new_connection);
-electron.ipcMain.on("show_new_connection_window", (event) => show_new_connection());
 
 async function connect_to_server(server, pass = "") {
     const win = await new_document_window();
