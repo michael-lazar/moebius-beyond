@@ -11,9 +11,8 @@
 - Removed miscellaneous dead server/client code. The server feature
   of moebius does not work with this fork, and I have no intention
   of supporting it going forward.
-- Removed the Network menu and the server connection info from the
-  splash screen. 
 - Removed the discord rich presence integration.
+- Removed several unused dependencies.
 
 ## v3.0.1 (2025-04-04)
 
