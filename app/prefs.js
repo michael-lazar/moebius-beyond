@@ -42,9 +42,6 @@ const default_values = {
         [32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32],
     ],
     default_fkeys: 5,
-    server: "",
-    pass: "",
-    saved_servers: []
 };
 const fs = require("fs");
 const JSON5 = require("json5");
