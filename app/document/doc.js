@@ -928,7 +928,7 @@ class TextModeDoc extends events.EventEmitter {
             this.undo_history.start_chunk();
             for (let x = doc.columns - 1; x > count - 1; x--) {
                 const block = doc.data[y * doc.columns + x - count];
-                this.change_data(x, y, block.code, block.fg, 0);
+                this.change_data(x, y, block.code, block.fg, block.bg);
             }
             for (let x = count - 1; x >= 0; x--) this.change_data(x, y, 32, 7, 0);
         }
