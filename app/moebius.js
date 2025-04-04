@@ -12,7 +12,6 @@ const linux = (process.platform == "linux");
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
 let prevent_splash_screen_at_startup = false;
 let splash_screen;
-const discord = require("./discord");
 const {new_win} = require("./window");
 
 // This switch is required for <input type="color"> to utilize the OS color
@@ -229,15 +228,6 @@ function update_prefs(key, value) {
 
 electron.ipcMain.on("update_prefs", (event, { key, value }) => update_prefs(key, value));
 
-electron.ipcMain.on("discord", (event, { value }) => {
-    prefs.set("discord", value);
-    if (value) {
-        discord.login();
-    } else {
-        discord.destroy();
-    }
-});
-
 electron.ipcMain.on("show_rendering_modal", async (event, { id }) => {
     docs[id].modal = await window.new_modal("app/html/rendering.html", { width: 200, height: 80, parent: docs[id].win, frame: false, ...get_centered_xy(id, 200, 80) });
     if (darwin) add_darwin_window_menu_handler(id);
@@ -378,9 +368,6 @@ electron.app.on("ready", (event) => {
         if (!prevent_splash_screen_at_startup) show_splash_screen();
     }
     if (darwin) electron.app.dock.setMenu(menu.dock_menu);
-    if (prefs.get("discord")) {
-        discord.login();
-    }
 });
 
 electron.app.on("window-all-closed", (event) => {

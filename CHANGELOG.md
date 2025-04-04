@@ -11,6 +11,7 @@
 - Removed the Network menu and the server connection info from the
   splash screen. The server feature of moebius does not work with
   this fork.
+- Removed the discord integration.
 
 ## v3.0.1 (2025-04-04)
 
