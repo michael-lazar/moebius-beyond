@@ -125,20 +125,28 @@ class KeyboardEvent extends events.EventEmitter {
                 this.emit("toggle_bg", 7);
                 return;
             case "ArrowLeft":
-                this.emit("move_charlist", "left");
-                event.preventDefault();
+                if (!event.shiftKey) {
+                    this.emit("move_charlist", "left");
+                    event.preventDefault();
+                }
                 return;
             case "ArrowUp":
-                this.emit("move_charlist", "up");
-                event.preventDefault();
+                if (!event.shiftKey) {
+                    this.emit("move_charlist", "up");
+                    event.preventDefault();
+                }
                 return;
             case "ArrowRight":
-                this.emit("move_charlist", "right");
-                event.preventDefault();
+                if (!event.shiftKey) {
+                    this.emit("move_charlist", "right");
+                    event.preventDefault();
+                }
                 return;
             case "ArrowDown":
-                this.emit("move_charlist", "down");
-                event.preventDefault();
+                if (!event.shiftKey) {
+                    this.emit("move_charlist", "down");
+                    event.preventDefault();
+                }
                 return;
             }
             
