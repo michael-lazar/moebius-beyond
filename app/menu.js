@@ -325,22 +325,14 @@ const window_menu_items = {
 
 const help_menu_items = {
     label: "Help", role: "help", submenu: [
-        { label: "Tutorial for Moebius XBIN editor", id: "xbin_tutorial", click(item) { electron.shell.openExternal("https://blog.glyphdrawing.club/moebius-ansi-ascii-art-editor-with-custom-font-support"); } },
-        { type: "separator" },
-        { label: "How to Start a Server", id: "show_repo", click(item) { electron.shell.openExternal("https://github.com/blocktronics/moebius/blob/master/README.md#moebius-server"); } },
-        { label: "Enable Function Keys on MacOS", id: "enable_function_keys", click(item) { electron.shell.openExternal("file:///System/Library/PreferencePanes/Keyboard.prefPane/"); }, enabled: darwin },
-        { type: "separator" },
         { label: "Cheatsheet", id: "show_cheatsheet", click(item) { event.emit("show_cheatsheet"); } },
         { label: "Show Numpad Mappings", id: "show_numpad_mappings", click(item) { event.emit("show_numpad_mappings"); } },
-        { type: "separator" },
         { label: "Acknowledgements", id: "show_acknowledgements", click(item) { event.emit("show_acknowledgements"); } },
         { type: "separator" },
+        { label: "Enable Function Keys on MacOS", id: "enable_function_keys", click(item) { electron.shell.openExternal("file:///System/Library/PreferencePanes/Keyboard.prefPane/"); }, enabled: darwin },
         { label: "ANSI Art Tutorials at 16Colors", id: "changelog", click(item) { electron.shell.openExternal("https://16colo.rs/tags/content/tutorial"); } },
-        { label: "Mœbius Homepage", id: "show_homepage", click(item) { electron.shell.openExternal("https://blocktronics.github.io/moebius/"); } },
-        { label: "Source Code at GitHub", id: "show_repo", click(item) { electron.shell.openExternal("https://github.com/blocktronics/moebius"); } },
-        { label: "Raise an Issue at GitHub", id: "show_issues", click(item) { electron.shell.openExternal("https://github.com/blocktronics/moebius/issues"); } },
-        { type: "separator" },
-        { label: "Changelog", id: "changelog", click(item) { event.emit("show_changelog"); } },
+        { label: "New Releases at Github",id: "show_released", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/releases"); } },
+        { label: "Raise an Issue at GitHub", id: "show_issues", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/issues"); } },
     ]
 };
 

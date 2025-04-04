@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Reorganized the help menu and updated/removed dead links.
+
 ## v3.0.1 (2025-04-04)
 
 ### Fixed
