@@ -149,7 +149,7 @@ class MouseListener extends events.EventEmitter {
             if (this.listening_to_wheel) {
                 if (event.deltaX > 0 || event.deltaY > 0) {
                     decrease_reference_image_opacity();
-                } else if (event.deltaX < 0 || event.deltaX < 0) {
+                } else if (event.deltaX < 0 || event.deltaY < 0) {
                     increase_reference_image_opacity();
                 }
                 this.listening_to_wheel = false;
