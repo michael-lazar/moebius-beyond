@@ -8,10 +8,10 @@
 
 ### Removed
 
-- Removed miscellaneous dead server/client code. The server feature
-  of moebius does not work with this fork, and I have no intention
-  of supporting it going forward.
-- Removed the discord rich presence integration.
+- Removed miscellaneous server/client code. The server feature of 
+  moebius does not work with this fork, and I have no intention of
+  supporting it going forward.
+- Removed the discord rich presence feature.
 - Removed several unused dependencies.
 
 ## v3.0.1 (2025-04-04)
