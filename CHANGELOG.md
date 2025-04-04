@@ -4,7 +4,13 @@
 
 ### Changed
 
-- Reorganized the help menu and updated/removed dead links.
+- Updated the links in the Help menu and removed outdated URLs.
+
+### Removed
+
+- Removed the Network menu and the server connection info from the
+  splash screen. The server feature of moebius does not work with
+  this fork.
 
 ## v3.0.1 (2025-04-04)
 

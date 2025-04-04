@@ -346,11 +346,7 @@ const application = electron.Menu.buildFromTemplate([moebius_menu, {
         { type: "separator" },
         { role: "close" },
     ]
-}, bare_edit, {
-        label: "Network", submenu: [
-            { label: "Connect to Server…", accelerator: "Cmd+Alt+S", id: "connect_to_server", click(item) { event.emit("show_new_connection_window"); } },
-        ]
-    }, window_menu_items, help_menu_items
+}, bare_edit, window_menu_items, help_menu_items
 ]);
 
 function file_menu_template(win) {
@@ -593,16 +589,6 @@ function colors_menu_template(win) {
     };
 }
 
-function network_menu_template(win, enabled) {
-    return {
-        label: "&Network", submenu: [
-            { label: "Connect to Server…", id: "connect_to_server", accelerator: "CmdorCtrl+Alt+S", click(item) { event.emit("show_new_connection_window"); } },
-            { type: "separator" },
-            { label: "Toggle Chat Window", id: "chat_window_toggle", accelerator: "CmdorCtrl+[", click(item) { win.send("chat_window_toggle"); }, enabled },
-        ]
-    };
-}
-
 function debug_menu_template(win) {
     return {
         label: "Debug",
@@ -613,7 +599,7 @@ function debug_menu_template(win) {
 }
 
 function create_menu_template(win, chat, debug) {
-    const menu_lists = [file_menu_template(win), edit_menu_template(win, chat), selection_menu_template(win, chat), colors_menu_template(win), font_menu_template(win), view_menu_template(win), network_menu_template(win, chat)];
+    const menu_lists = [file_menu_template(win), edit_menu_template(win, chat), selection_menu_template(win, chat), colors_menu_template(win), font_menu_template(win), view_menu_template(win)];
     /*if (debug)*/ menu_lists.push(debug_menu_template(win));
     return menu_lists;
 }
@@ -984,7 +970,6 @@ class MenuEvent extends events.EventEmitter {
             { label: "New Document", click(item) { event.emit("new_document"); } },
             { label: "Open\u2026", click(item) { event.emit("open"); } },
             { label: "Preferences", click(item) { event.emit("preferences"); } },
-            { label: "Connect to Server…", click(item) { event.emit("show_new_connection_window"); } }
         ]);
     }
 

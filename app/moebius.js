@@ -193,11 +193,6 @@ electron.ipcMain.on("connect_to_server", (event, { server, pass }) => connect_to
 
 async function show_splash_screen() {
     splash_screen = await window.static("app/html/splash_screen.html", { width: 720, height: 600, ...frameless }, touchbar.splash_screen, { preferences, new_document, open });
-    const server = prefs.get('server');
-    const pass = prefs.get('pass');
-    if (server) {
-        splash_screen.send("saved_server", { server, pass });
-    }
 }
 
 menu.on("show_cheatsheet", () => window.static("app/html/cheatsheet.html", { width: 640, height: 816, ...frameless }));
