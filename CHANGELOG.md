@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- Added a new menu option "Reset to Default Palette" to reset the
+  color palette to standard ANSI.
+
 ### Fixed
 
 - Fixed broken links in the Help menu and removed outdated URLs.
