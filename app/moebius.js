@@ -38,7 +38,7 @@ async function new_document_window() {
     const win_pos = win.getPosition();
     last_win_pos = win_pos;
     const debug = prefs.get("debug");
-    docs[win.id] = { win, menu: menu.document_menu(win, debug), chat_input_menu: menu.chat_input_menu(win, debug), edited: false, win_pos, destroyed: false, open_in_current_window: false };
+    docs[win.id] = { win, menu: menu.document_menu(win, debug), edited: false, win_pos, destroyed: false, open_in_current_window: false };
     touchbar.create_touch_bars(win);
     prefs.send(win);
     win.on("focus", (event) => {
@@ -216,20 +216,6 @@ electron.ipcMain.on("show_rendering_modal", async (event, { id }) => {
 
 electron.ipcMain.on("close_modal", (event, { id }) => {
     if (docs[id].modal && !docs[id].modal.isDestroyed()) docs[id].modal.close();
-});
-
-electron.ipcMain.on("chat_input_focus", (event, { id }) => {
-    if (darwin) electron.Menu.setApplicationMenu(docs[id].chat_input_menu);
-});
-
-electron.ipcMain.on("chat_input_blur", (event, { id }) => {
-    if (darwin) {
-        if (docs[id] && docs[id].modal && !docs[id].modal.isDestroyed()) {
-            electron.Menu.setApplicationMenu(menu.modal_menu);
-        } else {
-            electron.Menu.setApplicationMenu(docs[id].menu);
-        }
-    }
 });
 
 electron.ipcMain.on("set_modal_menu", (event, { id }) => {

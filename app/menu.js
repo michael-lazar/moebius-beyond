@@ -2,7 +2,6 @@ const electron = require("electron");
 const events = new require("events");
 const darwin = (process.platform == "darwin");
 const menus = [];
-const chat_menus = [];
 const font_names = [];
 const font_list = {
     "Custom": { "TOPAZ 437": 16, "TES-SYM5": 16, "TES-GIGR": 16, "GJSCI-3": 16, "GJSCI-4": 16, "GJSCI-X": 16, "FROGBLOCK": 8 },
@@ -382,21 +381,21 @@ function file_menu_template(win) {
     };
 }
 
-function edit_menu_template(win, chat) {
+function edit_menu_template(win) {
     return {
         label: "&Edit",
         submenu: [
-            chat ? { label: "Undo", accelerator: "Cmd+Z", role: "undo" } : { label: "Undo", id: "undo", accelerator: darwin ? "CmdorCtrl+Z" : "", click(item) { win.send("undo"); }, enabled: false },
-            chat ? { label: "Redo", accelerator: "Cmd+Shift+Z", role: "redo" } : { label: "Redo", id: "redo", accelerator: darwin ? "CmdorCtrl+Shift+Z" : "", click(item) { win.send("redo"); }, enabled: false },
+            { label: "Undo", id: "undo", accelerator: darwin ? "CmdorCtrl+Z" : "", click(item) { win.send("undo"); }, enabled: false },
+            { label: "Redo", id: "redo", accelerator: darwin ? "CmdorCtrl+Shift+Z" : "", click(item) { win.send("redo"); }, enabled: false },
             { type: "separator" },
             { label: "Toggle Insert Mode", id: "toggle_insert_mode", accelerator: darwin ? "" : "Insert", type: "checkbox", click(item) { win.send("insert_mode", item.checked); }, checked: false },
             { label: "Toggle Overwrite Mode", id: "overwrite_mode", accelerator: "CmdorCtrl+Alt+O", click(item) { win.send("overwrite_mode", item.checked); }, type: "checkbox", checked: false },
             { type: "separator" },
             { label: "Mirror Mode", id: "mirror_mode", accelerator: "CmdorCtrl+Alt+M", click(item) { win.send("mirror_mode", item.checked); }, type: "checkbox", checked: false },
             { type: "separator" },
-            chat ? { label: "Cut", accelerator: "Cmd+X", role: "cut" } : { label: "Cut", id: "cut", accelerator: "CmdorCtrl+X", click(item) { win.send("cut"); }, enabled: false },
-            chat ? { label: "Copy", accelerator: "Cmd+C", role: "copy" } : { label: "Copy", id: "copy", accelerator: "CmdorCtrl+C", click(item) { win.send("copy"); }, enabled: false },
-            chat ? { label: "Paste", accelerator: "Cmd+V", role: "paste" } : { label: "Paste", id: "paste", accelerator: "CmdorCtrl+V", click(item) { win.send("paste"); }, enabled: true },
+            { label: "Cut", id: "cut", accelerator: "CmdorCtrl+X", click(item) { win.send("cut"); }, enabled: false },
+            { label: "Copy", id: "copy", accelerator: "CmdorCtrl+C", click(item) { win.send("copy"); }, enabled: false },
+            { label: "Paste", id: "paste", accelerator: "CmdorCtrl+V", click(item) { win.send("paste"); }, enabled: true },
             { label: "Paste As Selection", id: "paste_as_selection", accelerator: "CmdorCtrl+Alt+V", click(item) { win.send("paste_as_selection"); }, enabled: true },
             { type: "separator" },
             { label: "Left Justify Line", id: "left_justify_line", accelerator: "Alt+L", click(item) { win.send("left_justify_line"); }, enabled: true },
@@ -427,11 +426,11 @@ function edit_menu_template(win, chat) {
     };
 }
 
-function selection_menu_template(win, chat) {
+function selection_menu_template(win) {
     return {
         label: "&Selection",
         submenu: [
-            chat ? { label: "Select All", accelerator: "Cmd+A", role: "selectall" } : { label: "Select All", id: "select_all", accelerator: "CmdorCtrl+A", click(item) { win.send("select_all"); } },
+            { label: "Select All", id: "select_all", accelerator: "CmdorCtrl+A", click(item) { win.send("select_all"); } },
             { label: "Deselect", id: "deselect", click(item) { win.send("deselect"); }, enabled: false },
             { type: "separator" },
             { label: "Import\u2026", id: "import_selection", click(item) { win.send("import_selection"); } },
@@ -598,8 +597,8 @@ function debug_menu_template(win) {
     };
 }
 
-function create_menu_template(win, chat, debug) {
-    const menu_lists = [file_menu_template(win), edit_menu_template(win, chat), selection_menu_template(win, chat), colors_menu_template(win), font_menu_template(win), view_menu_template(win)];
+function create_menu_template(win, debug) {
+    const menu_lists = [file_menu_template(win), edit_menu_template(win), selection_menu_template(win), colors_menu_template(win), font_menu_template(win), view_menu_template(win)];
     /*if (debug)*/ menu_lists.push(debug_menu_template(win));
     return menu_lists;
 }
@@ -608,33 +607,24 @@ function get_menu_item(id, name) {
     return menus[id].getMenuItemById(name);
 }
 
-function get_chat_menu_item(id, name) {
-    return chat_menus[id].getMenuItemById(name);
-}
-
 function enable(id, name) {
     get_menu_item(id, name).enabled = true;
-    if (name != "cut" && name != "copy" && name != "paste" && name != "undo" && name != "redo" && name != "select_all") get_chat_menu_item(id, name).enabled = true;
 }
 
 function disable(id, name) {
     get_menu_item(id, name).enabled = false;
-    if (name != "cut" && name != "copy" && name != "paste" && name != "undo" && name != "redo" && name != "select_all") get_chat_menu_item(id, name).enabled = false;
 }
 
 function check(id, name) {
     get_menu_item(id, name).checked = true;
-    get_chat_menu_item(id, name).checked = true;
 }
 
 function uncheck(id, name) {
     get_menu_item(id, name).checked = false;
-    get_chat_menu_item(id, name).checked = false;
 }
 
 function set_check(id, name, value) {
     get_menu_item(id, name).checked = value;
-    get_chat_menu_item(id, name).checked = value;
 }
 
 electron.ipcMain.on("set_file", (event, { id }) => {
@@ -927,11 +917,6 @@ electron.ipcMain.on("uncheck_all_guides", (event, { id }) => {
     uncheck(id, "drawinggrid_16x8");
 });
 
-electron.ipcMain.on("enable_chat_window_toggle", (event, { id }) => {
-    enable(id, "chat_window_toggle");
-    check(id, "chat_window_toggle");
-});
-
 electron.ipcMain.on("enable_brush_size_shortcuts", (event, { id }) => {
     enable(id, "increase_brush_size");
     enable(id, "decrease_brush_size");
@@ -949,18 +934,12 @@ class MenuEvent extends events.EventEmitter {
         if (darwin) electron.Menu.setApplicationMenu(application);
     }
 
-    chat_input_menu(win, debug) {
-        const menu = darwin ? electron.Menu.buildFromTemplate([moebius_menu, ...create_menu_template(win, true, debug), window_menu_items, help_menu_items]) : electron.Menu.buildFromTemplate([...create_menu_template(win, true, debug), help_menu_items]);
-        chat_menus[win.id] = menu;
-        return menu;
-    }
-
     get modal_menu() {
         return electron.Menu.buildFromTemplate([moebius_menu, bare_file, bare_edit, window_menu_items, help_menu_items]);
     }
 
     document_menu(win, debug) {
-        const menu = darwin ? electron.Menu.buildFromTemplate([moebius_menu, ...create_menu_template(win, false, debug), window_menu_items, help_menu_items]) : electron.Menu.buildFromTemplate([...create_menu_template(win, false, debug), help_menu_items]);
+        const menu = darwin ? electron.Menu.buildFromTemplate([moebius_menu, ...create_menu_template(win, debug), window_menu_items, help_menu_items]) : electron.Menu.buildFromTemplate([...create_menu_template(win, debug), help_menu_items]);
         menus[win.id] = menu;
         return menu;
     }
