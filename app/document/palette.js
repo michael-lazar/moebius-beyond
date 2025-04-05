@@ -3,9 +3,7 @@ const { EventEmitter } = require("events");
 const doc = require("./doc");
 const keyboard = require("./input/keyboard");
 const senders = require("../senders");
-const { white, rgb_to_hex, hex_to_rbg, lospec_palette } = require("../libtextmode/palette");
-
-
+const { rgb_to_hex, hex_to_rbg, lospec_palette, palette_4bit } = require("../libtextmode/palette");
 
 class PaletteChooser extends EventEmitter {
     select_attribute() {
@@ -22,7 +20,6 @@ class PaletteChooser extends EventEmitter {
         doc.on("update_swatches", () => this.update_swatches());
         doc.on("set_bg", (index) => this.bg = index);
         doc.on("change_palette", (lospec_palette_name) => this.change_palette(lospec_palette_name));
-
 
         keyboard.on("previous_foreground_color", () => this.previous_foreground_color());
         keyboard.on("next_foreground_color", () => this.next_foreground_color());
@@ -179,8 +176,21 @@ class PaletteChooser extends EventEmitter {
 
     async change_palette(lospec_palette_name) {
         senders.send("update_menu_checkboxes", { lospec_palette_name });
-        await this.load_lospec_palette(lospec_palette_name);
+        if (lospec_palette_name === null) {
+            await this.load_default_palette()
+        } else {
+            await this.load_lospec_palette(lospec_palette_name);
+        }
         this.update_swatches();
+    }
+
+    async load_default_palette() {
+        for (let i = 0; i < 16; i++) {
+            doc.update_palette(i, palette_4bit[i]);
+        }
+        this.update_swatches()
+        //stupid way of forcing redraw on ui elements
+        this.fg = this.fg;
     }
 
     async load_lospec_palette(palette_name) {
@@ -192,7 +202,6 @@ class PaletteChooser extends EventEmitter {
         //stupid way of forcing redraw on ui elements
         this.fg = this.fg;
     }
-
 
     default_color() {
         this.fg = 7;

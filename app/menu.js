@@ -569,7 +569,8 @@ function colors_menu_template(win) {
     return {
         label: "Colors",
         submenu: [
-            { label: "Load Lospec palette", submenu: lospec_palette_menu_items(win) },
+            { label: "Load Lospec Palette", submenu: lospec_palette_menu_items(win) },
+            { label: "Reset to Default Palette", id: "reset_palette", click(item) { win.send("change_palette", null); }},
             { type: "separator" },
             { label: "Select Attribute", id: "select_attribute", accelerator: "Alt+A", click(item) { win.send("select_attribute"); } },
             { type: "separator" },
@@ -872,12 +873,18 @@ electron.ipcMain.on("update_menu_checkboxes", (event, { id, insert_mode, overwri
     if (use_9px_font != undefined) set_check(id, "use_9px_font", use_9px_font);
     if (ice_colors != undefined) set_check(id, "ice_colors", ice_colors);
     if (actual_size != undefined) set_check(id, "actual_size", actual_size);
-    if (lospec_palette_name != undefined) {
-        if (lospec_palette_names[id]) uncheck(id, lospec_palette_names[id]);
-        if (get_menu_item(id, lospec_palette_name)) {
-            check(id, lospec_palette_name);
-            lospec_palette_names[id] = lospec_palette_name;
+    if (lospec_palette_name !== undefined) {
+        if (lospec_palette_names[id]) {
+            uncheck(id, lospec_palette_names[id]);
+            lospec_palette_names[id] = null;
         }
+        if (lospec_palette_name) {
+            if (get_menu_item(id, lospec_palette_name)) {
+                check(id, lospec_palette_name);
+                lospec_palette_names[id] = lospec_palette_name;
+            }
+        }
+
     }
     if (font_name != undefined) {
         if (font_names[id]) uncheck(id, font_names[id]);
