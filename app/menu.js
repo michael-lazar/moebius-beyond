@@ -330,8 +330,10 @@ const help_menu_items = {
         { type: "separator" },
         { label: "Enable Function Keys on MacOS", id: "enable_function_keys", click(item) { electron.shell.openExternal("file:///System/Library/PreferencePanes/Keyboard.prefPane/"); }, enabled: darwin },
         { label: "ANSI Art Tutorials at 16Colors", id: "changelog", click(item) { electron.shell.openExternal("https://16colo.rs/tags/content/tutorial"); } },
-        { label: "New Releases at Github",id: "show_released", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/releases"); } },
-        { label: "Raise an Issue at GitHub", id: "show_issues", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/issues"); } },
+        { label: "Tutorial for Moebius XBIN editor", id: "xbin_tutorial", click(item) { electron.shell.openExternal("https://blog.glyphdrawing.club/moebius-ansi-and-ascii-art-editor-with-custom-font-support/"); } },
+        { type: "separator" },
+        { label: "New Releases",id: "show_released", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/releases"); } },
+        { label: "Report an Issue", id: "show_issues", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/issues"); } },
     ]
 };
 
