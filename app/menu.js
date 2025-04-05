@@ -601,7 +601,7 @@ function debug_menu_template(win) {
 
 function create_menu_template(win, debug) {
     const menu_lists = [file_menu_template(win), edit_menu_template(win), selection_menu_template(win), colors_menu_template(win), font_menu_template(win), view_menu_template(win)];
-    /*if (debug)*/ menu_lists.push(debug_menu_template(win));
+    if (debug) menu_lists.push(debug_menu_template(win));
     return menu_lists;
 }
 

@@ -2,9 +2,12 @@
 
 ## Unreleased
 
-### Changed
+### Fixed
 
-- Updated the links in the Help menu and removed outdated URLs.
+- Fixed broken links in the Help menu and removed outdated URLs.
+- Fixed GSJCI fonts not loading.
+- Fixed the debug menu being shown even if it has not been enabled
+  in the preferences.
 
 ### Removed
 
