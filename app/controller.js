@@ -21,22 +21,6 @@ require("./document/input/drag_and_drop");
 
 doc.on("start_rendering", () => send_sync("show_rendering_modal"));
 doc.on("end_rendering", () => send("close_modal"));
-doc.on("connecting", () => send_sync("show_connecting_modal"));
-doc.on("connected", () => send("close_modal"));
-doc.on("unable_to_connect", () => {
-    const choice = msg_box("Connect to Server", "Cannot connect to Server", { buttons: ["Retry", "Cancel"], defaultId: 0, cancelId: 1 });
-    if (choice == 1) send("destroy");
-    doc.connect_to_server(doc.connection.server, doc.connection.pass);
-});
-doc.on("refused", () => {
-    msg_box("Connect to Server", "Incorrect password!");
-    send("destroy");
-});
-doc.on("disconnected", () => {
-    const choice = msg_box("Disconnected", "You were disconnected from the server.", { buttons: ["Retry", "Cancel"], defaultId: 0, cancelId: 1 });
-    if (choice == 1) send("destroy");
-    doc.connect_to_server(doc.connection.server, doc.connection.pass);
-});
 doc.on("ready", () => {
     send("ready");
     tools.start(tools.modes.SELECT);
@@ -185,6 +169,5 @@ on("export_as_utf8", (event) => export_as_utf8());
 on("export_as_png", (event) => export_as_png());
 on("export_as_apng", (event) => export_as_apng());
 on("remove_ice_colors", (event) => send("new_document", remove_ice_colors(doc)));
-on("connect_to_server", (event, { server, pass }) => doc.connect_to_server(server, pass));
 on("backup_folder", (event, folder) => backup_folder = folder);
 on("use_backup", (event, value) => use_backup(value));

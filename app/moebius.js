@@ -170,15 +170,6 @@ async function open_reference_window(win) {
 }
 menu.on("open_reference_window", open_reference_window);
 
-
-async function connect_to_server(server, pass = "") {
-    const win = await new_document_window();
-    docs[win.id].network = true;
-    win.setTitle(server);
-    win.send("connect_to_server", { server, pass });
-}
-electron.ipcMain.on("connect_to_server", (event, { server, pass }) => connect_to_server(server, pass));
-
 async function show_splash_screen() {
     splash_screen = await window.static("app/html/splash_screen.html", { width: 720, height: 600, ...frameless }, touchbar.splash_screen, { preferences, new_document, open });
 }
@@ -219,12 +210,6 @@ electron.ipcMain.on("update_prefs", (event, { key, value }) => update_prefs(key,
 
 electron.ipcMain.on("show_rendering_modal", async (event, { id }) => {
     docs[id].modal = await window.new_modal("app/html/rendering.html", { width: 200, height: 80, parent: docs[id].win, frame: false, ...get_centered_xy(id, 200, 80) });
-    if (darwin) add_darwin_window_menu_handler(id);
-    event.returnValue = true;
-});
-
-electron.ipcMain.on("show_connecting_modal", async (event, { id }) => {
-    docs[id].modal = await window.new_modal("app/html/connecting.html", { width: 200, height: 80, parent: docs[id].win, frame: false, ...get_centered_xy(id, 200, 80) });
     if (darwin) add_darwin_window_menu_handler(id);
     event.returnValue = true;
 });
