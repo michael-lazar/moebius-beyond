@@ -12,7 +12,6 @@ const linux = (process.platform == "linux");
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
 let prevent_splash_screen_at_startup = false;
 let splash_screen;
-const discord = require("./discord");
 const {new_win} = require("./window");
 
 // This switch is required for <input type="color"> to utilize the OS color
@@ -39,7 +38,7 @@ async function new_document_window() {
     const win_pos = win.getPosition();
     last_win_pos = win_pos;
     const debug = prefs.get("debug");
-    docs[win.id] = { win, menu: menu.document_menu(win, debug), chat_input_menu: menu.chat_input_menu(win, debug), edited: false, win_pos, destroyed: false, open_in_current_window: false };
+    docs[win.id] = { win, menu: menu.document_menu(win, debug), edited: false, win_pos, destroyed: false, open_in_current_window: false };
     touchbar.create_touch_bars(win);
     prefs.send(win);
     win.on("focus", (event) => {
@@ -171,39 +170,13 @@ async function open_reference_window(win) {
 }
 menu.on("open_reference_window", open_reference_window);
 
-async function show_new_connection() {
-    const new_connection = await window.static("app/html/new_connection.html", { width: 480, height: 340 }, touchbar.new_connection);
-    const server = prefs.get("server");
-    const pass = prefs.get("pass");
-    const saved_servers = prefs.get("saved_servers");
-    if (server) {
-        new_connection.send("saved_servers", { server, pass, saved_servers });
-    }
-}
-menu.on("show_new_connection_window", show_new_connection);
-electron.ipcMain.on("show_new_connection_window", (event) => show_new_connection());
-
-async function connect_to_server(server, pass = "") {
-    const win = await new_document_window();
-    docs[win.id].network = true;
-    win.setTitle(server);
-    win.send("connect_to_server", { server, pass });
-}
-electron.ipcMain.on("connect_to_server", (event, { server, pass }) => connect_to_server(server, pass));
-
 async function show_splash_screen() {
     splash_screen = await window.static("app/html/splash_screen.html", { width: 720, height: 600, ...frameless }, touchbar.splash_screen, { preferences, new_document, open });
-    const server = prefs.get('server');
-    const pass = prefs.get('pass');
-    if (server) {
-        splash_screen.send("saved_server", { server, pass });
-    }
 }
 
 menu.on("show_cheatsheet", () => window.static("app/html/cheatsheet.html", { width: 640, height: 816, ...frameless }));
 menu.on("show_acknowledgements", () => window.static("app/html/acknowledgements.html", { width: 640, height: 688, ...frameless }));
 menu.on("show_numpad_mappings", () => window.static("app/html/numpad_mappings.html", { width: 640, height: 400, ...frameless }));
-menu.on("show_changelog", () => window.static("app/html/changelog.html", { width: 352, height: 576, ...frameless }));
 
 function has_documents_open() {
     return Object.keys(docs).length > 0;
@@ -235,43 +208,14 @@ function update_prefs(key, value) {
 
 electron.ipcMain.on("update_prefs", (event, { key, value }) => update_prefs(key, value));
 
-electron.ipcMain.on("discord", (event, { value }) => {
-    prefs.set("discord", value);
-    if (value) {
-        discord.login();
-    } else {
-        discord.destroy();
-    }
-});
-
 electron.ipcMain.on("show_rendering_modal", async (event, { id }) => {
     docs[id].modal = await window.new_modal("app/html/rendering.html", { width: 200, height: 80, parent: docs[id].win, frame: false, ...get_centered_xy(id, 200, 80) });
     if (darwin) add_darwin_window_menu_handler(id);
     event.returnValue = true;
 });
 
-electron.ipcMain.on("show_connecting_modal", async (event, { id }) => {
-    docs[id].modal = await window.new_modal("app/html/connecting.html", { width: 200, height: 80, parent: docs[id].win, frame: false, ...get_centered_xy(id, 200, 80) });
-    if (darwin) add_darwin_window_menu_handler(id);
-    event.returnValue = true;
-});
-
 electron.ipcMain.on("close_modal", (event, { id }) => {
     if (docs[id].modal && !docs[id].modal.isDestroyed()) docs[id].modal.close();
-});
-
-electron.ipcMain.on("chat_input_focus", (event, { id }) => {
-    if (darwin) electron.Menu.setApplicationMenu(docs[id].chat_input_menu);
-});
-
-electron.ipcMain.on("chat_input_blur", (event, { id }) => {
-    if (darwin) {
-        if (docs[id] && docs[id].modal && !docs[id].modal.isDestroyed()) {
-            electron.Menu.setApplicationMenu(menu.modal_menu);
-        } else {
-            electron.Menu.setApplicationMenu(docs[id].menu);
-        }
-    }
 });
 
 electron.ipcMain.on("set_modal_menu", (event, { id }) => {
@@ -384,9 +328,6 @@ electron.app.on("ready", (event) => {
         if (!prevent_splash_screen_at_startup) show_splash_screen();
     }
     if (darwin) electron.app.dock.setMenu(menu.dock_menu);
-    if (prefs.get("discord")) {
-        discord.login();
-    }
 });
 
 electron.app.on("window-all-closed", (event) => {

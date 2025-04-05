@@ -2,7 +2,6 @@ const electron = require("electron");
 const events = new require("events");
 const darwin = (process.platform == "darwin");
 const menus = [];
-const chat_menus = [];
 const font_names = [];
 const font_list = {
     "Custom": { "TOPAZ 437": 16, "TES-SYM5": 16, "TES-GIGR": 16, "GJSCI-3": 16, "GJSCI-4": 16, "GJSCI-X": 16, "FROGBLOCK": 8 },
@@ -325,22 +324,14 @@ const window_menu_items = {
 
 const help_menu_items = {
     label: "Help", role: "help", submenu: [
-        { label: "Tutorial for Moebius XBIN editor", id: "xbin_tutorial", click(item) { electron.shell.openExternal("https://blog.glyphdrawing.club/moebius-ansi-ascii-art-editor-with-custom-font-support"); } },
-        { type: "separator" },
-        { label: "How to Start a Server", id: "show_repo", click(item) { electron.shell.openExternal("https://github.com/blocktronics/moebius/blob/master/README.md#moebius-server"); } },
-        { label: "Enable Function Keys on MacOS", id: "enable_function_keys", click(item) { electron.shell.openExternal("file:///System/Library/PreferencePanes/Keyboard.prefPane/"); }, enabled: darwin },
-        { type: "separator" },
         { label: "Cheatsheet", id: "show_cheatsheet", click(item) { event.emit("show_cheatsheet"); } },
         { label: "Show Numpad Mappings", id: "show_numpad_mappings", click(item) { event.emit("show_numpad_mappings"); } },
-        { type: "separator" },
         { label: "Acknowledgements", id: "show_acknowledgements", click(item) { event.emit("show_acknowledgements"); } },
         { type: "separator" },
+        { label: "Enable Function Keys on MacOS", id: "enable_function_keys", click(item) { electron.shell.openExternal("file:///System/Library/PreferencePanes/Keyboard.prefPane/"); }, enabled: darwin },
         { label: "ANSI Art Tutorials at 16Colors", id: "changelog", click(item) { electron.shell.openExternal("https://16colo.rs/tags/content/tutorial"); } },
-        { label: "Mœbius Homepage", id: "show_homepage", click(item) { electron.shell.openExternal("https://blocktronics.github.io/moebius/"); } },
-        { label: "Source Code at GitHub", id: "show_repo", click(item) { electron.shell.openExternal("https://github.com/blocktronics/moebius"); } },
-        { label: "Raise an Issue at GitHub", id: "show_issues", click(item) { electron.shell.openExternal("https://github.com/blocktronics/moebius/issues"); } },
-        { type: "separator" },
-        { label: "Changelog", id: "changelog", click(item) { event.emit("show_changelog"); } },
+        { label: "New Releases at Github",id: "show_released", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/releases"); } },
+        { label: "Raise an Issue at GitHub", id: "show_issues", click(item) { electron.shell.openExternal("https://github.com/michael-lazar/moebius-xbin-ultimate/issues"); } },
     ]
 };
 
@@ -354,11 +345,7 @@ const application = electron.Menu.buildFromTemplate([moebius_menu, {
         { type: "separator" },
         { role: "close" },
     ]
-}, bare_edit, {
-        label: "Network", submenu: [
-            { label: "Connect to Server…", accelerator: "Cmd+Alt+S", id: "connect_to_server", click(item) { event.emit("show_new_connection_window"); } },
-        ]
-    }, window_menu_items, help_menu_items
+}, bare_edit, window_menu_items, help_menu_items
 ]);
 
 function file_menu_template(win) {
@@ -394,21 +381,21 @@ function file_menu_template(win) {
     };
 }
 
-function edit_menu_template(win, chat) {
+function edit_menu_template(win) {
     return {
         label: "&Edit",
         submenu: [
-            chat ? { label: "Undo", accelerator: "Cmd+Z", role: "undo" } : { label: "Undo", id: "undo", accelerator: darwin ? "CmdorCtrl+Z" : "", click(item) { win.send("undo"); }, enabled: false },
-            chat ? { label: "Redo", accelerator: "Cmd+Shift+Z", role: "redo" } : { label: "Redo", id: "redo", accelerator: darwin ? "CmdorCtrl+Shift+Z" : "", click(item) { win.send("redo"); }, enabled: false },
+            { label: "Undo", id: "undo", accelerator: darwin ? "CmdorCtrl+Z" : "", click(item) { win.send("undo"); }, enabled: false },
+            { label: "Redo", id: "redo", accelerator: darwin ? "CmdorCtrl+Shift+Z" : "", click(item) { win.send("redo"); }, enabled: false },
             { type: "separator" },
             { label: "Toggle Insert Mode", id: "toggle_insert_mode", accelerator: darwin ? "" : "Insert", type: "checkbox", click(item) { win.send("insert_mode", item.checked); }, checked: false },
             { label: "Toggle Overwrite Mode", id: "overwrite_mode", accelerator: "CmdorCtrl+Alt+O", click(item) { win.send("overwrite_mode", item.checked); }, type: "checkbox", checked: false },
             { type: "separator" },
             { label: "Mirror Mode", id: "mirror_mode", accelerator: "CmdorCtrl+Alt+M", click(item) { win.send("mirror_mode", item.checked); }, type: "checkbox", checked: false },
             { type: "separator" },
-            chat ? { label: "Cut", accelerator: "Cmd+X", role: "cut" } : { label: "Cut", id: "cut", accelerator: "CmdorCtrl+X", click(item) { win.send("cut"); }, enabled: false },
-            chat ? { label: "Copy", accelerator: "Cmd+C", role: "copy" } : { label: "Copy", id: "copy", accelerator: "CmdorCtrl+C", click(item) { win.send("copy"); }, enabled: false },
-            chat ? { label: "Paste", accelerator: "Cmd+V", role: "paste" } : { label: "Paste", id: "paste", accelerator: "CmdorCtrl+V", click(item) { win.send("paste"); }, enabled: true },
+            { label: "Cut", id: "cut", accelerator: "CmdorCtrl+X", click(item) { win.send("cut"); }, enabled: false },
+            { label: "Copy", id: "copy", accelerator: "CmdorCtrl+C", click(item) { win.send("copy"); }, enabled: false },
+            { label: "Paste", id: "paste", accelerator: "CmdorCtrl+V", click(item) { win.send("paste"); }, enabled: true },
             { label: "Paste As Selection", id: "paste_as_selection", accelerator: "CmdorCtrl+Alt+V", click(item) { win.send("paste_as_selection"); }, enabled: true },
             { type: "separator" },
             { label: "Left Justify Line", id: "left_justify_line", accelerator: "Alt+L", click(item) { win.send("left_justify_line"); }, enabled: true },
@@ -439,11 +426,11 @@ function edit_menu_template(win, chat) {
     };
 }
 
-function selection_menu_template(win, chat) {
+function selection_menu_template(win) {
     return {
         label: "&Selection",
         submenu: [
-            chat ? { label: "Select All", accelerator: "Cmd+A", role: "selectall" } : { label: "Select All", id: "select_all", accelerator: "CmdorCtrl+A", click(item) { win.send("select_all"); } },
+            { label: "Select All", id: "select_all", accelerator: "CmdorCtrl+A", click(item) { win.send("select_all"); } },
             { label: "Deselect", id: "deselect", click(item) { win.send("deselect"); }, enabled: false },
             { type: "separator" },
             { label: "Import\u2026", id: "import_selection", click(item) { win.send("import_selection"); } },
@@ -601,16 +588,6 @@ function colors_menu_template(win) {
     };
 }
 
-function network_menu_template(win, enabled) {
-    return {
-        label: "&Network", submenu: [
-            { label: "Connect to Server…", id: "connect_to_server", accelerator: "CmdorCtrl+Alt+S", click(item) { event.emit("show_new_connection_window"); } },
-            { type: "separator" },
-            { label: "Toggle Chat Window", id: "chat_window_toggle", accelerator: "CmdorCtrl+[", click(item) { win.send("chat_window_toggle"); }, enabled },
-        ]
-    };
-}
-
 function debug_menu_template(win) {
     return {
         label: "Debug",
@@ -620,8 +597,8 @@ function debug_menu_template(win) {
     };
 }
 
-function create_menu_template(win, chat, debug) {
-    const menu_lists = [file_menu_template(win), edit_menu_template(win, chat), selection_menu_template(win, chat), colors_menu_template(win), font_menu_template(win), view_menu_template(win), network_menu_template(win, chat)];
+function create_menu_template(win, debug) {
+    const menu_lists = [file_menu_template(win), edit_menu_template(win), selection_menu_template(win), colors_menu_template(win), font_menu_template(win), view_menu_template(win)];
     /*if (debug)*/ menu_lists.push(debug_menu_template(win));
     return menu_lists;
 }
@@ -630,33 +607,24 @@ function get_menu_item(id, name) {
     return menus[id].getMenuItemById(name);
 }
 
-function get_chat_menu_item(id, name) {
-    return chat_menus[id].getMenuItemById(name);
-}
-
 function enable(id, name) {
     get_menu_item(id, name).enabled = true;
-    if (name != "cut" && name != "copy" && name != "paste" && name != "undo" && name != "redo" && name != "select_all") get_chat_menu_item(id, name).enabled = true;
 }
 
 function disable(id, name) {
     get_menu_item(id, name).enabled = false;
-    if (name != "cut" && name != "copy" && name != "paste" && name != "undo" && name != "redo" && name != "select_all") get_chat_menu_item(id, name).enabled = false;
 }
 
 function check(id, name) {
     get_menu_item(id, name).checked = true;
-    get_chat_menu_item(id, name).checked = true;
 }
 
 function uncheck(id, name) {
     get_menu_item(id, name).checked = false;
-    get_chat_menu_item(id, name).checked = false;
 }
 
 function set_check(id, name, value) {
     get_menu_item(id, name).checked = value;
-    get_chat_menu_item(id, name).checked = value;
 }
 
 electron.ipcMain.on("set_file", (event, { id }) => {
@@ -949,11 +917,6 @@ electron.ipcMain.on("uncheck_all_guides", (event, { id }) => {
     uncheck(id, "drawinggrid_16x8");
 });
 
-electron.ipcMain.on("enable_chat_window_toggle", (event, { id }) => {
-    enable(id, "chat_window_toggle");
-    check(id, "chat_window_toggle");
-});
-
 electron.ipcMain.on("enable_brush_size_shortcuts", (event, { id }) => {
     enable(id, "increase_brush_size");
     enable(id, "decrease_brush_size");
@@ -971,18 +934,12 @@ class MenuEvent extends events.EventEmitter {
         if (darwin) electron.Menu.setApplicationMenu(application);
     }
 
-    chat_input_menu(win, debug) {
-        const menu = darwin ? electron.Menu.buildFromTemplate([moebius_menu, ...create_menu_template(win, true, debug), window_menu_items, help_menu_items]) : electron.Menu.buildFromTemplate([...create_menu_template(win, true, debug), help_menu_items]);
-        chat_menus[win.id] = menu;
-        return menu;
-    }
-
     get modal_menu() {
         return electron.Menu.buildFromTemplate([moebius_menu, bare_file, bare_edit, window_menu_items, help_menu_items]);
     }
 
     document_menu(win, debug) {
-        const menu = darwin ? electron.Menu.buildFromTemplate([moebius_menu, ...create_menu_template(win, false, debug), window_menu_items, help_menu_items]) : electron.Menu.buildFromTemplate([...create_menu_template(win, false, debug), help_menu_items]);
+        const menu = darwin ? electron.Menu.buildFromTemplate([moebius_menu, ...create_menu_template(win, debug), window_menu_items, help_menu_items]) : electron.Menu.buildFromTemplate([...create_menu_template(win, debug), help_menu_items]);
         menus[win.id] = menu;
         return menu;
     }
@@ -992,7 +949,6 @@ class MenuEvent extends events.EventEmitter {
             { label: "New Document", click(item) { event.emit("new_document"); } },
             { label: "Open\u2026", click(item) { event.emit("open"); } },
             { label: "Preferences", click(item) { event.emit("preferences"); } },
-            { label: "Connect to Server…", click(item) { event.emit("show_new_connection_window"); } }
         ]);
     }
 

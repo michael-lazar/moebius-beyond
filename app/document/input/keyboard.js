@@ -6,9 +6,6 @@ const libtextmode = require("../../libtextmode/libtextmode");
 let use_shift = true;
 
 class KeyboardEvent extends events.EventEmitter {
-    chat(text) {
-        if (doc.connection && text) doc.connection.chat(text);
-    }
 
     ctrl_key(event) {
         switch (event.code) {
@@ -331,12 +328,7 @@ class KeyboardEvent extends events.EventEmitter {
     }
 
     keydown(event) {
-        if (document.activeElement == this.chat_input) {
-            if (event.code == "Enter" || event.code == "NumpadEnter" && this.chat_input.value){
-                this.chat(this.chat_input.value);
-                this.chat_input.value = "";
-            }
-        } else if (event.ctrlKey && !event.altKey && !event.metaKey) {
+        if (event.ctrlKey && !event.altKey && !event.metaKey) {
             this.ctrl_key(event);
         } else if (event.altKey && !event.ctrlKey && !event.metaKey) {
             this.alt_key(event);
@@ -345,10 +337,6 @@ class KeyboardEvent extends events.EventEmitter {
         } else if (!event.ctrlKey && !event.altKey && !event.metaKey) {
             this.key_typed(event);
         }
-    }
-
-    get in_chat() {
-        return document.activeElement == this.chat_input;
     }
 
     constructor() {
@@ -361,7 +349,6 @@ class KeyboardEvent extends events.EventEmitter {
         on("overwrite_mode", (event, value) => this.overwrite_mode = value);
         on("f_key", (event, value) => this.emit("f_key", value));
         document.addEventListener("DOMContentLoaded", () => {
-            this.chat_input = document.getElementById("chat_input");
             document.body.addEventListener("keydown", (event) => this.keydown(event), true);
         }, true);
     }

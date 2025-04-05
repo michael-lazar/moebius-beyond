@@ -86,10 +86,6 @@ function get_canvas_size(win) {
     win.setTouchBar(simple_touch_bar(win, "Resize"));
 }
 
-function new_connection(win) {
-    win.setTouchBar(simple_touch_bar(win, "Connect"));
-}
-
 function splash_screen(win, {preferences, new_document, open}) {
     win.setTouchBar(new electron.TouchBar({
         items: [
@@ -136,4 +132,4 @@ electron.ipcMain.on("show_operation_touchbar", (event, {id}) => touchbars[id].wi
 electron.ipcMain.on("show_brush_touchbar", (event, {id}) => touchbars[id].win.setTouchBar(touchbars[id].touchbar.brush));
 electron.ipcMain.on("show_reference_touchbar", (event, {id}) => touchbars[id].win.setTouchBar(touchbars[id].touchbar.reference));
 
-module.exports = {create_touch_bars, get_sauce_info, get_canvas_size, select_attribute, new_connection, splash_screen};
+module.exports = {create_touch_bars, get_sauce_info, get_canvas_size, select_attribute, splash_screen};

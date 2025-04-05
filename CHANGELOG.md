@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated the links in the Help menu and removed outdated URLs.
+
+### Removed
+
+- Removed miscellaneous server/client code. The server feature of 
+  moebius does not work with this fork, and I have no intention of
+  supporting it going forward.
+- Removed the discord rich presence feature.
+- Removed several unused dependencies.
+
 ## v3.0.1 (2025-04-04)
 
 ### Fixed

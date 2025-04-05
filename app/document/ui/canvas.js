@@ -1,5 +1,4 @@
 const doc = require("../doc");
-const chat = require("./chat");
 const cursor = require("../tools/cursor");
 
 let interval, render;
@@ -65,8 +64,6 @@ function update_frame() {
         if (top > preview_height + preview.scrollTop - height - 2) preview.scrollTop = top - preview_height + height + 2;
     }
 }
-
-chat.on("update_frame", () => update_frame());
 
 function add(new_render) {
     hide("view_frame");
@@ -152,4 +149,5 @@ doc.on("ice_color", (value) => {
 doc.on("use_9px_font", () => add(doc.render));
 doc.on("goto_row", (row_no) => goto_row(row_no));
 doc.on("goto_self", () => goto_row(cursor.y));
-module.export = {update_frame};
+
+module.exports = { update_frame };

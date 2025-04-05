@@ -16,10 +16,6 @@ function fill(x, y, col) {
     if (block.is_blocky) {
         const target_color = block.is_top ? block.upper_block_color : block.lower_block_color;
         if (target_color == col) return;
-        if (doc.connection) {
-            const choice = msg_box("Fill", "Using fill whilst connected to a server is a potentially destructive operation. Are you sure?", {type: "question", buttons: ["Perform Fill", "Cancel"], defaultId: 1, cancelId: 1});
-            if (choice == 1) return;
-        }
         doc.start_undo();
         const queue = [{to: {x, y}, from: {x, y}}];
         while (queue.length) {
