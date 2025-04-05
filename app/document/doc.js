@@ -4,7 +4,6 @@ const events = require("events");
 const path = require("path");
 let doc, render;
 let nick, group;
-let connection;
 const SIXTEEN_COLORS_API_KEY = "mirebitqv2ualog65ifv2p1a5076soh9";
 let retention = "8035200";
 const undo_types = { INDIVIDUAL: 0, RESIZE: 1, INSERT_ROW: 2, DELETE_ROW: 3, INSERT_COLUMN: 4, DELETE_COLUMN: 5, SCROLL_CANVAS_UP: 6, SCROLL_CANVAS_DOWN: 7, SCROLL_CANVAS_LEFT: 8, SCROLL_CANVAS_RIGHT: 9 };
@@ -36,7 +35,7 @@ class UndoHistory extends events.EventEmitter {
         this.reset_redos();
         this.undo_buffer.push({ type, data });
         send("enable_undo");
-        if (!connection) send("document_changed");
+        send("document_changed");
     }
 
     push_resize() {
@@ -57,7 +56,6 @@ class UndoHistory extends events.EventEmitter {
             block.fg = undo.fg;
             block.bg = undo.bg;
             libtextmode.render_at(render, undo.x, undo.y, block);
-            if (connection) connection.draw(undo.x, undo.y, block);
             if (undo.cursor) this.emit("move_to", undo.cursor.prev_x, undo.cursor.prev_y);
         }
         this.redo_buffer.push({ type: undo_types.INDIVIDUAL, data: redos });
@@ -77,7 +75,6 @@ class UndoHistory extends events.EventEmitter {
             block.fg = redo.fg;
             block.bg = redo.bg;
             libtextmode.render_at(render, redo.x, redo.y, block);
-            if (connection) connection.draw(redo.x, redo.y, block);
             if (redo.cursor) this.emit("move_to", redo.cursor.post_x, redo.cursor.post_y);
         }
         this.undo_buffer.push({ type: undo_types.INDIVIDUAL, data: undos });
@@ -286,7 +283,6 @@ class TextModeDoc extends events.EventEmitter {
         if (big_data) this.emit("start_rendering");
         render = await libtextmode.render_split(doc);
         if (big_data) this.emit("end_rendering");
-        if (connection) connection.resize_cursors();
         this.emit("render");
     }
 
@@ -303,7 +299,6 @@ class TextModeDoc extends events.EventEmitter {
         this.ready();
     }
 
-    get connection() { return connection; }
     get render() { return render; }
     get font() { return render.font; }
     get font_height() { return render.font.height; }
@@ -327,32 +322,27 @@ class TextModeDoc extends events.EventEmitter {
         doc.group = group;
         doc.comments = comments;
         send("update_sauce", { title, author, group, comments });
-        if (connection) connection.sauce(doc.title, doc.author, doc.group, doc.comments);
     }
 
     set lospec_palette_name(lospec_palette_name) {
         doc.lospec_palette_name = lospec_palette_name;
         this.start_rendering().then(() => this.emit("change_palette", doc.lospec_palette_name));
-        // TODO: if (connection) connection.change_palette(doc.lospec_palette_name);
     }
 
     set font_name(font_name) {
         doc.font_name = font_name;
         doc.font_bytes = undefined;
         this.start_rendering().then(() => this.emit("change_font", doc.font_name));
-        if (connection) connection.change_font(doc.font_name);
     }
 
     set use_9px_font(value) {
         doc.use_9px_font = value;
         this.start_rendering().then(() => this.emit("use_9px_font", doc.use_9px_font));
-        if (connection) connection.use_9px_font(doc.use_9px_font);
     }
 
     set ice_colors(value) {
         doc.ice_colors = value;
         this.emit("ice_colors", doc.ice_colors);
-        if (connection) connection.ice_colors(doc.ice_colors);
     }
 
     at(x, y) {
@@ -374,7 +364,6 @@ class TextModeDoc extends events.EventEmitter {
         }
         doc.data[i] = { code, fg, bg };
         libtextmode.render_at(render, x, y, doc.data[i]);
-        if (connection) connection.draw(x, y, doc.data[i]);
         if (this.mirror_mode && mirrored) {
             const opposing_x = Math.floor(doc.columns / 2) - (x - Math.ceil(doc.columns / 2)) - 1;
             this.change_data(opposing_x, y, libtextmode.flip_code_x(code), fg, bg, undefined, undefined, false);
@@ -482,14 +471,9 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     resize(columns, rows) {
-        if (!connection) {
-            this.undo_history.push_resize();
-        } else {
-            this.undo_history.reset_undos();
-        }
+        this.undo_history.push_resize();
         libtextmode.resize_canvas(doc, columns, rows);
         this.start_rendering();
-        if (connection) connection.set_canvas_size(columns, rows);
     }
 
     count_left(y) {
@@ -618,52 +602,44 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     insert_row(y) {
-        if (connection) return;
         this.undo_history.push_insert_row(y, libtextmode.insert_row(doc, y));
         libtextmode.render_insert_row(doc, y, render);
     }
 
     delete_row(y) {
-        if (connection) return;
         this.undo_history.push_delete_row(y, libtextmode.delete_row(doc, y));
         libtextmode.render_delete_row(doc, y, render);
     }
 
     insert_column(x) {
-        if (connection) return;
         this.undo_history.push_insert_column(x, libtextmode.insert_column(doc, x));
         libtextmode.render_insert_column(doc, x, render);
     }
 
     delete_column(x) {
-        if (connection) return;
         this.undo_history.push_delete_column(x, libtextmode.delete_column(doc, x));
         libtextmode.render_delete_column(doc, x, render);
     }
 
     scroll_canvas_up() {
-        if (connection) return;
         libtextmode.scroll_canvas_up(doc);
         libtextmode.render_scroll_canvas_up(doc, render);
         this.undo_history.push_scroll_canvas_up();
     }
 
     scroll_canvas_down() {
-        if (connection) return;
         libtextmode.scroll_canvas_down(doc);
         libtextmode.render_scroll_canvas_down(doc, render);
         this.undo_history.push_scroll_canvas_down();
     }
 
     scroll_canvas_left() {
-        if (connection) return;
         libtextmode.scroll_canvas_left(doc);
         libtextmode.render_scroll_canvas_left(doc, render);
         this.undo_history.push_scroll_canvas_left();
     }
 
     scroll_canvas_right() {
-        if (connection) return;
         libtextmode.scroll_canvas_right(doc);
         libtextmode.render_scroll_canvas_right(doc, render);
         this.undo_history.push_scroll_canvas_right();
@@ -682,7 +658,7 @@ class TextModeDoc extends events.EventEmitter {
     async save(save_without_sauce) {
         if (!this.file) return;
         await libtextmode.write_file(this, this.file, { save_without_sauce });
-        if (!connection) send("set_file", { file: this.file });
+        send("set_file", { file: this.file });
     }
 
     async share_online() {

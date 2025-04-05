@@ -6,9 +6,7 @@ const libtextmode = require("../../libtextmode/libtextmode");
 let use_shift = true;
 
 class KeyboardEvent extends events.EventEmitter {
-    chat(text) {
-        if (doc.connection && text) doc.connection.chat(text);
-    }
+    chat(text) {}
 
     ctrl_key(event) {
         switch (event.code) {

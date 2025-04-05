@@ -146,7 +146,6 @@ class Cursor {
                 this.canvas.style.top = `${y * this.height}px`;
                 this.canvas.style.width = `${this.width}px`;
                 this.canvas.style.height = `${this.height}px`;
-                if (doc.connection) doc.connection.cursor(this.x, this.y);
                 break;
             case modes.SELECTION:
                 this.selection.dx = x;
@@ -157,12 +156,10 @@ class Cursor {
                 this.canvas.style.width = `${(dx - sx + 1) * this.width - 4}px`;
                 this.canvas.style.height = `${(dy - sy + 1) * this.height - 4}px`;
                 statusbar.status_bar_info(dx - sx + 1, dy - sy + 1);
-                if (doc.connection) doc.connection.selection(this.x, this.y);
                 break;
             case modes.OPERATION:
                 this.canvas.style.left = `${x * this.width}px`;
                 this.canvas.style.top = `${y * this.height}px`;
-                if (doc.connection) doc.connection.operation(this.x, this.y);
                 break;
         }
         this.draw();
@@ -182,7 +179,6 @@ class Cursor {
         if (!this.hidden) {
             document.getElementById("editing_layer").removeChild(this.canvas);
             this.hidden = true;
-            if (doc.connection) doc.connection.hide_cursor();
         }
     }
 
@@ -252,7 +248,6 @@ class Cursor {
     start_operation_mode(is_move_operation) {
         const { sx, sy, dx, dy } = this.reorientate_selection();
         this.set_operation_mode({ ...doc.get_blocks(sx, sy, dx, dy), is_move_operation });
-        if (doc.connection) doc.connection.operation(sx, sy);
         if (is_move_operation) doc.erase(sx, sy, dx, dy);
         this.move_to(sx, sy);
     }
@@ -291,19 +286,16 @@ class Cursor {
     rotate() {
         libtextmode.rotate(this.operation_blocks);
         this.redraw_operation_blocks();
-        if (doc.connection) doc.connection.rotate();
     }
 
     flip_x() {
         libtextmode.flip_x(this.operation_blocks);
         this.redraw_operation_blocks();
-        if (doc.connection) doc.connection.flip_x();
     }
 
     flip_y() {
         libtextmode.flip_y(this.operation_blocks);
         this.redraw_operation_blocks();
-        if (doc.connection) doc.connection.flip_y();
     }
 
     center() {
@@ -547,7 +539,6 @@ class Cursor {
     paste_as_selection() {
         const blocks = clipboard.paste_blocks();
         if (blocks) {
-            if (doc.connection) doc.connection.paste_as_selection(blocks);
             this.set_operation_mode(blocks);
         }
     }

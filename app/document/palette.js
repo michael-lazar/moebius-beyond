@@ -38,10 +38,7 @@ class PaletteChooser extends EventEmitter {
         senders.on("default_color", () => this.default_color());
         senders.on("switch_foreground_background", () => this.switch_foreground_background());
         senders.on("set_fg", (e, new_fg) => this.fg = new_fg);
-        senders.on("set_bg", (e, new_bg) => {
-            this.bg = new_bg;
-            if (doc.connection) doc.connection.set_bg(this.bg);
-        });
+        senders.on("set_bg", (e, new_bg) => this.bg = new_bg);
     }
 
     new_document() {
@@ -158,7 +155,6 @@ class PaletteChooser extends EventEmitter {
 
     set bg_internal(value) {
         this.bg = value
-        if (doc.connection) doc.connection.set_bg(this.bg);
     }
 
     get bg() {

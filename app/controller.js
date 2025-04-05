@@ -128,8 +128,7 @@ function export_as_apng() {
 }
 
 function hourly_save() {
-    if (doc.connection && !doc.connection.connected) return;
-    const file = (doc.connection) ? `${doc.connection.server}.ans` : (doc.file ? doc.file : "Untitled.ans");
+    const file = doc.file ? doc.file : "Untitled.ans";
     const timestamped_file = hourly_saver.filename(backup_folder, file);
     doc.save_backup(timestamped_file);
     hourly_saver.keep_if_changes(timestamped_file);
@@ -151,13 +150,7 @@ on("revert_to_last_save", (event, opts) => doc.open(doc.file));
 on("show_file_in_folder", (event, opts) => electron.shell.showItemInFolder(doc.file));
 on("duplicate", (event, opts) => send("new_document", { columns: doc.columns, rows: doc.rows, data: doc.data, palette: doc.palette, font_name: doc.font_name, use_9px_font: doc.use_9px_font, ice_colors: doc.ice_colors, font_bytes: doc.font_bytes }));
 on("process_save", (event, { method, destroy_when_done, ignore_controlcharacters }) => process_save(method, destroy_when_done, ignore_controlcharacters));
-on("save", (event, opts) => {
-    if (doc.connection) {
-        process_save('save_as');
-    } else {
-        process_save('save');
-    }
-});
+on("save", (event, opts) => process_save('save'));
 on("save_as", (event, opts) => process_save('save_as'));
 on("save_without_sauce", (event, opts) => process_save('save_without_sauce'));
 on("share_online", (event, opts) => share_online());
