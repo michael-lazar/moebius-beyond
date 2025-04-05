@@ -2,9 +2,14 @@
 
 ## Unreleased
 
-### Changed
+### Fixed
 
-- Updated the links in the Help menu and removed outdated URLs.
+- Fixed broken links in the Help menu and removed outdated URLs.
+- Fixed GSJCI fonts not loading correctly.
+- Fixed "Share Online" menu option to upload .ans files to 16colors. 
+- Fixed "Load Custom Font" menu option to work again.
+- Fixed "Open Reference Image" menu option & hotkey to work again.
+- Fixed the debug menu showing even if it had not been enabled.
 
 ### Removed
 

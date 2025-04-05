@@ -370,8 +370,8 @@ function file_menu_template(win) {
             { label: "Save As\u2026", id: "save_as", accelerator: "CmdorCtrl+Shift+S", click(item) { win.send("save_as"); } },
             { label: "Save Without Sauce Info\u2026", id: "save_without_sauce", click(item) { win.send("save_without_sauce"); } },
             { type: "separator" },
-            { label: "Share Online", id: "share_online", click(item) { win.send("share_online"); } },
-            { label: "Share Online (XBIN)", id: "share_online_xbin", click(item) { win.send("share_online_xbin"); } },
+            { label: "Share Online (.ans)", id: "share_online", click(item) { win.send("share_online"); } },
+            { label: "Share Online (.xb)", id: "share_online_xbin", click(item) { win.send("share_online_xbin"); } },
             { type: "separator" },
             { label: "Export As PNG\u2026", id: "export_as_png", accelerator: "CmdorCtrl+Shift+E", click(item) { win.send("export_as_png"); } },
             { label: "Export As Animated PNG\u2026", id: "export_as_apng", accelerator: "CmdorCtrl+Shift+A", click(item) { win.send("export_as_apng"); } },
@@ -601,7 +601,7 @@ function debug_menu_template(win) {
 
 function create_menu_template(win, debug) {
     const menu_lists = [file_menu_template(win), edit_menu_template(win), selection_menu_template(win), colors_menu_template(win), font_menu_template(win), view_menu_template(win)];
-    /*if (debug)*/ menu_lists.push(debug_menu_template(win));
+    if (debug) menu_lists.push(debug_menu_template(win));
     return menu_lists;
 }
 

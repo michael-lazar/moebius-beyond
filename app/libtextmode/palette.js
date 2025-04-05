@@ -536,19 +536,6 @@ module.exports = {
         }
     },
 
-    // TODO: used for share online
-    //  is there a better way to determine this after we handle document type?
-    has_base_palette(palette) {
-        if (palette.length > 16) return false;
-
-        let i = 0;
-        for (let { r, g, b } of palette) {
-            if (r !== palette_4bit[i].r || g !== palette_4bit[i].g || b !== palette_4bit[i].b) return false;
-            i++;
-        }
-        return true;
-    },
-
     base_palette_index({ r, g, b}) {
         for (let i in palette_4bit) {
             if (r === palette_4bit[i].r && g === palette_4bit[i].g && b === palette_4bit[i].b) return i;
