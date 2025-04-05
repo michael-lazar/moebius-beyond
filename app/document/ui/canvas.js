@@ -149,4 +149,5 @@ doc.on("ice_color", (value) => {
 doc.on("use_9px_font", () => add(doc.render));
 doc.on("goto_row", (row_no) => goto_row(row_no));
 doc.on("goto_self", () => goto_row(cursor.y));
-module.export = {update_frame};
+
+module.exports = { update_frame };
