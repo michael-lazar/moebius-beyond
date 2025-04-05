@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.1.0 (2025-04-05)
+
 ### Added
 
 - Added a new menu option "Reset to Default Palette" to reset the
