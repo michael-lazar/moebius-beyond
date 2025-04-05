@@ -731,7 +731,7 @@ class TextModeDoc extends events.EventEmitter {
         this.start_rendering().then(() => this.emit("change_font", doc.font_name));
     }
 
-    async load_custom_font({ file }) {
+    async load_custom_font({ file } = {}) {
         if (!file) {
             const files = open_box({
                 filters: [{
