@@ -10,6 +10,8 @@
 - Fixed "Load Custom Font" menu option to work again.
 - Fixed "Open Reference Image" menu option & hotkey to work again.
 - Fixed the debug menu showing even if it had not been enabled.
+- Fixed "Open In Current Window" causing every subsequent file to
+  be opened in the current window.
 
 ### Removed
 

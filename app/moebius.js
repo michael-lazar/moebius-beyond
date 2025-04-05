@@ -129,11 +129,13 @@ function open(win) {
 }
 
 menu.on("open", open);
+
 electron.ipcMain.on("open", (event) => open());
 
 menu.on("open_in_current_window", (win) => {
     docs[win.id].open_in_current_window = true;
     open(win);
+    docs[win.id].open_in_current_window = false;
 });
 
 async function preferences() {
