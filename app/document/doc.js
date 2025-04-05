@@ -662,11 +662,9 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async share_online() {
-        const default_palette = libtextmode.has_base_palette(doc.palette);
-        const bytes = default_palette ? libtextmode.encode_as_ansi(doc) : libtextmode.encode_as_xbin(doc);
-        const extension = (default_palette) ? "ans" : "xb";
-        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + extension;
-        const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=${extension}&retention=${retention}&filename=${filename}`, {
+        const bytes = libtextmode.encode_as_ansi(this, false);
+        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + "ans";
+        const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=ans&retention=${retention}&filename=${filename}`, {
             body: `file=${Buffer.from(bytes).toString("base64")}`,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -683,7 +681,8 @@ class TextModeDoc extends events.EventEmitter {
 
     async share_online_xbin() {
         const bytes = libtextmode.encode_as_xbin(this)
-        const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}`, {
+        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + "xb";
+        const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}&filename=${filename}`, {
             body: `file=${Buffer.from(bytes).toString("base64")}`,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
