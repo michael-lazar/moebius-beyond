@@ -31,13 +31,19 @@ class Cursor {
         }
     }
 
+    canvas_zoom_toggle() {
+        this.canvas_zoom_toggled = !this.canvas_zoom_toggled;
+        this.new_render();
+    }
+
     get_blocks_in_operation() {
         return doc.get_blocks(this.x, this.y, Math.min(doc.columns - 1, this.x + this.operation_blocks.columns - 1), Math.min(doc.rows - 1, this.y + this.operation_blocks.rows - 1));
     }
 
     scroll(x, y) {
-        document.getElementById("viewport").scrollLeft += x * this.width;
-        document.getElementById("viewport").scrollTop += y * this.height;
+        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
+        document.getElementById("viewport").scrollLeft += x * this.width * scale_factor;
+        document.getElementById("viewport").scrollTop += y * this.height * scale_factor;
     }
 
     left() {
@@ -61,13 +67,21 @@ class Cursor {
     }
 
     page_up() {
-        const characters_in_screen_height = Math.floor(document.getElementById("viewport").getBoundingClientRect().height / this.height);
+        const viewport = document.getElementById("viewport");
+        const viewport_rect = viewport.getBoundingClientRect();
+        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
+        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / scale_factor);
+
         this.move_to(this.x, Math.max(this.y - characters_in_screen_height, 0));
         if (this.scroll_document_with_cursor) this.scroll(0, -characters_in_screen_height);
     }
 
     page_down() {
-        const characters_in_screen_height = Math.floor(document.getElementById("viewport").getBoundingClientRect().height / this.height);
+        const viewport = document.getElementById("viewport");
+        const viewport_rect = viewport.getBoundingClientRect();
+        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
+        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / scale_factor);
+
         this.move_to(this.x, Math.min(this.y + characters_in_screen_height, doc.rows - 1));
         if (this.scroll_document_with_cursor) this.scroll(0, characters_in_screen_height);
     }
@@ -101,23 +115,30 @@ class Cursor {
     }
 
     scroll_to_cursor() {
-        const cursor_top = this.height * this.y;
-        const cursor_left = this.width * this.x;
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
-        if (viewport.scrollTop + (this.height * this.scroll_margin) > cursor_top) {
-            viewport.scrollTop = cursor_top - (this.height * this.scroll_margin);
-        } else {
-            const bottom_of_view = viewport.scrollTop + viewport_rect.height;
-            const cursor_bottom = this.height * (this.y + this.scroll_margin + 1) + 1;
-            if (bottom_of_view < cursor_bottom) viewport.scrollTop = cursor_bottom - viewport_rect.height;
+
+        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
+
+        const cursor_top = this.height * (this.y - this.scroll_margin) * scale_factor;
+        const cursor_left = this.width * (this.x - this.scroll_margin) * scale_factor;
+        const cursor_bottom = (this.height * (this.y + this.scroll_margin + 1)) * scale_factor + 1;
+        const cursor_right = (this.width * (this.x + this.scroll_margin + 1)) * scale_factor + 1;
+
+        const viewport_bottom = viewport.scrollTop + viewport_rect.height;
+        const viewport_right = viewport.scrollLeft + viewport_rect.width;
+
+        if (viewport.scrollTop > cursor_top) {
+            viewport.scrollTop = cursor_top;
         }
-        if (viewport.scrollLeft + (this.width * this.scroll_margin) > cursor_left) {
-            viewport.scrollLeft = cursor_left - (this.width * this.scroll_margin);
-        } else {
-            const right_of_view = viewport.scrollLeft + viewport_rect.width - 2;
-            const cursor_farthest_right = this.width * (this.x + this.scroll_margin + 1) + 1;
-            if (right_of_view < cursor_farthest_right) viewport.scrollLeft = cursor_farthest_right - viewport_rect.width + 2;
+        if (viewport_bottom < cursor_bottom) {
+            viewport.scrollTop = cursor_bottom - viewport_rect.height;
+        }
+        if (viewport.scrollLeft > cursor_left) {
+            viewport.scrollLeft = cursor_left;
+        }
+        if (viewport_right < cursor_right) {
+            viewport.scrollLeft = cursor_right - viewport_rect.width;
         }
     }
 
@@ -563,6 +584,7 @@ class Cursor {
         this.flashing = false;
         this.selection = { sx: 0, sy: 0, dx: 0, dy: 0 };
         this.scroll_document_with_cursor = false;
+        this.canvas_zoom_toggled = false;
         on("deselect", (event) => this.deselect());
         on("use_flashing_cursor", (event, value) => this.set_flashing(value));
         on("fill", (event) => this.fill());
@@ -627,6 +649,7 @@ class Cursor {
         doc.on("render", () => this.new_render());
         on("undo", (event) => this.draw());
         on("redo", (event) => this.draw());
+        on("canvas_zoom_toggle", (event) => this.canvas_zoom_toggle());
     }
 }
 

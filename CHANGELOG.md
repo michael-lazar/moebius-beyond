@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed window scrolling when moving the cursor at 200% zoom.
+
 ## v3.1.0 (2025-04-05)
 
 ### Added
