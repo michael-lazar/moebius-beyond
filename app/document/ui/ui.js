@@ -612,9 +612,7 @@ class Toolbar extends events.EventEmitter {
             this.charlist_x = event.clientX - rect.left;
             this.charlist_y = event.clientY - rect.top;
             this.char_index = Math.floor(this.charlist_y / cell_height / scale) * 16 + Math.floor(this.charlist_x / cell_width / scale);
-            this.draw_charlist_cursor(this.char_index);
-            this.custom_block_index = this.char_index;
-            this.draw_custom_block();
+            this.draw_charlist_cursor();
         }, true);
         const ctx = canvas.getContext("2d");
         for (let y = 0, code = 0; y < 16; y++) {
@@ -624,7 +622,13 @@ class Toolbar extends events.EventEmitter {
         }
     }
 
-    draw_charlist_cursor(index) {
+    update_charlist_cursor(char_index) {
+        this.char_index = char_index;
+        console.log(char_index);
+        this.draw_charlist_cursor();
+    }
+
+    draw_charlist_cursor() {
         const font = doc.font;
         const scale = charlist_zoom_toggled ? 2 : 1
         const cell_width = font.width + 1;
@@ -661,7 +665,7 @@ class Toolbar extends events.EventEmitter {
         else {
             this.char_index = 0;
         }
-        this.draw_charlist_cursor(this.char_index)
+        this.draw_charlist_cursor()
     }
 
     draw_fkeys() {
@@ -882,7 +886,7 @@ class Toolbar extends events.EventEmitter {
             this.redraw_fkeys();
             this.draw_custom_block();
             this.redraw_charlist();
-            this.draw_charlist_cursor(0);
+            this.draw_charlist_cursor();
             const font = doc.font;
             const sample_block = document.getElementById("sample_block");
             sample_block.width = font.width;

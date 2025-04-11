@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- Added a hotkey SHIFT+ALT+Left Click to grab the character under the
+  cursor and load it into the custom block.
+
 ### Fixed
 
 - Fixed window scrolling when moving the cursor at 200% zoom.

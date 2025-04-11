@@ -69,7 +69,10 @@ class MouseListener extends events.EventEmitter {
         if (event.altKey) {
             if (!is_legal) return;
             const block = doc.get_half_block(x, half_y);
-            if (block.is_blocky) {
+            if (event.shiftKey) {
+                toolbar.update_charlist_cursor(doc.at(x, y).code);
+            }
+            else if (block.is_blocky) {
                 palette[(event.button == 0) ? "fg" : "bg"] = block.is_top ? block.upper_block_color : block.lower_block_color;
             } else {
                 palette[(event.button == 0) ? "fg" : "bg"] = block.fg;
