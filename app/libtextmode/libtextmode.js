@@ -298,6 +298,7 @@ function flip_code_x(code) {
         case 181: return 198;
         case 182: return 199;
         case 183: return 214;
+        case 184: return 213;
         case 185: return 204;
         case 187: return 201;
         case 188: return 200;
@@ -312,8 +313,9 @@ function flip_code_x(code) {
         case 201: return 187;
         case 204: return 185;
         case 211: return 189;
-        case 214: return 183;
         case 212: return 190;
+        case 213: return 184;
+        case 214: return 183;
         case 217: return 192;
         case 218: return 191;
         case 221: return 222;
