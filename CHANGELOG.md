@@ -11,6 +11,8 @@
 
 - Fixed window scrolling when moving the cursor at 200% zoom.
 - Fixed X-flipping for characters 184 (╕) and 213 (╒).
+- Fixed "Save as..." resetting the editor state and clearing the
+  undo/redo history for the current document.
 
 ## v3.1.0 (2025-04-05)
 

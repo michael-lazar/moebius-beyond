@@ -61,29 +61,19 @@ function save(destroy_when_done = false, save_without_sauce = false) {
 async function save_as(destroy_when_done = false) {
     const file = save_box(doc.file, "xb", { filters: [{ name: "XBin", extensions: ["xb"] }, { name: "ANSI Art", extensions: ["ans", "asc", "diz", "nfo", "txt"] }, { name: "Binary Text", extensions: ["bin"] }] });
     if (!file) return;
-
-    if (file === doc.file) {
-        doc.file = file;
-        doc.edited = false;
-        save(destroy_when_done);
-    } else {
-        await doc.save_backup(file)
-        await doc.open(file);
-    }
+    doc.file = file;
+    doc.edited = false;
+    save(destroy_when_done);
+    send("set_file", { file: doc.file });
 }
 
 async function save_without_sauce() {
     const file = save_box(doc.file, "xb", { filters: [{ name: "XBin", extensions: ["xb"] }, { name: "ANSI Art", extensions: ["ans", "asc", "diz", "nfo", "txt"] }, { name: "Binary Text", extensions: ["bin"] }] });
     if (!file) return;
-
-    if (file === doc.file) {
-        doc.file = file;
-        doc.edited = false;
-        save(false, true);
-    } else {
-        await doc.save_backup_without_sauce(file)
-        await doc.open(file);
-    }
+    doc.file = file;
+    doc.edited = false;
+    save(false, true);
+    send("set_file", { file: doc.file });
 }
 
 async function export_font() {
