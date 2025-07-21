@@ -40,15 +40,23 @@ function stop_blinking() {
     $("blink_on_container").style.display = "none";
 }
 
+function get_zoom_level() {
+    const container = $("canvas_container");
+    if (container.classList.contains("zoom-0.5x")) return 0.5;
+    if (container.classList.contains("zoom-1x")) return 1.0;
+    if (container.classList.contains("zoom-2x")) return 2.0;
+    if (container.classList.contains("zoom-3x")) return 3.0;
+    return 1.0;
+}
+
 function update_frame() {
     const viewport = $("viewport");
     const view_rect = viewport.getBoundingClientRect();
     const view_frame = $("view_frame");
-    const canvas_zoom_toggled = $("canvas_container").classList.contains("canvas_zoom");
 
     if (render) {
         let scale_factor = render.width / 260;
-        if (canvas_zoom_toggled) scale_factor *= 2;
+        scale_factor *= get_zoom_level();
 
         const width = Math.min(Math.ceil(view_rect.width / scale_factor), 260);
         const height = Math.min(Math.ceil(view_rect.height / scale_factor), render.height / (render.width / 260));
@@ -91,13 +99,12 @@ function add(new_render) {
 function update_with_mouse_pos(client_x, client_y) {
     const preview = $("preview");
     const viewport = $("viewport");
-    const canvas_zoom_toggled = $("canvas_container").classList.contains("canvas_zoom");
     const preview_rect = preview.getBoundingClientRect();
     const viewport_rect = viewport.getBoundingClientRect();
     const x = client_x - preview_rect.left - 20 + preview.scrollLeft;
     const y = client_y - preview_rect.top + preview.scrollTop;
     let scale_factor = render.width / 260;
-    if (canvas_zoom_toggled) scale_factor *= 2;
+    scale_factor *= get_zoom_level();
     const half_view_width = viewport_rect.width / scale_factor / 2;
     const half_view_height = viewport_rect.height / scale_factor / 2;
     viewport.scrollLeft = Math.floor((x - half_view_width) * scale_factor);

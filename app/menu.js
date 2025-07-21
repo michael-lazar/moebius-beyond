@@ -511,7 +511,15 @@ function view_menu_template(win) {
             { type: "separator" },
             { label: "Use 9px Font", id: "use_9px_font", accelerator: "CmdorCtrl+F", click(item) { win.send("use_9px_font", item.checked); }, type: "checkbox", checked: false },
             { type: "separator" },
-            { label: "View canvas at 200%", id: "canvas_zoom_toggle", accelerator: "CmdorCtrl+Alt+2", click(item) { win.send("canvas_zoom_toggle"); }, type: "checkbox", checked: false },
+            {
+                label: "Zoom",
+                submenu: [
+                    { label: "50%", id: "canvas_zoom_50", accelerator: "CmdorCtrl+Alt+1", click(item) { win.send("set_canvas_zoom", 0.5); }, type: "radio", checked: false },
+                    { label: "100%", id: "canvas_zoom_100", accelerator: "CmdorCtrl+Alt+2", click(item) { win.send("set_canvas_zoom", 1.0); }, type: "radio", checked: true },
+                    { label: "200%", id: "canvas_zoom_200", accelerator: "CmdorCtrl+Alt+3", click(item) { win.send("set_canvas_zoom", 2.0); }, type: "radio", checked: false },
+                    { label: "300%", id: "canvas_zoom_300", accelerator: "CmdorCtrl+Alt+4", click(item) { win.send("set_canvas_zoom", 3.0); }, type: "radio", checked: false },
+                ]
+            },
             { label: "Actual Size", id: "actual_size", accelerator: "CmdorCtrl+Alt+0", click(item) { win.send("actual_size"); }, type: "checkbox", checked: false },
             { label: "Zoom In", id: "zoom_in", accelerator: "CmdorCtrl+=", click(item) { win.send("zoom_in"); } },
             { label: "Zoom Out", id: "zoom_out", accelerator: "CmdorCtrl+-", click(item) { win.send("zoom_out"); } },

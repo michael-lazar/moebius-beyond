@@ -7,7 +7,7 @@ const events = require("events");
 
 let interval, guide_columns, guide_rows, grid_columns;
 
-let canvas_zoom_toggled = false;
+let canvas_zoom = 1.0;
 let charlist_zoom_toggled = false;
 
 function $(name) {
@@ -368,19 +368,22 @@ function actual_size() {
     set_zoom(1.0);
 }
 
-function canvas_zoom_toggle() {
-    canvas_zoom_toggled = !canvas_zoom_toggled;
-    if (canvas_zoom_toggled) {
-        $("canvas_container").classList.add("canvas_zoom");
-    } else {
-        $("canvas_container").classList.remove("canvas_zoom");
-    }
+function set_canvas_zoom(level) {
+    canvas_zoom = level;
+    const container = $("canvas_container");
+    container.classList.remove("zoom-0.5x", "zoom-1x", "zoom-2x", "zoom-3x");
+    container.classList.add(`zoom-${level}x`);
 
     // Call require() inside the function to avoid circular dependency
     const { update_frame } = require("./canvas");
     update_frame();
 
-    send("update_menu_checkboxes", { canvas_zoom_toggle: canvas_zoom_toggled });
+    send("update_menu_radios", {
+        canvas_zoom_50: level === 0.5,
+        canvas_zoom_100: level === 1.0,
+        canvas_zoom_200: level === 2.0,
+        canvas_zoom_300: level === 3.0
+    });
 }
 
 function charlist_zoom_toggle() {
@@ -463,7 +466,7 @@ on("show_charlist", (event, visible) => show_charlist(visible));
 on("use_pixel_aliasing", (event, value) => use_pixel_aliasing(value));
 on("hide_scrollbars", (event, value) => hide_scrollbars(value));
 on("zoom_in", (event) => zoom_in());
-on("canvas_zoom_toggle", (event) => canvas_zoom_toggle());
+on("set_canvas_zoom", (event, level) => set_canvas_zoom(level));
 on("zoom_out", (event) => zoom_out());
 on("actual_size", (event) => actual_size());
 on("charlist_zoom_toggle", (event) => charlist_zoom_toggle());
@@ -946,7 +949,7 @@ module.exports = {
     zoom_in,
     zoom_out,
     actual_size,
-    canvas_zoom_toggle,
+    set_canvas_zoom,
     charlist_zoom_toggle,
     increase_reference_image_opacity,
     decrease_reference_image_opacity,

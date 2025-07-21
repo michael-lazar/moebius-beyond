@@ -248,8 +248,18 @@ body.dark #preview {
     width: inherit;
     height: inherit;
 }
-#canvas_container.canvas_zoom {
+#canvas_container.zoom-0-5x {
+    transform: scale(0.5);
+    transform-origin: top left;
+    margin: 0;
+}
+#canvas_container.zoom-2x {
     transform: scale(2);
+    transform-origin: top left;
+    margin: 0;
+}
+#canvas_container.zoom-3x {
+    transform: scale(3);
     transform-origin: top left;
     margin: 0;
 }

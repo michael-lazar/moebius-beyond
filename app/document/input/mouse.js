@@ -26,14 +26,14 @@ class MouseListener extends events.EventEmitter {
         let mouseY = event.clientY - canvas_container_rect.top;
         let canvasX = mouseX * canvas_width / canvas_container.clientWidth;
         let canvasY = mouseY * canvas_height / canvas_container.clientHeight;
-        const x = Math.floor(canvasX / (this.font.width * (this.canvas_zoom_toggled ? 2 : 1)));
-        const y = Math.floor(canvasY / (this.font.height * (this.canvas_zoom_toggled ? 2 : 1)));
-        const half_y = Math.floor(canvasY / (this.font.height / 2 * (this.canvas_zoom_toggled ? 2 : 1)));
+        const x = Math.floor(canvasX / (this.font.width * this.canvas_zoom));
+        const y = Math.floor(canvasY / (this.font.height * this.canvas_zoom));
+        const half_y = Math.floor(canvasY / (this.font.height / 2 * this.canvas_zoom));
         return { x, y, half_y };
     }
 
-    canvas_zoom_toggle() {
-        this.canvas_zoom_toggled = !this.canvas_zoom_toggled;
+    set_canvas_zoom(level) {
+        this.canvas_zoom = level;
     }
 
     record_start() {
@@ -187,8 +187,8 @@ class MouseListener extends events.EventEmitter {
         this.started = false;
         this.drawing = false;
         this.listening_to_wheel = true;
-        this.canvas_zoom_toggled = false;
-        on("canvas_zoom_toggle", (event) => this.canvas_zoom_toggle());
+        this.canvas_zoom = 1.0;
+        on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {
             document.getElementById("viewport").addEventListener("pointerdown", (event) => this.mouse_down(event), true);
