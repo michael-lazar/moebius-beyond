@@ -41,12 +41,9 @@ function stop_blinking() {
 }
 
 function get_zoom_level() {
-    const container = $("canvas_container");
-    if (container.classList.contains("zoom-0.5x")) return 0.5;
-    if (container.classList.contains("zoom-1x")) return 1.0;
-    if (container.classList.contains("zoom-2x")) return 2.0;
-    if (container.classList.contains("zoom-3x")) return 3.0;
-    return 1.0;
+    // Get zoom level from ui.js canvas_zoom variable
+    const { current_zoom_factor } = require("./ui");
+    return current_zoom_factor();
 }
 
 function update_frame() {
