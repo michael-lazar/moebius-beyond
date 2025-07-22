@@ -31,9 +31,9 @@ class Cursor {
         }
     }
 
-    canvas_zoom_toggle() {
-        this.canvas_zoom_toggled = !this.canvas_zoom_toggled;
-        this.new_render();
+    set_canvas_zoom(level) {
+        this.canvas_zoom = level;
+        this.new_render(false); // Don't scroll during zoom operations
     }
 
     get_blocks_in_operation() {
@@ -41,9 +41,8 @@ class Cursor {
     }
 
     scroll(x, y) {
-        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
-        document.getElementById("viewport").scrollLeft += x * this.width * scale_factor;
-        document.getElementById("viewport").scrollTop += y * this.height * scale_factor;
+        document.getElementById("viewport").scrollLeft += x * this.width * this.canvas_zoom;
+        document.getElementById("viewport").scrollTop += y * this.height * this.canvas_zoom;
     }
 
     left() {
@@ -69,8 +68,7 @@ class Cursor {
     page_up() {
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
-        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
-        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / scale_factor);
+        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / this.canvas_zoom);
 
         this.move_to(this.x, Math.max(this.y - characters_in_screen_height, 0));
         if (this.scroll_document_with_cursor) this.scroll(0, -characters_in_screen_height);
@@ -79,8 +77,7 @@ class Cursor {
     page_down() {
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
-        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
-        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / scale_factor);
+        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / this.canvas_zoom);
 
         this.move_to(this.x, Math.min(this.y + characters_in_screen_height, doc.rows - 1));
         if (this.scroll_document_with_cursor) this.scroll(0, characters_in_screen_height);
@@ -118,12 +115,10 @@ class Cursor {
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
 
-        const scale_factor = this.canvas_zoom_toggled ? 2 : 1
-
-        const cursor_top = this.height * (this.y - this.scroll_margin) * scale_factor;
-        const cursor_left = this.width * (this.x - this.scroll_margin) * scale_factor;
-        const cursor_bottom = (this.height * (this.y + this.scroll_margin + 1)) * scale_factor + 1;
-        const cursor_right = (this.width * (this.x + this.scroll_margin + 1)) * scale_factor + 1;
+        const cursor_top = this.height * (this.y - this.scroll_margin) * this.canvas_zoom;
+        const cursor_left = this.width * (this.x - this.scroll_margin) * this.canvas_zoom;
+        const cursor_bottom = (this.height * (this.y + this.scroll_margin + 1)) * this.canvas_zoom + 1;
+        const cursor_right = (this.width * (this.x + this.scroll_margin + 1)) * this.canvas_zoom + 1;
 
         const viewport_bottom = viewport.scrollTop + viewport_rect.height;
         const viewport_right = viewport.scrollLeft + viewport_rect.width;
@@ -212,8 +207,8 @@ class Cursor {
         this.move_to(this.x, this.y, false);
     }
 
-    new_render() {
-        this.move_to(Math.min(this.x, doc.columns - 1), Math.min(this.y, doc.rows - 1));
+    new_render(should_scroll = true) {
+        this.move_to(Math.min(this.x, doc.columns - 1), Math.min(this.y, doc.rows - 1), should_scroll);
         this.resize_to_font();
         if (this.mode == modes.OPERATION) this.redraw_operation_blocks();
     }
@@ -584,7 +579,7 @@ class Cursor {
         this.flashing = false;
         this.selection = { sx: 0, sy: 0, dx: 0, dy: 0 };
         this.scroll_document_with_cursor = false;
-        this.canvas_zoom_toggled = false;
+        this.canvas_zoom = 1.0;
         on("deselect", (event) => this.deselect());
         on("use_flashing_cursor", (event, value) => this.set_flashing(value));
         on("fill", (event) => this.fill());
@@ -649,7 +644,7 @@ class Cursor {
         doc.on("render", () => this.new_render());
         on("undo", (event) => this.draw());
         on("redo", (event) => this.draw());
-        on("canvas_zoom_toggle", (event) => this.canvas_zoom_toggle());
+        on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
     }
 }
 

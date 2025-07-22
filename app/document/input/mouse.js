@@ -1,7 +1,7 @@
 const events = require("events");
 const doc = require("../doc");
 const buttons = { NONE: 0, LEFT: 1, RIGHT: 2 };
-const { toolbar, zoom_in, zoom_out, actual_size, decrease_reference_image_opacity, increase_reference_image_opacity} = require("../ui/ui");
+const { toolbar, zoom_in, zoom_out, actual_size, zoom_with_anchor, decrease_reference_image_opacity, increase_reference_image_opacity} = require("../ui/ui");
 const palette = require("../palette");
 const { on } = require("../../senders");
 
@@ -26,14 +26,14 @@ class MouseListener extends events.EventEmitter {
         let mouseY = event.clientY - canvas_container_rect.top;
         let canvasX = mouseX * canvas_width / canvas_container.clientWidth;
         let canvasY = mouseY * canvas_height / canvas_container.clientHeight;
-        const x = Math.floor(canvasX / (this.font.width * (this.canvas_zoom_toggled ? 2 : 1)));
-        const y = Math.floor(canvasY / (this.font.height * (this.canvas_zoom_toggled ? 2 : 1)));
-        const half_y = Math.floor(canvasY / (this.font.height / 2 * (this.canvas_zoom_toggled ? 2 : 1)));
+        const x = Math.floor(canvasX / (this.font.width * this.canvas_zoom));
+        const y = Math.floor(canvasY / (this.font.height * this.canvas_zoom));
+        const half_y = Math.floor(canvasY / (this.font.height / 2 * this.canvas_zoom));
         return { x, y, half_y };
     }
 
-    canvas_zoom_toggle() {
-        this.canvas_zoom_toggled = !this.canvas_zoom_toggled;
+    set_canvas_zoom(level) {
+        this.canvas_zoom = level;
     }
 
     record_start() {
@@ -138,15 +138,21 @@ class MouseListener extends events.EventEmitter {
         if (event.ctrlKey) { // zooming
             event.preventDefault();
             if (this.listening_to_wheel) {
+                // Get mouse position relative to viewport for anchored zooming
+                const viewport = document.getElementById("viewport");
+                const viewportRect = viewport.getBoundingClientRect();
+                const mouseX = event.clientX - viewportRect.left;
+                const mouseY = event.clientY - viewportRect.top;
+                
                 if (event.deltaY > 0) {
-                    zoom_out();
+                    zoom_out(mouseX, mouseY);
                 } else if (event.deltaY < 0) {
-                    zoom_in();
+                    zoom_in(mouseX, mouseY);
                 }
                 this.listening_to_wheel = false;
                 setTimeout(() => {
                     this.listening_to_wheel = true;
-                }, 100);
+                }, 16); // Reduced from 100ms to ~60fps for smoother zooming
             }
         } else if (event.shiftKey) { // reference image opacity
             if (this.listening_to_wheel) {
@@ -158,7 +164,7 @@ class MouseListener extends events.EventEmitter {
                 this.listening_to_wheel = false;
                 setTimeout(() => {
                     this.listening_to_wheel = true;
-                }, 100);
+                }, 16); // Reduced from 100ms to ~60fps for smoother scrolling
             }
         } else if (event.altKey) { // grid opacity
             if (this.listening_to_wheel) {
@@ -174,7 +180,7 @@ class MouseListener extends events.EventEmitter {
                 this.listening_to_wheel = false;
                 setTimeout(() => {
                     this.listening_to_wheel = true;
-                }, 100);
+                }, 16); // Reduced from 100ms to ~60fps for smoother scrolling
             }
         }
     }
@@ -187,8 +193,8 @@ class MouseListener extends events.EventEmitter {
         this.started = false;
         this.drawing = false;
         this.listening_to_wheel = true;
-        this.canvas_zoom_toggled = false;
-        on("canvas_zoom_toggle", (event) => this.canvas_zoom_toggle());
+        this.canvas_zoom = 1.0;
+        on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {
             document.getElementById("viewport").addEventListener("pointerdown", (event) => this.mouse_down(event), true);

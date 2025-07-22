@@ -7,7 +7,7 @@ const events = require("events");
 
 let interval, guide_columns, guide_rows, grid_columns;
 
-let canvas_zoom_toggled = false;
+let canvas_zoom = 1.0;
 let charlist_zoom_toggled = false;
 
 function $(name) {
@@ -340,48 +340,89 @@ function show_charlist(visible) {
 }
 
 function current_zoom_factor() {
-    return parseFloat(electron.remote.getCurrentWebContents().zoomFactor.toFixed(1));
+    return canvas_zoom;
 }
 
-function set_zoom(factor) {
+function set_canvas_zoom_without_frame_update(factor) {
+    // Clamp factor to valid range (0.1 to 5.0) and round to nearest 0.1
+    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 10) / 10));
+
+    const cursor = require("../tools/cursor");
+    const mouse = require("../input/mouse");
+
+    const container = $("canvas_container");
+
+    // Set continuous zoom using CSS transform
+    container.style.transform = `scale(${canvas_zoom})`;
+    container.style.transformOrigin = 'top left';
+    container.style.margin = '0';
+
+    cursor.set_canvas_zoom(canvas_zoom);
+    mouse.set_canvas_zoom(canvas_zoom);
+
+    // Update zoom display element
     const zoom_element = $("zoom");
-    electron.remote.getCurrentWebContents().zoomFactor = factor;
-    zoom_element.textContent = `${Math.ceil(factor * 10) * 10}%`;
-    zoom_element.classList.remove("fade");
-    document.body.removeChild(zoom_element);
-    document.body.appendChild(zoom_element);
-    zoom_element.classList.add("fade");
-    send("update_menu_checkboxes", { actual_size: (electron.remote.getCurrentWebContents().zoomFactor == 1) });
+    if (zoom_element) {
+        zoom_element.textContent = `${Math.round(canvas_zoom * 100)}%`;
+        zoom_element.classList.remove("fade");
+        document.body.removeChild(zoom_element);
+        document.body.appendChild(zoom_element);
+        zoom_element.classList.add("fade");
+    }
+    
+    send("update_menu_checkboxes", { actual_size: (canvas_zoom === 1.0) });
 }
 
-function zoom_in() {
-    set_zoom(Math.min(current_zoom_factor() + 0.1, 3.0));
+function set_canvas_zoom(factor) {
+    set_canvas_zoom_without_frame_update(factor);
+    
+    // Call require() inside the function to avoid circular dependency
+    const { update_frame } = require("./canvas");
+    update_frame();
 }
 
-function zoom_out() {
-    if (current_zoom_factor() >= 1.001) {
-        set_zoom(Math.max(current_zoom_factor() - 0.1, 0.4));
+function zoom_in(mouseX, mouseY) {
+    zoom_with_anchor(Math.min(current_zoom_factor() + 0.2, 5.0), mouseX, mouseY);
+}
+
+function zoom_out(mouseX, mouseY) {
+    zoom_with_anchor(Math.max(current_zoom_factor() - 0.2, 0.2), mouseX, mouseY);
+}
+
+function zoom_with_anchor(newZoom, mouseX, mouseY) {
+    if (mouseX !== undefined && mouseY !== undefined) {
+        // Get viewport element and current scroll position
+        const viewport = document.getElementById("viewport");
+        const oldZoom = current_zoom_factor();
+        
+        // Calculate the content position under the mouse before zoom
+        const contentX = (viewport.scrollLeft + mouseX) / oldZoom;
+        const contentY = (viewport.scrollTop + mouseY) / oldZoom;
+        
+        // Apply the zoom without updating preview frame yet
+        set_canvas_zoom_without_frame_update(newZoom);
+        
+        // Calculate new scroll position to keep content under mouse
+        const newScrollLeft = contentX * newZoom - mouseX;
+        const newScrollTop = contentY * newZoom - mouseY;
+        
+        // Apply the new scroll position with bounds checking
+        viewport.scrollLeft = Math.max(0, newScrollLeft);
+        viewport.scrollTop = Math.max(0, newScrollTop);
+        
+        // Update preview frame immediately
+        const { update_frame } = require("./canvas");
+        update_frame();
+    } else {
+        // Fallback to regular zoom if no mouse position provided
+        set_canvas_zoom(newZoom);
     }
 }
 
 function actual_size() {
-    set_zoom(1.0);
+    set_canvas_zoom(1.0);
 }
 
-function canvas_zoom_toggle() {
-    canvas_zoom_toggled = !canvas_zoom_toggled;
-    if (canvas_zoom_toggled) {
-        $("canvas_container").classList.add("canvas_zoom");
-    } else {
-        $("canvas_container").classList.remove("canvas_zoom");
-    }
-
-    // Call require() inside the function to avoid circular dependency
-    const { update_frame } = require("./canvas");
-    update_frame();
-
-    send("update_menu_checkboxes", { canvas_zoom_toggle: canvas_zoom_toggled });
-}
 
 function charlist_zoom_toggle() {
     charlist_zoom_toggled = !charlist_zoom_toggled;
@@ -463,7 +504,7 @@ on("show_charlist", (event, visible) => show_charlist(visible));
 on("use_pixel_aliasing", (event, value) => use_pixel_aliasing(value));
 on("hide_scrollbars", (event, value) => hide_scrollbars(value));
 on("zoom_in", (event) => zoom_in());
-on("canvas_zoom_toggle", (event) => canvas_zoom_toggle());
+on("set_canvas_zoom", (event, level) => set_canvas_zoom(level));
 on("zoom_out", (event) => zoom_out());
 on("actual_size", (event) => actual_size());
 on("charlist_zoom_toggle", (event) => charlist_zoom_toggle());
@@ -946,7 +987,8 @@ module.exports = {
     zoom_in,
     zoom_out,
     actual_size,
-    canvas_zoom_toggle,
+    current_zoom_factor,
+    zoom_with_anchor,
     charlist_zoom_toggle,
     increase_reference_image_opacity,
     decrease_reference_image_opacity,
