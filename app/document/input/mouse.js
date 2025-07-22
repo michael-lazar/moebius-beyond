@@ -1,7 +1,7 @@
 const events = require("events");
 const doc = require("../doc");
 const buttons = { NONE: 0, LEFT: 1, RIGHT: 2 };
-const { toolbar, zoom_in, zoom_out, actual_size, decrease_reference_image_opacity, increase_reference_image_opacity} = require("../ui/ui");
+const { toolbar, zoom_in, zoom_out, actual_size, zoom_with_anchor, decrease_reference_image_opacity, increase_reference_image_opacity} = require("../ui/ui");
 const palette = require("../palette");
 const { on } = require("../../senders");
 
@@ -138,10 +138,16 @@ class MouseListener extends events.EventEmitter {
         if (event.ctrlKey) { // zooming
             event.preventDefault();
             if (this.listening_to_wheel) {
+                // Get mouse position relative to viewport for anchored zooming
+                const viewport = document.getElementById("viewport");
+                const viewportRect = viewport.getBoundingClientRect();
+                const mouseX = event.clientX - viewportRect.left;
+                const mouseY = event.clientY - viewportRect.top;
+                
                 if (event.deltaY > 0) {
-                    zoom_out();
+                    zoom_out(mouseX, mouseY);
                 } else if (event.deltaY < 0) {
-                    zoom_in();
+                    zoom_in(mouseX, mouseY);
                 }
                 this.listening_to_wheel = false;
                 setTimeout(() => {

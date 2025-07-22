@@ -33,7 +33,7 @@ class Cursor {
 
     set_canvas_zoom(level) {
         this.canvas_zoom = level;
-        this.new_render();
+        this.new_render(false); // Don't scroll during zoom operations
     }
 
     get_blocks_in_operation() {
@@ -207,8 +207,8 @@ class Cursor {
         this.move_to(this.x, this.y, false);
     }
 
-    new_render() {
-        this.move_to(Math.min(this.x, doc.columns - 1), Math.min(this.y, doc.rows - 1));
+    new_render(should_scroll = true) {
+        this.move_to(Math.min(this.x, doc.columns - 1), Math.min(this.y, doc.rows - 1), should_scroll);
         this.resize_to_font();
         if (this.mode == modes.OPERATION) this.redraw_operation_blocks();
     }

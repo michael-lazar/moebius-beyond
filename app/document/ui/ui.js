@@ -377,12 +377,41 @@ function set_canvas_zoom(factor) {
     send("update_menu_checkboxes", { actual_size: (canvas_zoom === 1.0) });
 }
 
-function zoom_in() {
-    set_canvas_zoom(Math.min(current_zoom_factor() + 0.2, 5.0));
+function zoom_in(mouseX, mouseY) {
+    zoom_with_anchor(Math.min(current_zoom_factor() + 0.2, 5.0), mouseX, mouseY);
 }
 
-function zoom_out() {
-    set_canvas_zoom(Math.max(current_zoom_factor() - 0.2, 0.2));
+function zoom_out(mouseX, mouseY) {
+    zoom_with_anchor(Math.max(current_zoom_factor() - 0.2, 0.2), mouseX, mouseY);
+}
+
+function zoom_with_anchor(newZoom, mouseX, mouseY) {
+    if (mouseX !== undefined && mouseY !== undefined) {
+        // Get viewport element and current scroll position
+        const viewport = document.getElementById("viewport");
+        const oldZoom = current_zoom_factor();
+        
+        // Calculate the content position under the mouse before zoom
+        const contentX = (viewport.scrollLeft + mouseX) / oldZoom;
+        const contentY = (viewport.scrollTop + mouseY) / oldZoom;
+        
+        // Apply the zoom (cursor.set_canvas_zoom now handles scroll prevention)
+        set_canvas_zoom(newZoom);
+        
+        // Use requestAnimationFrame to ensure scroll adjustment happens after DOM updates
+        requestAnimationFrame(() => {
+            // Calculate new scroll position to keep content under mouse
+            const newScrollLeft = contentX * newZoom - mouseX;
+            const newScrollTop = contentY * newZoom - mouseY;
+            
+            // Apply the new scroll position with bounds checking
+            viewport.scrollLeft = Math.max(0, newScrollLeft);
+            viewport.scrollTop = Math.max(0, newScrollTop);
+        });
+    } else {
+        // Fallback to regular zoom if no mouse position provided
+        set_canvas_zoom(newZoom);
+    }
 }
 
 function actual_size() {
@@ -954,6 +983,7 @@ module.exports = {
     zoom_out,
     actual_size,
     current_zoom_factor,
+    zoom_with_anchor,
     charlist_zoom_toggle,
     increase_reference_image_opacity,
     decrease_reference_image_opacity,
