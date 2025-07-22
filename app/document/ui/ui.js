@@ -343,44 +343,15 @@ function current_zoom_factor() {
     return canvas_zoom;
 }
 
-function set_zoom(factor) {
+function set_canvas_zoom(factor) {
     // Clamp factor to valid range (0.1 to 5.0) and round to nearest 0.1
-    const clampedFactor = Math.max(0.1, Math.min(5.0, Math.round(factor * 10) / 10));
-    
-    // Use canvas zoom instead of electron zoomFactor
-    set_canvas_zoom(clampedFactor);
-    
-    // Update zoom display element
-    const zoom_element = $("zoom");
-    if (zoom_element) {
-        zoom_element.textContent = `${Math.round(clampedFactor * 100)}%`;
-        zoom_element.classList.remove("fade");
-        document.body.removeChild(zoom_element);
-        document.body.appendChild(zoom_element);
-        zoom_element.classList.add("fade");
-    }
-    
-    send("update_menu_checkboxes", { actual_size: (clampedFactor === 1.0) });
-}
+    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 10) / 10));
 
-function zoom_in() {
-    set_zoom(Math.min(current_zoom_factor() + 0.1, 5.0));
-}
+    const cursor = require("../tools/cursor");
+    const mouse = require("../input/mouse");
 
-function zoom_out() {
-    set_zoom(Math.max(current_zoom_factor() - 0.1, 0.1));
-}
-
-function actual_size() {
-    set_zoom(1.0);
-}
-
-function set_canvas_zoom(level) {
-    // Clamp level to valid range (0.1 to 5.0) and round to nearest 0.1
-    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(level * 10) / 10));
-    
     const container = $("canvas_container");
-    
+
     // Set continuous zoom using CSS transform
     container.style.transform = `scale(${canvas_zoom})`;
     container.style.transformOrigin = 'top left';
@@ -390,10 +361,34 @@ function set_canvas_zoom(level) {
     const { update_frame } = require("./canvas");
     update_frame();
 
-    // Update menu to show current zoom level
-    const zoomPercent = Math.round(canvas_zoom * 100);
-    send("update_canvas_zoom_display", { level: canvas_zoom, percent: zoomPercent });
+    cursor.set_canvas_zoom(canvas_zoom);
+    mouse.set_canvas_zoom(canvas_zoom);
+
+    // Update zoom display element
+    const zoom_element = $("zoom");
+    if (zoom_element) {
+        zoom_element.textContent = `${Math.round(canvas_zoom * 100)}%`;
+        zoom_element.classList.remove("fade");
+        document.body.removeChild(zoom_element);
+        document.body.appendChild(zoom_element);
+        zoom_element.classList.add("fade");
+    }
+    
+    send("update_menu_checkboxes", { actual_size: (canvas_zoom === 1.0) });
 }
+
+function zoom_in() {
+    set_canvas_zoom(Math.min(current_zoom_factor() + 0.1, 5.0));
+}
+
+function zoom_out() {
+    set_canvas_zoom(Math.max(current_zoom_factor() - 0.1, 0.1));
+}
+
+function actual_size() {
+    set_canvas_zoom(1.0);
+}
+
 
 function charlist_zoom_toggle() {
     charlist_zoom_toggled = !charlist_zoom_toggled;
@@ -958,7 +953,6 @@ module.exports = {
     zoom_in,
     zoom_out,
     actual_size,
-    set_canvas_zoom,
     current_zoom_factor,
     charlist_zoom_toggle,
     increase_reference_image_opacity,
