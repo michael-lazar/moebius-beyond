@@ -343,7 +343,7 @@ function current_zoom_factor() {
     return canvas_zoom;
 }
 
-function set_canvas_zoom(factor) {
+function set_canvas_zoom_without_frame_update(factor) {
     // Clamp factor to valid range (0.1 to 5.0) and round to nearest 0.1
     canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 10) / 10));
 
@@ -356,10 +356,6 @@ function set_canvas_zoom(factor) {
     container.style.transform = `scale(${canvas_zoom})`;
     container.style.transformOrigin = 'top left';
     container.style.margin = '0';
-
-    // Call require() inside the function to avoid circular dependency
-    const { update_frame } = require("./canvas");
-    update_frame();
 
     cursor.set_canvas_zoom(canvas_zoom);
     mouse.set_canvas_zoom(canvas_zoom);
@@ -375,6 +371,14 @@ function set_canvas_zoom(factor) {
     }
     
     send("update_menu_checkboxes", { actual_size: (canvas_zoom === 1.0) });
+}
+
+function set_canvas_zoom(factor) {
+    set_canvas_zoom_without_frame_update(factor);
+    
+    // Call require() inside the function to avoid circular dependency
+    const { update_frame } = require("./canvas");
+    update_frame();
 }
 
 function zoom_in(mouseX, mouseY) {
@@ -395,8 +399,8 @@ function zoom_with_anchor(newZoom, mouseX, mouseY) {
         const contentX = (viewport.scrollLeft + mouseX) / oldZoom;
         const contentY = (viewport.scrollTop + mouseY) / oldZoom;
         
-        // Apply the zoom (cursor.set_canvas_zoom now handles scroll prevention)
-        set_canvas_zoom(newZoom);
+        // Apply the zoom without updating preview frame yet
+        set_canvas_zoom_without_frame_update(newZoom);
         
         // Use requestAnimationFrame to ensure scroll adjustment happens after DOM updates
         requestAnimationFrame(() => {
@@ -407,6 +411,10 @@ function zoom_with_anchor(newZoom, mouseX, mouseY) {
             // Apply the new scroll position with bounds checking
             viewport.scrollLeft = Math.max(0, newScrollLeft);
             viewport.scrollTop = Math.max(0, newScrollTop);
+            
+            // Update preview frame after scroll position is final
+            const { update_frame } = require("./canvas");
+            update_frame();
         });
     } else {
         // Fallback to regular zoom if no mouse position provided
