@@ -152,7 +152,7 @@ class MouseListener extends events.EventEmitter {
                 this.listening_to_wheel = false;
                 setTimeout(() => {
                     this.listening_to_wheel = true;
-                }, 100);
+                }, 16); // Reduced from 100ms to ~60fps for smoother zooming
             }
         } else if (event.shiftKey) { // reference image opacity
             if (this.listening_to_wheel) {
@@ -164,7 +164,7 @@ class MouseListener extends events.EventEmitter {
                 this.listening_to_wheel = false;
                 setTimeout(() => {
                     this.listening_to_wheel = true;
-                }, 100);
+                }, 16); // Reduced from 100ms to ~60fps for smoother scrolling
             }
         } else if (event.altKey) { // grid opacity
             if (this.listening_to_wheel) {
@@ -180,7 +180,7 @@ class MouseListener extends events.EventEmitter {
                 this.listening_to_wheel = false;
                 setTimeout(() => {
                     this.listening_to_wheel = true;
-                }, 100);
+                }, 16); // Reduced from 100ms to ~60fps for smoother scrolling
             }
         }
     }

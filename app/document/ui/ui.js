@@ -402,20 +402,17 @@ function zoom_with_anchor(newZoom, mouseX, mouseY) {
         // Apply the zoom without updating preview frame yet
         set_canvas_zoom_without_frame_update(newZoom);
         
-        // Use requestAnimationFrame to ensure scroll adjustment happens after DOM updates
-        requestAnimationFrame(() => {
-            // Calculate new scroll position to keep content under mouse
-            const newScrollLeft = contentX * newZoom - mouseX;
-            const newScrollTop = contentY * newZoom - mouseY;
-            
-            // Apply the new scroll position with bounds checking
-            viewport.scrollLeft = Math.max(0, newScrollLeft);
-            viewport.scrollTop = Math.max(0, newScrollTop);
-            
-            // Update preview frame after scroll position is final
-            const { update_frame } = require("./canvas");
-            update_frame();
-        });
+        // Calculate new scroll position to keep content under mouse
+        const newScrollLeft = contentX * newZoom - mouseX;
+        const newScrollTop = contentY * newZoom - mouseY;
+        
+        // Apply the new scroll position with bounds checking
+        viewport.scrollLeft = Math.max(0, newScrollLeft);
+        viewport.scrollTop = Math.max(0, newScrollTop);
+        
+        // Update preview frame immediately
+        const { update_frame } = require("./canvas");
+        update_frame();
     } else {
         // Fallback to regular zoom if no mouse position provided
         set_canvas_zoom(newZoom);
