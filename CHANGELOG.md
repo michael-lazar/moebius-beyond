@@ -7,6 +7,15 @@
 - Added a hotkey SHIFT+ALT+Left Click to grab the character under the
   cursor and load it into the custom block.
 
+### Changed
+
+- Overhauled the zoom system to only target the canvas and not the
+  UI toolbars and other elements. Significantly improved mousewheel 
+  zoom performance and smoothness.
+- Added a new "Zoom" submenu with preset zoom levels (25%, 50%, 75%, 
+  100%, 150%, 200%, 300%, 400%, 500%) replacing the old binary 200% 
+  toggle.
+
 ### Fixed
 
 - Fixed window scrolling when moving the cursor at 200% zoom.
