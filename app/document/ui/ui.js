@@ -378,11 +378,11 @@ function set_canvas_zoom(factor) {
 }
 
 function zoom_in() {
-    set_canvas_zoom(Math.min(current_zoom_factor() + 0.1, 5.0));
+    set_canvas_zoom(Math.min(current_zoom_factor() + 0.2, 5.0));
 }
 
 function zoom_out() {
-    set_canvas_zoom(Math.max(current_zoom_factor() - 0.1, 0.1));
+    set_canvas_zoom(Math.max(current_zoom_factor() - 0.2, 0.2));
 }
 
 function actual_size() {
