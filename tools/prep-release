@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# prep-release - Prepare release directory with built distribution files
+# This script creates a release/ directory and copies the built distribution files
+
+echo "Preparing release directory..."
+
+# Create release directory, clear it if it exists
+if [ -d "release" ]; then
+    echo "Clearing existing release directory..."
+    rm -rf release/*
+else
+    echo "Creating release directory..."
+    mkdir release
+fi
+
+# Files to copy from dist/
+FILES=(
+    "MoebiusXBIN.deb"
+    "MoebiusXBIN.dmg"
+    "MoebiusXBIN.exe"
+    "MoebiusXBIN.rpm"
+    "MoebiusXBIN.Setup.exe"
+)
+
+echo "Copying distribution files..."
+
+# Copy each file if it exists
+for file in "${FILES[@]}"; do
+    if [ -f "dist/$file" ]; then
+        echo "  Copying $file"
+        cp "dist/$file" "release/"
+    else
+        echo "  Warning: $file not found in dist/"
+    fi
+done
+
+echo "Release preparation complete!"
+echo "Files in release directory:"
+ls -la release/

@@ -9,7 +9,7 @@
   "main": "app/moebius.js",
   "scripts": {
     "start": "electron --no-sandbox --inspect=5858 .",
-    "build": "node_modules/.bin/electron-builder -mwl",
+    "build": "npm run build-mac && npm run build-win && npm run build-linux",
     "build-mac": "node_modules/.bin/electron-builder -m --x64",
     "build-win": "node_modules/.bin/electron-builder -w",
     "build-linux": "node_modules/.bin/electron-builder -l"
