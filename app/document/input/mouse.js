@@ -61,7 +61,13 @@ class MouseListener extends events.EventEmitter {
     mouse_down(event) {
         if (!this.font || this.started || this.drawing) return;
         if (event.button == 1) {
-            actual_size();
+            this.panning = true;
+            this.pan_start_x = event.clientX;
+            this.pan_start_y = event.clientY;
+            const viewport = document.getElementById("viewport");
+            this.pan_start_scroll_left = viewport.scrollLeft;
+            this.pan_start_scroll_top = viewport.scrollTop;
+            viewport.style.cursor = 'grabbing';
             return;
         }
         const { x, y, half_y } = this.get_xy(event);
@@ -98,6 +104,17 @@ class MouseListener extends events.EventEmitter {
 
     mouse_move(event) {
         if (!this.font) return;
+        
+        // Handle panning with middle mouse button
+        if (this.panning) {
+            const viewport = document.getElementById("viewport");
+            const deltaX = event.clientX - this.pan_start_x;
+            const deltaY = event.clientY - this.pan_start_y;
+            viewport.scrollLeft = this.pan_start_scroll_left - deltaX;
+            viewport.scrollTop = this.pan_start_scroll_top - deltaY;
+            return;
+        }
+        
         const { x, y, half_y } = this.get_xy(event);
         const is_legal = (x >= 0 && x < doc.columns && y >= 0 && y < doc.rows);
         if (this.x == x && this.y == y && this.half_y == half_y) return;
@@ -115,6 +132,15 @@ class MouseListener extends events.EventEmitter {
 
     mouse_up(event) {
         if (!this.font) return;
+        
+        // Handle end of panning with middle mouse button
+        if (this.panning) {
+            this.panning = false;
+            const viewport = document.getElementById("viewport");
+            viewport.style.cursor = '';
+            return;
+        }
+        
         const { x, y, half_y } = this.get_xy(event);
         if (this.drawing || this.started) {
             this.emit("up", x, y, half_y, this.button, this.start.x == x && this.start.y == y && this.start.half_y == half_y, event.shiftKey);
@@ -123,6 +149,11 @@ class MouseListener extends events.EventEmitter {
     }
 
     escape() {
+        if (this.panning) {
+            this.panning = false;
+            const viewport = document.getElementById("viewport");
+            viewport.style.cursor = '';
+        }
         if (this.drawing || this.started) {
             this.end();
             this.emit("out");
@@ -194,6 +225,7 @@ class MouseListener extends events.EventEmitter {
         this.drawing = false;
         this.listening_to_wheel = true;
         this.canvas_zoom = 1.0;
+        this.panning = false;
         on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {

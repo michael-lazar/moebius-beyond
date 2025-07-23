@@ -15,6 +15,8 @@
 - Added a new "Zoom" submenu with preset zoom levels (25%, 50%, 75%, 
   100%, 150%, 200%, 300%, 400%, 500%) replacing the old binary 200% 
   toggle.
+- Middle mouse button click now pans the canvas instead of resetting 
+  zoom to 100%.
 
 ### Fixed
 
