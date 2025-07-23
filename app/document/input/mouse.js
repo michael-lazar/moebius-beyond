@@ -13,12 +13,17 @@ const zoomConfig = {
     maxZoom: 5.0,
     
     // Zoom delta calculation
-    minStep: 0.01,      // Minimum zoom change per wheel event
-    maxStep: 0.2,       // Maximum zoom change per wheel event
-    sensitivity: 0.002, // How much each pixel of delta affects zoom
+    minStep: 0.02,      // Minimum zoom change per wheel event (2%)
+    maxStep: 0.2,       // Maximum zoom change per wheel event (20%)
+    sensitivity: 0.01,  // How much each pixel of delta affects zoom
     
     // Throttling
     throttleMs: 16      // Throttle wheel events to ~60fps
+};
+
+// Panning configuration
+const panConfig = {
+    threshold: 5        // Minimum pixels moved before panning activates
 };
 
 class MouseListener extends events.EventEmitter {
@@ -83,8 +88,9 @@ class MouseListener extends events.EventEmitter {
             // Check for double-click
             if ((now - this.middle_click_time) < double_click_threshold) {
                 // Double-click detected - cancel panning and reset zoom
-                if (this.panning) {
+                if (this.panning || this.pan_potential) {
                     this.panning = false;
+                    this.pan_potential = false;
                     const viewport = document.getElementById("viewport");
                     viewport.style.cursor = '';
                 }
@@ -93,15 +99,15 @@ class MouseListener extends events.EventEmitter {
                 return;
             }
             
-            // Single click - start panning immediately
+            // Single click - prepare for potential panning (but don't activate yet)
             this.middle_click_time = now;
-            this.panning = true;
+            this.pan_potential = true;
+            this.panning = false;
             this.pan_start_x = event.clientX;
             this.pan_start_y = event.clientY;
             const viewport = document.getElementById("viewport");
             this.pan_start_scroll_left = viewport.scrollLeft;
             this.pan_start_scroll_top = viewport.scrollTop;
-            viewport.style.cursor = 'grabbing';
             return;
         }
         const { x, y, half_y } = this.get_xy(event);
@@ -149,6 +155,25 @@ class MouseListener extends events.EventEmitter {
             return;
         }
         
+        // Check if we should activate panning (threshold exceeded)
+        if (this.pan_potential) {
+            const deltaX = event.clientX - this.pan_start_x;
+            const deltaY = event.clientY - this.pan_start_y;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            if (distance > panConfig.threshold) {
+                // Activate panning
+                this.pan_potential = false;
+                this.panning = true;
+                const viewport = document.getElementById("viewport");
+                viewport.style.cursor = 'grabbing';
+                // Immediately apply the current movement
+                viewport.scrollLeft = this.pan_start_scroll_left - deltaX;
+                viewport.scrollTop = this.pan_start_scroll_top - deltaY;
+                return;
+            }
+        }
+        
         const { x, y, half_y } = this.get_xy(event);
         const is_legal = (x >= 0 && x < doc.columns && y >= 0 && y < doc.rows);
         if (this.x == x && this.y == y && this.half_y == half_y) return;
@@ -168,8 +193,9 @@ class MouseListener extends events.EventEmitter {
         if (!this.font) return;
         
         // Handle end of panning with middle mouse button
-        if (this.panning) {
+        if (this.panning || this.pan_potential) {
             this.panning = false;
+            this.pan_potential = false;
             const viewport = document.getElementById("viewport");
             viewport.style.cursor = '';
             return;
@@ -183,8 +209,9 @@ class MouseListener extends events.EventEmitter {
     }
 
     escape() {
-        if (this.panning) {
+        if (this.panning || this.pan_potential) {
             this.panning = false;
+            this.pan_potential = false;
             const viewport = document.getElementById("viewport");
             viewport.style.cursor = '';
         }
@@ -313,6 +340,7 @@ class MouseListener extends events.EventEmitter {
         this.listening_to_wheel = true;
         this.canvas_zoom = 1.0;
         this.panning = false;
+        this.pan_potential = false;
         this.middle_click_time = 0;
         on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
