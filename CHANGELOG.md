@@ -10,11 +10,10 @@
 ### Changed
 
 - Overhauled the zoom system to only target the canvas and not the
-  UI toolbars and other elements. Significantly improved mousewheel 
-  zoom performance and smoothness.
-- Added a new "Zoom" submenu with preset zoom levels (25%, 50%, 75%, 
-  100%, 150%, 200%, 300%, 400%, 500%) replacing the old binary 200% 
-  toggle.
+  UI toolbars and other elements.
+- Significantly improved mousewheel zoom responsiveness.
+- Added a new "Zoom" submenu with preset zoom levels replacing the
+  old binary 200% toggle.
 
 ### Fixed
 
