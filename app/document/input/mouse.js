@@ -15,7 +15,7 @@ const zoomConfig = {
     // Zoom delta calculation
     minStep: 0.02,      // Minimum zoom change per wheel event (2%)
     maxStep: 0.2,       // Maximum zoom change per wheel event (20%)
-    sensitivity: 0.01,  // How much each pixel of delta affects zoom
+    sensitivity: 0.005, // How much each pixel of delta affects zoom
     
     // Panning
     panThreshold: 5,    // Minimum pixels moved before middle-mouse panning activates
@@ -236,14 +236,20 @@ class MouseListener extends events.EventEmitter {
     
     
     // Calculate proportional zoom delta from normalized wheel input
-    calculateZoomDelta(pixelDelta) {
+    calculateZoomDelta(pixelDelta, currentZoom) {
         const absDelta = Math.abs(pixelDelta);
         
-        // Proportional scaling: more delta = more zoom, but clamped
-        return Math.sign(pixelDelta) * Math.min(
+        // Calculate base zoom change
+        const baseChange = Math.min(
             Math.max(absDelta * zoomConfig.sensitivity, zoomConfig.minStep),
             zoomConfig.maxStep
         );
+        
+        // Apply proportional scaling based on current zoom level
+        // Higher zoom levels get larger absolute changes to maintain consistent relative feel
+        const proportionalChange = baseChange * currentZoom;
+        
+        return Math.sign(pixelDelta) * proportionalChange;
     }
     
     handleZoom(event) {
@@ -252,8 +258,8 @@ class MouseListener extends events.EventEmitter {
         if (!this.listening_to_wheel) return;
         
         const normalized = this.normalizeWheel(event);
-        const zoomDelta = this.calculateZoomDelta(normalized.pixelY);
         const currentZoom = current_zoom_factor();
+        const zoomDelta = this.calculateZoomDelta(normalized.pixelY, currentZoom);
         
         // Calculate new zoom level with bounds
         const newZoom = Math.max(zoomConfig.minZoom, 
