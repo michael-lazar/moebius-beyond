@@ -5,8 +5,8 @@ const { toolbar, actual_size, zoom_with_anchor, current_zoom_factor, decrease_re
 const palette = require("../palette");
 const { on } = require("../../senders");
 
-// Zoom configuration constants for wheel/pinch handling
-// Adjust these values to fine-tune zoom behavior across different devices
+// Mouse input configuration constants
+// Adjust these values to fine-tune zoom and pan behavior across different devices
 const zoomConfig = {
     // Zoom level bounds
     minZoom: 0.2,
@@ -17,13 +17,11 @@ const zoomConfig = {
     maxStep: 0.2,       // Maximum zoom change per wheel event (20%)
     sensitivity: 0.01,  // How much each pixel of delta affects zoom
     
+    // Panning
+    panThreshold: 5,    // Minimum pixels moved before middle-mouse panning activates
+    
     // Throttling
     throttleMs: 16      // Throttle wheel events to ~60fps
-};
-
-// Panning configuration
-const panConfig = {
-    threshold: 5        // Minimum pixels moved before panning activates
 };
 
 class MouseListener extends events.EventEmitter {
@@ -161,7 +159,7 @@ class MouseListener extends events.EventEmitter {
             const deltaY = event.clientY - this.pan_start_y;
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             
-            if (distance > panConfig.threshold) {
+            if (distance > zoomConfig.panThreshold) {
                 // Activate panning
                 this.pan_potential = false;
                 this.panning = true;
@@ -320,6 +318,18 @@ class MouseListener extends events.EventEmitter {
         }, zoomConfig.throttleMs);
     }
     
+    handleTrackpadPan(event) {
+        const viewport = document.getElementById("viewport");
+        const normalized = this.normalizeWheel(event);
+        
+        // Apply trackpad panning directly to viewport scroll
+        // Note: We add the delta (not subtract) because trackpad scroll is inverted
+        viewport.scrollLeft += normalized.pixelX;
+        viewport.scrollTop += normalized.pixelY;
+        
+        event.preventDefault();
+    }
+    
     wheel(event) {
         if (event.ctrlKey) {
             this.handleZoom(event);
@@ -327,6 +337,9 @@ class MouseListener extends events.EventEmitter {
             this.handleRefImageOpacity(event);
         } else if (event.altKey) {
             this.handleGridOpacity(event);
+        } else {
+            // Handle trackpad two-finger panning
+            this.handleTrackpadPan(event);
         }
     }
 
