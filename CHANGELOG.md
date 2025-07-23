@@ -9,17 +9,17 @@
 
 ### Changed
 
-- Overhauled the zoom system to only target the canvas and not the
-  UI toolbars and other elements.
-- Significantly improved mousewheel zoom responsiveness.
-- Added a new "Zoom" submenu with preset zoom levels replacing the
-  old binary 200% toggle.
-- Middle mouse button click now pans the canvas instead of resetting 
-  zoom to 100%. Double-click middle mouse button to reset zoom to 100%.
+- Overhauled the zooming system for the main canvas.
+  - The canvas now zooms independently from other elements in the UI.
+  - Mousewheel zooming is smoother and more responsive.
+  - Mousewheel zooming is anchored to the mouse pointer position.
+  - Added more zoom menu items with preset levels from 10% to 500%.
+  - Added middle mouse button click-and-drag to pan the canvas.
+  - Added middle mouse button double-click to reset zoom to 100%.
+  - Fixed window scrolling when moving the cursor while zoomed in.
 
 ### Fixed
 
-- Fixed window scrolling when moving the cursor at 200% zoom.
 - Fixed X-flipping for characters 184 (╕) and 213 (╒).
 - Fixed "Save as..." resetting the editor state and clearing the
   undo/redo history for the current document.
