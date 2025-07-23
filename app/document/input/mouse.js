@@ -61,6 +61,24 @@ class MouseListener extends events.EventEmitter {
     mouse_down(event) {
         if (!this.font || this.started || this.drawing) return;
         if (event.button == 1) {
+            const now = Date.now();
+            const double_click_threshold = 400; // milliseconds
+            
+            // Check for double-click
+            if ((now - this.middle_click_time) < double_click_threshold) {
+                // Double-click detected - cancel panning and reset zoom
+                if (this.panning) {
+                    this.panning = false;
+                    const viewport = document.getElementById("viewport");
+                    viewport.style.cursor = '';
+                }
+                actual_size();
+                this.middle_click_time = 0; // Reset to prevent triple-click issues
+                return;
+            }
+            
+            // Single click - start panning immediately
+            this.middle_click_time = now;
             this.panning = true;
             this.pan_start_x = event.clientX;
             this.pan_start_y = event.clientY;
@@ -226,6 +244,7 @@ class MouseListener extends events.EventEmitter {
         this.listening_to_wheel = true;
         this.canvas_zoom = 1.0;
         this.panning = false;
+        this.middle_click_time = 0;
         on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {
