@@ -1,10 +1,10 @@
 {
   "name": "moebius-xbin-ultimate",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Modern ANSI Art Editor",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blocktronics/moebius.git"
+    "url": "https://github.com/michael-lazar/moebius-xbin-ultimate.git"
   },
   "main": "app/moebius.js",
   "scripts": {
@@ -15,6 +15,9 @@
     "build-linux": "node_modules/.bin/electron-builder -l"
   },
   "author": "Andy Herbert <andy.herbert@gmail.com>",
+  "maintainers": [
+    "Michael Lazar <lazar.michael22@gmail.com>"
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
     "electron": "^12.0.2",

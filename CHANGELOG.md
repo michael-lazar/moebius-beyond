@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.2.0 (2025-07-22)
+
 ### Added
 
 - Added a hotkey SHIFT+ALT+Left Click to grab the character under the
@@ -24,7 +26,7 @@
 - Fixed "Save as..." resetting the editor state and clearing the
   undo/redo history for the current document.
 
-## v3.1.0 (2025-04-05)
+## v3.2.0 (2025-04-05)
 
 ### Added
 
