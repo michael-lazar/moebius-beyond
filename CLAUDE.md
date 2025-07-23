@@ -8,3 +8,4 @@
 - Avoid *hacky* patches that mock out functions or have other unintuitive side effects.
 - When changes involve ICP messages, carefully consider the interaction between the main process and the renderer process.
 - Add comments when it makes sense to do so, but do not comment trivial behavior.
+- PRs should always be made against origin/main and never the upstream repo.
