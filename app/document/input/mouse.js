@@ -17,6 +17,9 @@ const zoomConfig = {
     maxStep: 0.2,       // Maximum zoom change per wheel event (20%)
     sensitivity: 0.005, // How much each pixel of delta affects zoom
     
+    // Zoom snapping - snap to nearest 10% increment after zooming stops
+    snapDelayMs: 300,       // Delay before snapping after zoom stops
+    
     // Panning
     panThreshold: 5,    // Minimum pixels moved before middle-mouse panning activates
     
@@ -252,6 +255,31 @@ class MouseListener extends events.EventEmitter {
         return Math.sign(pixelDelta) * proportionalChange;
     }
     
+    // Snap zoom level to nearest 10% increment
+    snapZoomLevel(zoomLevel) {
+        // Round to nearest 0.1 (10%) within bounds
+        const snapped = Math.round(zoomLevel * 10) / 10;
+        return Math.max(zoomConfig.minZoom, Math.min(zoomConfig.maxZoom, snapped));
+    }
+    
+    // Schedule zoom snap after interaction stops
+    scheduleZoomSnap(mouseX, mouseY) {
+        // Clear any existing snap timer
+        if (this.zoomSnapTimer) {
+            clearTimeout(this.zoomSnapTimer);
+        }
+        
+        this.zoomSnapTimer = setTimeout(() => {
+            const currentZoom = current_zoom_factor();
+            const snappedZoom = this.snapZoomLevel(currentZoom);
+            
+            if (snappedZoom !== currentZoom) {
+                zoom_with_anchor(snappedZoom, mouseX, mouseY);
+            }
+            this.zoomSnapTimer = null;
+        }, zoomConfig.snapDelayMs);
+    }
+    
     handleZoom(event) {
         event.preventDefault();
         
@@ -261,7 +289,7 @@ class MouseListener extends events.EventEmitter {
         const currentZoom = current_zoom_factor();
         const zoomDelta = this.calculateZoomDelta(normalized.pixelY, currentZoom);
         
-        // Calculate new zoom level with bounds
+        // Calculate new zoom level with bounds (no immediate snapping)
         const newZoom = Math.max(zoomConfig.minZoom, 
             Math.min(zoomConfig.maxZoom, currentZoom - zoomDelta));
         
@@ -272,7 +300,11 @@ class MouseListener extends events.EventEmitter {
             const mouseX = event.clientX - viewportRect.left;
             const mouseY = event.clientY - viewportRect.top;
             
+            // Apply smooth zoom immediately
             zoom_with_anchor(newZoom, mouseX, mouseY);
+            
+            // Schedule snap to 10% increment after interaction stops
+            this.scheduleZoomSnap(mouseX, mouseY);
         }
         
         this.listening_to_wheel = false;
@@ -361,6 +393,7 @@ class MouseListener extends events.EventEmitter {
         this.panning = false;
         this.pan_potential = false;
         this.middle_click_time = 0;
+        this.zoomSnapTimer = null;
         on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {
