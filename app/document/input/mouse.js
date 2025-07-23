@@ -1,9 +1,25 @@
 const events = require("events");
 const doc = require("../doc");
 const buttons = { NONE: 0, LEFT: 1, RIGHT: 2 };
-const { toolbar, zoom_in, zoom_out, actual_size, zoom_with_anchor, decrease_reference_image_opacity, increase_reference_image_opacity} = require("../ui/ui");
+const { toolbar, actual_size, zoom_with_anchor, current_zoom_factor, decrease_reference_image_opacity, increase_reference_image_opacity} = require("../ui/ui");
 const palette = require("../palette");
 const { on } = require("../../senders");
+
+// Zoom configuration constants for wheel/pinch handling
+// Adjust these values to fine-tune zoom behavior across different devices
+const zoomConfig = {
+    // Zoom level bounds
+    minZoom: 0.2,
+    maxZoom: 5.0,
+    
+    // Zoom delta calculation
+    minStep: 0.01,      // Minimum zoom change per wheel event
+    maxStep: 0.2,       // Maximum zoom change per wheel event
+    sensitivity: 0.002, // How much each pixel of delta affects zoom
+    
+    // Throttling
+    throttleMs: 16      // Throttle wheel events to ~60fps
+};
 
 class MouseListener extends events.EventEmitter {
     set_dimensions(columns, rows, font) {
@@ -183,54 +199,107 @@ class MouseListener extends events.EventEmitter {
         this.escape();
     }
 
+    // Get wheel deltas (already in pixels in Electron/Chromium)
+    normalizeWheel(event) {
+        // Electron/Chromium always uses DOM_DELTA_PIXEL mode (deltaMode = 0)
+        // so deltaX and deltaY are already in pixel units
+        return { 
+            pixelX: event.deltaX || 0, 
+            pixelY: event.deltaY || 0 
+        };
+    }
+    
+    
+    // Calculate proportional zoom delta from normalized wheel input
+    calculateZoomDelta(pixelDelta) {
+        const absDelta = Math.abs(pixelDelta);
+        
+        // Proportional scaling: more delta = more zoom, but clamped
+        return Math.sign(pixelDelta) * Math.min(
+            Math.max(absDelta * zoomConfig.sensitivity, zoomConfig.minStep),
+            zoomConfig.maxStep
+        );
+    }
+    
+    handleZoom(event) {
+        event.preventDefault();
+        
+        if (!this.listening_to_wheel) return;
+        
+        const normalized = this.normalizeWheel(event);
+        const zoomDelta = this.calculateZoomDelta(normalized.pixelY);
+        const currentZoom = current_zoom_factor();
+        
+        // Calculate new zoom level with bounds
+        const newZoom = Math.max(zoomConfig.minZoom, 
+            Math.min(zoomConfig.maxZoom, currentZoom - zoomDelta));
+        
+        if (newZoom !== currentZoom) {
+            // Get mouse position relative to viewport for anchored zooming
+            const viewport = document.getElementById("viewport");
+            const viewportRect = viewport.getBoundingClientRect();
+            const mouseX = event.clientX - viewportRect.left;
+            const mouseY = event.clientY - viewportRect.top;
+            
+            zoom_with_anchor(newZoom, mouseX, mouseY);
+        }
+        
+        this.listening_to_wheel = false;
+        setTimeout(() => {
+            this.listening_to_wheel = true;
+        }, zoomConfig.throttleMs);
+    }
+    
+    handleRefImageOpacity(event) {
+        if (!this.listening_to_wheel) return;
+        
+        const normalized = this.normalizeWheel(event);
+        // Use both X and Y deltas for opacity
+        const delta = normalized.pixelX + normalized.pixelY;
+        
+        if (delta > 0) {
+            decrease_reference_image_opacity();
+        } else if (delta < 0) {
+            increase_reference_image_opacity();
+        }
+        
+        this.listening_to_wheel = false;
+        setTimeout(() => {
+            this.listening_to_wheel = true;
+        }, zoomConfig.throttleMs);
+    }
+    
+    handleGridOpacity(event) {
+        if (!this.listening_to_wheel) return;
+        
+        const gridElement = document.getElementById("drawing_grid");
+        const currentOpacity = parseFloat(gridElement.style.opacity) || 1.0;
+        const normalized = this.normalizeWheel(event);
+        
+        // Scale opacity change based on normalized delta
+        const opacityStep = 0.2;
+        const scaledStep = Math.sign(normalized.pixelY) * opacityStep;
+        
+        let newOpacity = currentOpacity - scaledStep;
+        newOpacity = Math.max(0, Math.min(1.0, newOpacity));
+        
+        if (newOpacity > 0) {
+            gridElement.style.opacity = newOpacity.toString();
+        }
+        
+        this.listening_to_wheel = false;
+        setTimeout(() => {
+            this.listening_to_wheel = true;
+        }, zoomConfig.throttleMs);
+    }
+    
     wheel(event) {
-        if (event.ctrlKey) { // zooming
-            event.preventDefault();
-            if (this.listening_to_wheel) {
-                // Get mouse position relative to viewport for anchored zooming
-                const viewport = document.getElementById("viewport");
-                const viewportRect = viewport.getBoundingClientRect();
-                const mouseX = event.clientX - viewportRect.left;
-                const mouseY = event.clientY - viewportRect.top;
-                
-                if (event.deltaY > 0) {
-                    zoom_out(mouseX, mouseY);
-                } else if (event.deltaY < 0) {
-                    zoom_in(mouseX, mouseY);
-                }
-                this.listening_to_wheel = false;
-                setTimeout(() => {
-                    this.listening_to_wheel = true;
-                }, 16); // Reduced from 100ms to ~60fps for smoother zooming
-            }
-        } else if (event.shiftKey) { // reference image opacity
-            if (this.listening_to_wheel) {
-                if (event.deltaX > 0 || event.deltaY > 0) {
-                    decrease_reference_image_opacity();
-                } else if (event.deltaX < 0 || event.deltaY < 0) {
-                    increase_reference_image_opacity();
-                }
-                this.listening_to_wheel = false;
-                setTimeout(() => {
-                    this.listening_to_wheel = true;
-                }, 16); // Reduced from 100ms to ~60fps for smoother scrolling
-            }
-        } else if (event.altKey) { // grid opacity
-            if (this.listening_to_wheel) {
-                let e = document.getElementById("drawing_grid");
-                let o = parseFloat(e.style.opacity);
-                let a = 0.2;
-                if (event.deltaY > 0) {
-                    if (o >= a) o = o - a;
-                } else if (event.deltaY < 0) {
-                    if (o <= (1.0 - a)) o = o + a;
-                }
-                if (o > 0) e.style.opacity = parseFloat(o);
-                this.listening_to_wheel = false;
-                setTimeout(() => {
-                    this.listening_to_wheel = true;
-                }, 16); // Reduced from 100ms to ~60fps for smoother scrolling
-            }
+        if (event.ctrlKey) {
+            this.handleZoom(event);
+        } else if (event.shiftKey) {
+            this.handleRefImageOpacity(event);
+        } else if (event.altKey) {
+            this.handleGridOpacity(event);
         }
     }
 
