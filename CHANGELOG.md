@@ -14,6 +14,8 @@
 - Significantly improved mousewheel zoom responsiveness.
 - Added a new "Zoom" submenu with preset zoom levels replacing the
   old binary 200% toggle.
+- Middle mouse button click now pans the canvas instead of resetting 
+  zoom to 100%. Double-click middle mouse button to reset zoom to 100%.
 
 ### Fixed
 
