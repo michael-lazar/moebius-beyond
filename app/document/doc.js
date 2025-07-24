@@ -3,22 +3,25 @@ const { on, send, send_sync, open_box} = require("../senders");
 const events = require("events");
 const path = require("path");
 let doc, render;
-let nick, group;
 const SIXTEEN_COLORS_API_KEY = "mirebitqv2ualog65ifv2p1a5076soh9";
 let retention = "8035200";
-const undo_types = { INDIVIDUAL: 0, RESIZE: 1, INSERT_ROW: 2, DELETE_ROW: 3, INSERT_COLUMN: 4, DELETE_COLUMN: 5, SCROLL_CANVAS_UP: 6, SCROLL_CANVAS_DOWN: 7, SCROLL_CANVAS_LEFT: 8, SCROLL_CANVAS_RIGHT: 9 };
 
-on("nick", (event, value) => nick = value);
-on("group", (event, value) => group = value);
+const undo_types = {
+    INDIVIDUAL: 0,
+    RESIZE: 1,
+    INSERT_ROW: 2,
+    DELETE_ROW: 3,
+    INSERT_COLUMN: 4,
+    DELETE_COLUMN: 5,
+    SCROLL_CANVAS_UP: 6,
+    SCROLL_CANVAS_DOWN: 7,
+    SCROLL_CANVAS_LEFT: 8,
+    SCROLL_CANVAS_RIGHT: 9
+};
+
 on("retention", (event, value) => retention = value);
 
 class UndoHistory extends events.EventEmitter {
-    has_latest_undo_got_this_block(x, y) {
-        for (const undo of this.undo_buffer[undo_buffer.length - 1]) {
-            if (undo.x == x && undo.y == y) return true;
-        }
-        return false;
-    }
 
     reset_redos() {
         this.redo_buffer = [];
@@ -310,7 +313,6 @@ class TextModeDoc extends events.EventEmitter {
     get comments() { return doc.comments; }
     get palette() { return doc.palette; }
     get font_name() { return doc.font_name; }
-    get lospec_palette_name() { return doc.lospec_palette_name; }
     get font_bytes() { return doc.font_bytes; }
     get ice_colors() { return doc.ice_colors; }
     get use_9px_font() { return doc.use_9px_font; }
