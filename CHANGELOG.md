@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+# v3.2.1 (2025-07-23)
+
+### Fixed
+
+- Fixed the new zoom system to better support trackpads.
+  - Two-finger pinch on trackpad will zoom the canvas.
+  - Two-finger touch on trackpad will pan the canvas.
+  - Added magnetic snapping at 10% zoom intervals.
+  - Added sensitivity threshold to prevent accidental panning.
+  - Added a velocity curve to the zooming to make it more
+    consistent at different scales.
+
 ## v3.2.0 (2025-07-22)
 
 ### Added

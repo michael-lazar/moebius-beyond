@@ -344,8 +344,8 @@ function current_zoom_factor() {
 }
 
 function set_canvas_zoom_without_frame_update(factor) {
-    // Clamp factor to valid range (0.1 to 5.0) and round to nearest 0.1
-    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 10) / 10));
+    // Clamp factor to valid range (0.1 to 5.0) with finer precision for smooth wheel zoom
+    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 100) / 100));
 
     const cursor = require("../tools/cursor");
     const mouse = require("../input/mouse");
