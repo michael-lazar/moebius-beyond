@@ -15,7 +15,7 @@ const zoomConfig = {
     // Zoom delta calculation
     minStep: 0.02,      // Minimum zoom change per wheel event (2%)
     maxStep: 0.2,       // Maximum zoom change per wheel event (20%)
-    sensitivity: 0.005, // How much each pixel of delta affects zoom
+    sensitivity: 0.01,  // How much each pixel of delta affects zoom
     
     // Zoom snapping - snap to nearest 10% increment after zooming stops
     snapDelayMs: 300,       // Delay before snapping after zoom stops
