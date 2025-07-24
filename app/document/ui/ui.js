@@ -26,11 +26,11 @@ function open_reference_image({ file } = {}) {
     if (!file) {
         const files = open_box({ filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }] });
         if (files === undefined || files.length === 0) return;
-        file = files[0]
+        file = files[0];
     }
 
     $("reference_image").src = electron.nativeImage.createFromPath(file).toDataURL();
-    $("reference_image").classList.remove("closed")
+    $("reference_image").classList.remove("closed");
     set_var("reference-control-opacity", 1.0);
 
     reset_reference_image();
@@ -41,7 +41,7 @@ function open_reference_image({ file } = {}) {
 
 function clear_reference_image() {
     $("reference_image").src = "";
-    $("reference_image").classList.add("closed")
+    $("reference_image").classList.add("closed");
     set_var("reference-control-opacity", 0.4);
 
     $("reference_hide").classList.remove("brush_mode_selected");
@@ -55,13 +55,13 @@ function reset_reference_image() {
     $("reference_image").style.left = "0";
 
     $("reference_opacity_value").value = 40;
-    $("reference_opacity_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 
-    $('reference_size_value').value = doc.columns;
-    $("reference_size_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_size_value").value = doc.columns;
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 
-    $('reference_angle_value').value = 0;
-    $("reference_angle_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_angle_value").value = 0;
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function toggle_reference_image(visible) {
@@ -92,12 +92,12 @@ function hide_reference_image() {
 
 function increase_reference_image_opacity() {
     $("reference_opacity_value").stepUp(1);
-    $("reference_opacity_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_opacity() {
     $("reference_opacity_value").stepDown(1);
-    $("reference_opacity_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_opacity_value(event) {
@@ -107,12 +107,12 @@ function on_update_reference_opacity_value(event) {
 
 function increase_reference_image_size() {
     $("reference_size_value").stepUp(1);
-    $("reference_size_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_size() {
     $("reference_size_value").stepDown(1);
-    $("reference_size_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_size_value(event) {
@@ -123,12 +123,12 @@ function on_update_reference_size_value(event) {
 
 function increase_reference_image_angle() {
     $("reference_angle_value").stepUp(1);
-    $("reference_angle_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_angle() {
     $("reference_angle_value").stepDown(1);
-    $("reference_angle_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_angle_value(event) {
@@ -255,19 +255,19 @@ function rescale_drawinggrid() {
     }
     width = doc.render.font.width * doc.columns;
     height = doc.render.font.height * doc.rows;
-    $("drawing_grid").innerHTML = '';
+    $("drawing_grid").innerHTML = "";
     c = doc.render.font.width * grid_columns;
     while (c < width) {
-        var div = document.createElement('div');
-        div.style.width = c + 'px';
+        var div = document.createElement("div");
+        div.style.width = c + "px";
         div.classList.add("column");
         $("drawing_grid").appendChild(div);
         c += doc.render.font.width * grid_columns;
     }
     r = doc.render.font.height * rows;
     while (r < height) {
-        var div = document.createElement('div');
-        div.style.height = r + 'px';
+        var div = document.createElement("div");
+        div.style.height = r + "px";
         div.classList.add("row");
         $("drawing_grid").appendChild(div);
         r += doc.render.font.height * rows;
@@ -285,7 +285,7 @@ doc.on("render", () => rescale_guide());
 doc.on("render", () => rescale_drawinggrid());
 
 class StatusBar {
-    status_bar_info(columns, rows, code='') {
+    status_bar_info(columns, rows, code="") {
         set_text("columns", `${columns}`);
         set_text("rows", `${rows}`);
         set_text("columns_s", (columns > 1) ? "s" : "");
@@ -354,8 +354,8 @@ function set_canvas_zoom_without_frame_update(factor) {
 
     // Set continuous zoom using CSS transform
     container.style.transform = `scale(${canvas_zoom})`;
-    container.style.transformOrigin = 'top left';
-    container.style.margin = '0';
+    container.style.transformOrigin = "top left";
+    container.style.margin = "0";
 
     cursor.set_canvas_zoom(canvas_zoom);
     mouse.set_canvas_zoom(canvas_zoom);
@@ -634,7 +634,7 @@ class Toolbar extends events.EventEmitter {
     draw_charlist() {
         const font = doc.font;
         const { fg, bg } = palette;
-        const scale = charlist_zoom_toggled ? 2 : 1
+        const scale = charlist_zoom_toggled ? 2 : 1;
         const canvas = document.createElement("canvas");
         const charlist = document.getElementById("charlist");
         const cell_width = font.width + 1;
@@ -644,8 +644,8 @@ class Toolbar extends events.EventEmitter {
         canvas.height = cell_height * 16;
         canvas.style.width = `${canvas.width * scale}px`;
         canvas.style.height = `${canvas.height * scale}px`;
-        if (charlist.contains(charlist.getElementsByTagName('canvas')[0])) {
-            charlist.removeChild(charlist.getElementsByTagName('canvas')[0]);
+        if (charlist.contains(charlist.getElementsByTagName("canvas")[0])) {
+            charlist.removeChild(charlist.getElementsByTagName("canvas")[0]);
         }
         charlist.appendChild(canvas);
         canvas.addEventListener("mousedown", (event) => {
@@ -671,7 +671,7 @@ class Toolbar extends events.EventEmitter {
 
     draw_charlist_cursor() {
         const font = doc.font;
-        const scale = charlist_zoom_toggled ? 2 : 1
+        const scale = charlist_zoom_toggled ? 2 : 1;
         const cell_width = font.width + 1;
         const cell_height = font.height + 1;
 
@@ -706,12 +706,12 @@ class Toolbar extends events.EventEmitter {
         else {
             this.char_index = 0;
         }
-        this.draw_charlist_cursor()
+        this.draw_charlist_cursor();
     }
 
     draw_fkeys() {
         // stop the character palette from mapping the function keys
-        return
+        return;
         for (let i = 0; i < 12; i++) {
             let num = i;
             const fkey_index = this.fkey_index;
@@ -963,22 +963,22 @@ class Toolbar extends events.EventEmitter {
             $("reference_show").addEventListener("click", show_reference_image);
             $("reference_hide").addEventListener("click", hide_reference_image);
             $("reference_reset").addEventListener("click", reset_reference_image);
-            $('reference_opacity_minus').addEventListener('click', decrease_reference_image_opacity);
-            $('reference_opacity_plus').addEventListener('click', increase_reference_image_opacity);
-            $('reference_opacity_value').addEventListener('input', on_update_reference_opacity_value);
-            $('reference_size_minus').addEventListener('click', decrease_reference_image_size);
-            $('reference_size_plus').addEventListener('click', increase_reference_image_size);
-            $('reference_size_value').addEventListener('input', on_update_reference_size_value);
-            $('reference_angle_minus').addEventListener('click', decrease_reference_image_angle);
-            $('reference_angle_plus').addEventListener('click', increase_reference_image_angle);
-            $('reference_angle_value').addEventListener('input', on_update_reference_angle_value);
+            $("reference_opacity_minus").addEventListener("click", decrease_reference_image_opacity);
+            $("reference_opacity_plus").addEventListener("click", increase_reference_image_opacity);
+            $("reference_opacity_value").addEventListener("input", on_update_reference_opacity_value);
+            $("reference_size_minus").addEventListener("click", decrease_reference_image_size);
+            $("reference_size_plus").addEventListener("click", increase_reference_image_size);
+            $("reference_size_value").addEventListener("input", on_update_reference_size_value);
+            $("reference_angle_minus").addEventListener("click", decrease_reference_image_angle);
+            $("reference_angle_plus").addEventListener("click", increase_reference_image_angle);
+            $("reference_angle_value").addEventListener("input", on_update_reference_angle_value);
             }, true);
 
         keyboard.on("move_charlist", (direction) => this.move_charlist(direction));
     }
 }
 
-const toolbar = new Toolbar()
+const toolbar = new Toolbar();
 
 module.exports = {
     statusbar: new StatusBar(),

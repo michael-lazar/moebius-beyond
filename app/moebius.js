@@ -18,7 +18,7 @@ const {new_win} = require("./window");
 // picker, which is nicer than the one that's provided by chromium. At some
 // time in the future, this may no longer be true, in which case it would be
 // fine to remove this line if it causes other issues with forms.
-electron.app.commandLine.appendSwitch('disable-features', 'FormControlsRefresh')
+electron.app.commandLine.appendSwitch("disable-features", "FormControlsRefresh");
 
 function cleanup(id) {
     menu.cleanup(id);
@@ -303,7 +303,7 @@ electron.ipcMain.on("show_controlcharacters", async (event, { id, method, destro
 electron.ipcMain.on("show_warning", async (event, { id, title, content }) => {
     docs[id].modal = await window.new_modal("app/html/warning.html", { width: 480, height: 200, parent: docs[id].win, frame: false, ...get_centered_xy(id, 480, 200) });
     if (darwin) add_darwin_window_menu_handler(id);
-    docs[id].modal.send("get_warning_data", { title, content })
+    docs[id].modal.send("get_warning_data", { title, content });
     event.returnValue = true;
 });
 

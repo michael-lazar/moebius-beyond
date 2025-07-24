@@ -15,7 +15,7 @@ let last_xy;
 tools.on("start", (mode) => {
     enabled = (mode == tools.modes.BRUSH);
     if (enabled) {
-        toolbar.show_brush()
+        toolbar.show_brush();
     } else {
         if (tab_held_down) {
             tab_held_down = false;
@@ -60,9 +60,9 @@ function draw_cursor_outline(x, y, half_y) {
         overlay.canvas.style.outline = "1px solid rgba(255, 255, 255, 0.8)";
     }
 
-    let sx = (x - Math.floor(toolbar.brush_size / 2)) * font.width
-    let sy = (y - Math.floor(toolbar.brush_size / 2)) * (font.height / height_scalar)
-    let width = toolbar.brush_size * font.width
+    let sx = (x - Math.floor(toolbar.brush_size / 2)) * font.width;
+    let sy = (y - Math.floor(toolbar.brush_size / 2)) * (font.height / height_scalar);
+    let width = toolbar.brush_size * font.width;
     let height = toolbar.brush_size * font.height / height_scalar;
 
     overlay.update(sx, sy, width, height);

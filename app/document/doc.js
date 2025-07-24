@@ -374,7 +374,7 @@ class TextModeDoc extends events.EventEmitter {
 
     update_palette(index, rgb) {
         if (index === null) index = doc.add_to_palette(rgb);
-        render.font.replace_cache_at(index, this.palette[index] = rgb)
+        render.font.replace_cache_at(index, this.palette[index] = rgb);
 
         // TODO: should this be undoable? it doesn't fit in nicely, but I think it should be.
         for (let y = 0; y <= doc.rows - 1; y++) {
@@ -665,7 +665,7 @@ class TextModeDoc extends events.EventEmitter {
 
     async share_online() {
         const bytes = libtextmode.encode_as_ansi(this, false);
-        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + "ans";
+        const filename = (this.file) ? path.basename(this.file) : "unknown" + "." + "ans";
         const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=ans&retention=${retention}&filename=${filename}`, {
             body: `file=${Buffer.from(bytes).toString("base64")}`,
             headers: {
@@ -682,8 +682,8 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async share_online_xbin() {
-        const bytes = libtextmode.encode_as_xbin(this)
-        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + "xb";
+        const bytes = libtextmode.encode_as_xbin(this);
+        const filename = (this.file) ? path.basename(this.file) : "unknown" + "." + "xb";
         const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}&filename=${filename}`, {
             body: `file=${Buffer.from(bytes).toString("base64")}`,
             headers: {
@@ -719,17 +719,17 @@ class TextModeDoc extends events.EventEmitter {
         const { bytes, filename } = await libtextmode.importFontFromImage();
         const { data, width, height } = await libtextmode.getImageData(bytes);
         if (width !== 128) {
-            alert('Wrong image size! Image width should be 128 px');
+            alert("Wrong image size! Image width should be 128 px");
             return;
         }
         if (!possibleHeights.has(height)) {
-            alert('Wrong image size! Image height should be one these: 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512 px');
+            alert("Wrong image size! Image height should be one these: 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512 px");
             return;
         }
-        const bit_array = await libtextmode.processImageDataTo1bit(data)
-        const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height)
+        const bit_array = await libtextmode.processImageDataTo1bit(data);
+        const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height);
         doc.font_name = path.parse(filename).name;
-        doc.font_bytes = Buffer.from(chunkedBitArray, 'hex');
+        doc.font_bytes = Buffer.from(chunkedBitArray, "hex");
         this.start_rendering().then(() => this.emit("change_font", doc.font_name));
     }
 
@@ -747,11 +747,11 @@ class TextModeDoc extends events.EventEmitter {
                 }]
             });
             if (files === undefined || files.length === 0) return;
-            file = files[0]
+            file = files[0];
         }
 
         const { bytes, filename } = await libtextmode.load_custom_font(file);
-        console.log(bytes, filename)
+        console.log(bytes, filename);
         doc.font_name = path.parse(filename).name;
         doc.font_bytes = bytes;
         this.start_rendering().then(() => this.emit("change_font", doc.font_name));

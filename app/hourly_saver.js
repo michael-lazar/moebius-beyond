@@ -18,12 +18,12 @@ class HourlySaver extends events.EventEmitter {
         let hour = date.getHours();
         let min = date.getMinutes();
         let sec = date.getSeconds();
-        month = (month < 10) ? '0' + month : month;
-        day = (day < 10) ? '0' + day : day;
-        hour = (hour < 10) ? '0' + hour : hour;
-        min = (min < 10) ? '0' + min : min;
-        sec = (sec < 10) ? '0' + sec : sec;
-        const timestamp = year + '-' + month + '-' + day + 'T' + hour + min + sec;
+        month = (month < 10) ? "0" + month : month;
+        day = (day < 10) ? "0" + day : day;
+        hour = (hour < 10) ? "0" + hour : hour;
+        min = (min < 10) ? "0" + min : min;
+        sec = (sec < 10) ? "0" + sec : sec;
+        const timestamp = year + "-" + month + "-" + day + "T" + hour + min + sec;
         return path.join(backup_folder, `${parsed_file.name} - ${timestamp}${parsed_file.ext}`);
     }
 

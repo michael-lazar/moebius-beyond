@@ -48,15 +48,15 @@ const data_type_types = {CHARACTER: 1, BIN: 5, XBIN: 6};
 const file_type_types = {NONE: 0, ANS_FILETYPE: 1};
 
 function add_comments_bytes(rawcomments, sauce_bytes) {
-    var comments = '';
-    var commentlines = rawcomments.split('\n');
+    var comments = "";
+    var commentlines = rawcomments.split("\n");
     for (var i = 0; i<commentlines.length; i++) {
         var s = 0;
         while (commentlines[i].length > 0) {
             var line = commentlines[i].substr((s * 64), 64).trim();
             if (line.length == 0) break;
             s++;
-            line = line.padEnd(64, ' ');
+            line = line.padEnd(64, " ");
             comments += line;
         }
     }
@@ -74,7 +74,7 @@ function comments_length(rawcomments) {
     if (rawcomments.length == 0) {
         return 0;
     } else {
-        var commentlines = rawcomments.split('\n');
+        var commentlines = rawcomments.split("\n");
         var count = 0;
         for (var i = 0; i<commentlines.length; i++) {
             var s = 0;
@@ -174,10 +174,10 @@ function get_sauce(bytes) {
             }
             const number_of_comments = sauce_bytes[104];
             const rawcomments = bytes.subarray(bytes.length - (number_of_comments * 64) - 128, bytes.length - 128).toString("utf-8");
-            var comments = '';
+            var comments = "";
             for (i=0; i<number_of_comments; i++) {
                 var line = rawcomments.substr(i * 64, 64).trim();
-                if (i != (number_of_comments-1)) line += '\n'
+                if (i != (number_of_comments-1)) line += "\n";
                 comments += line;
             }
             const flags = sauce_bytes[105];
@@ -212,7 +212,7 @@ class Textmode {
         this.font_name = sauce.font_name;
         this.comments = sauce.comments;
         this.bytes = bytes ? bytes.subarray(0, this.filesize) : [];
-        this.palette = sauce.palette || []
+        this.palette = sauce.palette || [];
     }
 
     get palette() {
@@ -225,19 +225,19 @@ class Textmode {
         for (let index in this.palette_array) {
             index = parseInt(index, 10);
             const rgb = this.palette_array[index];
-            this.palette_hashmap[Object.values(rgb).join('|')] = index;
+            this.palette_hashmap[Object.values(rgb).join("|")] = index;
         }
     }
 
     resolve_palette(rgb) {
-        const key = Object.values(rgb).join('|');
+        const key = Object.values(rgb).join("|");
         let index = this.palette_hashmap[key];
         if (index > 15) return index;
         return this.add_to_palette(rgb, key);
     }
 
     add_to_palette(rgb, key = null) {
-        key = key || Object.values(rgb).join('|');
+        key = key || Object.values(rgb).join("|");
         this.palette_array.push(rgb);
         return this.palette_hashmap[key] = this.palette_array.length - 1;
     }

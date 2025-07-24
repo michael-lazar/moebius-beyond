@@ -373,7 +373,7 @@ class Ansi extends Textmode {
                     case sequence_type.SAVE_POS: screen.save_pos(); break;
                     case sequence_type.TRUE_COLOR:
                     if (sequence.values.length >= 4) {
-                        const index = this.resolve_palette({r: sequence.values[1], g: sequence.values[2], b: sequence.values[3]})
+                        const index = this.resolve_palette({r: sequence.values[1], g: sequence.values[2], b: sequence.values[3]});
                         switch (sequence.values[0]) {
                             case true_color_type.BACKGROUND: screen.bg = index; break;
                             case true_color_type.FOREGROUND: screen.fg = index; break;
@@ -414,7 +414,7 @@ function bin_to_ansi_colour(bin_colour) {
 }
 
 function to_bytes(string) {
-    return Array.from(string).map((b) => b.charCodeAt(0))
+    return Array.from(string).map((b) => b.charCodeAt(0));
 }
 
 const ansi_code_mapping = { 10: 9, 13: 14, 26: 16, 27: 17 };
@@ -426,19 +426,19 @@ function build_ansi_palette(palette, bit_depth) {
     switch(bit_depth) {
         case 4: return palette.map((rgb, i) => `5;${index_to_ansi(i)}`);
         case 8: return palette.map((rgb) => `5;${index_to_ansi(rgb_to_ansi(rgb, 8))}`);
-        case 24: return palette.map((rgb, i) => `2;${i < 16 ? index_to_ansi(i) : Object.values(rgb).join(';')}`);
+        case 24: return palette.map((rgb, i) => `2;${i < 16 ? index_to_ansi(i) : Object.values(rgb).join(";")}`);
         default:
             return palette.map((rgb, i) => {
                 if (rgb === palette_4bit[i]) return index_to_ansi(i);
 
                 let resolved_index = base_palette_index(rgb);
-                return (resolved_index < 0) ? to_bytes(Object.values(rgb).join(';')) : index_to_ansi(resolved_index);
-            })
+                return (resolved_index < 0) ? to_bytes(Object.values(rgb).join(";")) : index_to_ansi(resolved_index);
+            });
     }
 }
 
 function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 } = {}) {
-    if (utf8) return encode_as_utf8ansi(doc, bit_depth)
+    if (utf8) return encode_as_utf8ansi(doc, bit_depth);
 
     let output = [27, 91, 48, 109];
 
@@ -449,9 +449,9 @@ function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 
     let current_bg = 0;
 
     const push_sgr = (sgr, sgr_tc) => {
-        if (sgr.length) output.push(27, 91, ...to_bytes(sgr.join(';')), 109);
+        if (sgr.length) output.push(27, 91, ...to_bytes(sgr.join(";")), 109);
         for (let entry of sgr_tc) output.push(27, 91, ...entry, 116);
-    }
+    };
 
     for (let i = 0; i < doc.data.length; i++) {
         let { code, fg, bg } = doc.data[i];
@@ -515,7 +515,7 @@ function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 
         }
 
         if (bg !== current_bg) {
-            sgr.push(40 + bg)
+            sgr.push(40 + bg);
             current_bg = bg;
         }
 
@@ -540,31 +540,31 @@ function encode_as_utf8ansi(doc, bit_depth) {
             if (ansi) output.push(27, ...(current_sgr[layer] = to_bytes(ansi)));
             else delete current_sgr[layer];
         }
-    }
+    };
 
     for (let i = 0; i < doc.data.length; i++) {
         let { code, fg, bg } = doc.data[i];
 
         if (fg !== current_fg) {
-            sgr({ clear: null, fg: `[38;${palette_map[fg]}m` })
+            sgr({ clear: null, fg: `[38;${palette_map[fg]}m` });
             current_fg = fg;
         }
 
         if (bg !== current_bg) {
-            sgr({ clear: null, bg: bg === 0 ? '[49m' : `[48;${palette_map[bg]}m` })
+            sgr({ clear: null, bg: bg === 0 ? "[49m" : `[48;${palette_map[bg]}m` });
             current_bg = bg;
         }
 
         if (i && i % doc.columns === 0) {
-            output.push(...to_bytes('[0m\r\n'))
-            for (let bytes of Object.values(current_sgr)) output.push(27, ...bytes)
+            output.push(...to_bytes("[0m\r\n"));
+            for (let bytes of Object.values(current_sgr)) output.push(27, ...bytes);
             current_sgr = {};
         }
 
         output.push(...cp437_to_unicode_bytes(code));
     }
 
-    sgr({ clear: '[0m\r\n' })
+    sgr({ clear: "[0m\r\n" });
 
     return new Uint8Array(output);
 }

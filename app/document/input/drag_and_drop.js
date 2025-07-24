@@ -1,18 +1,18 @@
-const path = require('path');
+const path = require("path");
 const { send, msg_box} = require("../../senders");
 const doc = require("../doc");
 const {open_reference_image} = require("../ui/ui");
 
 const document_extensions = [
     ".ans", ".asc", ".diz", ".nfo", ".txt", ".xb", ".bin"
-]
-const reference_extensions = [".png", ".jpg", ".jpeg"]
+];
+const reference_extensions = [".png", ".jpg", ".jpeg"];
 const font_extensions = [
     ".f06", ".f07", ".f08", ".f09", ".f10", ".f11", ".f12",
     ".f13", ".f14", ".f15", ".f16", ".f17", ".f18", ".f19",
     ".f20", ".f21", ".f22", ".f23", ".f24", ".f25", ".f26",
     ".f27", ".f28", ".f29", ".f30", ".f31", ".f32"
-]
+];
 
 document.addEventListener("DOMContentLoaded", (event) => {
     document.body.addEventListener("dragover", event => {
@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
                     buttons: ["Open in New Window", "Replace Current File", "Cancel"],
                 });
             if (choice === 0) {
-                send("open_file", {file: file.path})
+                send("open_file", {file: file.path});
             } else if (choice === 1) {
-                doc.open(file.path)
+                doc.open(file.path);
             }
         } else if (reference_extensions.includes(ext)) {
             const choice = msg_box(

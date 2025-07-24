@@ -22,12 +22,12 @@ function join_canvases(canvases) {
 
 function clone_canvas(original_canvas) {
     const {width, height} = original_canvas;
-    const original_data = original_canvas.getContext("2d").getImageData(0, 0, width, height)
+    const original_data = original_canvas.getContext("2d").getImageData(0, 0, width, height);
 
     const {canvas, ctx, image_data} = create_canvas(width, height);
     ctx.putImageData(original_data, 0, 0);
 
-    return {canvas, ctx, image_data}
+    return {canvas, ctx, image_data};
 }
 
 

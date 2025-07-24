@@ -71,7 +71,7 @@ function half_block_ellipse_overlay(sx, sy, dx, dy, col) {
     if (!coords) return;
     overlay.fill_style(font, col);
     for (let i = 0; i < coords.length; i += 2) {
-        overlay.fill_rect(coords[i].x * font.width, Math.floor(coords[i].y * font.height / 2), (coords[i + 1].x - coords[i].x) * font.width, Math.floor(font.height / 2))
+        overlay.fill_rect(coords[i].x * font.width, Math.floor(coords[i].y * font.height / 2), (coords[i + 1].x - coords[i].x) * font.width, Math.floor(font.height / 2));
     }
 }
 

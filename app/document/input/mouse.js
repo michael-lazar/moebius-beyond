@@ -93,7 +93,7 @@ class MouseListener extends events.EventEmitter {
                     this.panning = false;
                     this.pan_potential = false;
                     const viewport = document.getElementById("viewport");
-                    viewport.style.cursor = '';
+                    viewport.style.cursor = "";
                 }
                 actual_size();
                 this.middle_click_time = 0; // Reset to prevent triple-click issues
@@ -167,7 +167,7 @@ class MouseListener extends events.EventEmitter {
                 this.pan_potential = false;
                 this.panning = true;
                 const viewport = document.getElementById("viewport");
-                viewport.style.cursor = 'grabbing';
+                viewport.style.cursor = "grabbing";
                 // Immediately apply the current movement
                 viewport.scrollLeft = this.pan_start_scroll_left - deltaX;
                 viewport.scrollTop = this.pan_start_scroll_top - deltaY;
@@ -198,7 +198,7 @@ class MouseListener extends events.EventEmitter {
             this.panning = false;
             this.pan_potential = false;
             const viewport = document.getElementById("viewport");
-            viewport.style.cursor = '';
+            viewport.style.cursor = "";
             return;
         }
         
@@ -214,7 +214,7 @@ class MouseListener extends events.EventEmitter {
             this.panning = false;
             this.pan_potential = false;
             const viewport = document.getElementById("viewport");
-            viewport.style.cursor = '';
+            viewport.style.cursor = "";
         }
         if (this.drawing || this.started) {
             this.end();

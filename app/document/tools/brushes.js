@@ -1,5 +1,5 @@
 const doc = require("../doc");
-const {toolbar} = require("../ui/ui")
+const {toolbar} = require("../ui/ui");
 
 function line(x0, y0, x1, y1, skip_first = false) {
     const dx = Math.abs(x1 - x0);

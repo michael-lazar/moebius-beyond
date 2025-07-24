@@ -1,5 +1,5 @@
 const electron = require("electron");
-var save_method = '';
+var save_method = "";
 var save_destroy_when_done = false;
 
 function send(channel, opts) {
@@ -10,7 +10,7 @@ function ok() {
    let method = save_method;
    let destroy_when_done = save_destroy_when_done;
    let ignore_controlcharacters = true;
-   electron.remote.getCurrentWindow().getParentWindow().send('process_save', {method, destroy_when_done, ignore_controlcharacters});
+   electron.remote.getCurrentWindow().getParentWindow().send("process_save", {method, destroy_when_done, ignore_controlcharacters});
    electron.remote.getCurrentWindow().close();
 }
 

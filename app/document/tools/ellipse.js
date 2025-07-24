@@ -104,7 +104,7 @@ function draw_full_block_ellipse(sx, sy, dx, dy, col) {
 function draw_f1_block_ellipse(sx, sy, dx, dy, col) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
-    const code = toolbar.fkeys[toolbar.fkey_index][0]
+    const code = toolbar.fkeys[toolbar.fkey_index][0];
     for (const coord of coords) doc.change_data(coord.x, coord.y, code, col, 0);
 }
 

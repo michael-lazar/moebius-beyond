@@ -277,7 +277,7 @@ const palette_8bit = [
     { r: 0xda, g: 0xda, b: 0xda },
     { r: 0xe4, g: 0xe4, b: 0xe4 },
     { r: 0xee, g: 0xee, b: 0xee }
-]
+];
 
 function rgb_distance(rgb1, rgb2) {
     return Math.sqrt(
@@ -309,7 +309,7 @@ function convert_6_to_8bits(value) {
 }
 
 function index_to_ansi(index) {
-    return parseInt(palette_4bit_ansi_mapping[index] || index, 10)
+    return parseInt(palette_4bit_ansi_mapping[index] || index, 10);
 }
 
 module.exports = {
@@ -557,7 +557,7 @@ module.exports = {
 
     hex_to_rbg(hex) {
         const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || [0, 0, 0];
-        return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) }
+        return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
     },
 
     xbin_to_rgb(r, g, b) {
@@ -580,15 +580,15 @@ module.exports = {
 
         // early return if we found an exact base match.
         if (!base_distance) return base_index;
-        options.push([base_index, base_distance])
+        options.push([base_index, base_distance]);
 
         // find the nearest color on the cube map.
         const cube_index = 16 + f(b / 255 * 5) + (6 * f(g / 255 * 5)) + (36 * f(r / 255 * 5));
-        options.push([cube_index, rgb_distance(rgb, palette_8bit[cube_index])])
+        options.push([cube_index, rgb_distance(rgb, palette_8bit[cube_index])]);
 
         // find the nearest color on in the greyscale ramp (clamping to 255 because "precision").
         const grey_index = Math.min(255, 232 + f((rgb.r + rgb.g + rgb.b) / 2.8 / 255 * 23));
-        options.push([grey_index, rgb_distance(rgb, palette_8bit[grey_index])])
+        options.push([grey_index, rgb_distance(rgb, palette_8bit[grey_index])]);
 
         // return the index with the closest match.
         return options.sort((a, b) => a[1] - b[1])[0][0];

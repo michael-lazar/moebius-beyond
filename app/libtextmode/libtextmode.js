@@ -736,7 +736,7 @@ async function load_custom_font(file) {
 
 
 async function getImageData(content) {
-    return getSync(content)
+    return getSync(content);
 }
 
 async function processImageDataTo1bit(data) {
@@ -777,7 +777,7 @@ async function rearrangeBitArray(bit_array, height) {
 }
 
 function pad(num, size) {
-    var s = '000000000' + num;
+    var s = "000000000" + num;
     return s.substr(s.length - size);
 }
 
@@ -785,7 +785,7 @@ function splitToHexBulks(arr, bulkSize) {
     const bulks = [];
     for (let i = 0; i < Math.ceil(arr.length / bulkSize); i++) {
         bulks.push(
-            pad(parseInt(arr.slice(i * bulkSize, (i + 1) * bulkSize).join(''), 2).toString(16), 4)
+            pad(parseInt(arr.slice(i * bulkSize, (i + 1) * bulkSize).join(""), 2).toString(16), 4)
         );
     }
     return bulks;
@@ -794,7 +794,7 @@ function splitToHexBulks(arr, bulkSize) {
 function splitToBulks(arr, bulkSize) {
     let bulks = [];
     for (let i = 0; i < Math.ceil(arr.length / bulkSize); i++) {
-        bulks += arr.slice(i * bulkSize, (i + 1) * bulkSize).join('');
+        bulks += arr.slice(i * bulkSize, (i + 1) * bulkSize).join("");
     }
     return bulks;
 }

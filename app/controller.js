@@ -26,7 +26,7 @@ doc.on("ready", () => {
     tools.start(tools.modes.SELECT);
 });
 
-async function process_save(method = 'save', destroy_when_done = false, ignore_controlcharacters = true) {
+async function process_save(method = "save", destroy_when_done = false, ignore_controlcharacters = true) {
     var ctrl = false;
     doc.data.forEach((block, index) => {
         if (block.code == 9 || block.code == 10 || block.code == 13 || block.code == 26) ctrl = true;
@@ -77,7 +77,7 @@ async function save_without_sauce() {
 }
 
 async function export_font() {
-    const font_height = String(doc.font_height).padStart(2, '0');
+    const font_height = String(doc.font_height).padStart(2, "0");
     const file = save_box(doc.file, `F${font_height}`, { filters: [{ name: "VGA font", extensions: [`F${font_height}`] }] });
     if (file)
         await doc.export_font(file);
@@ -140,9 +140,9 @@ on("revert_to_last_save", (event, opts) => doc.open(doc.file));
 on("show_file_in_folder", (event, opts) => electron.shell.showItemInFolder(doc.file));
 on("duplicate", (event, opts) => send("new_document", { columns: doc.columns, rows: doc.rows, data: doc.data, palette: doc.palette, font_name: doc.font_name, use_9px_font: doc.use_9px_font, ice_colors: doc.ice_colors, font_bytes: doc.font_bytes }));
 on("process_save", (event, { method, destroy_when_done, ignore_controlcharacters }) => process_save(method, destroy_when_done, ignore_controlcharacters));
-on("save", (event, opts) => process_save('save'));
-on("save_as", (event, opts) => process_save('save_as'));
-on("save_without_sauce", (event, opts) => process_save('save_without_sauce'));
+on("save", (event, opts) => process_save("save"));
+on("save_as", (event, opts) => process_save("save_as"));
+on("save_without_sauce", (event, opts) => process_save("save_without_sauce"));
 on("share_online", (event, opts) => share_online());
 on("open_file", (event, file) => doc.open(file));
 on("check_before_closing", (event) => check_before_closing());

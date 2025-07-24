@@ -39,7 +39,7 @@ class PaletteChooser extends EventEmitter {
     }
 
     new_document() {
-        this.color_picker_el = document.getElementById("color_picker")
+        this.color_picker_el = document.getElementById("color_picker");
         this.swatch_container_el = document.getElementById("swatches");
 
         this.bind_events();
@@ -80,10 +80,10 @@ class PaletteChooser extends EventEmitter {
         clearTimeout(this.paint_timer);
         this.paint_timer = setTimeout(() => {
             this.color_picker_spawner.style.backgroundColor = hex;
-            const id = parseInt(this.color_picker_spawner.dataset.id, 10)
+            const id = parseInt(this.color_picker_spawner.dataset.id, 10);
 
-            if (this.bg_index === id) document.getElementById('bg').style.backgroundColor = hex;
-            if (this.fg_index === id) document.getElementById('fg').style.backgroundColor = hex;
+            if (this.bg_index === id) document.getElementById("bg").style.backgroundColor = hex;
+            if (this.fg_index === id) document.getElementById("fg").style.backgroundColor = hex;
 
             doc.update_palette(parseInt(this.color_picker_spawner.dataset.id, 10), hex_to_rbg(hex));
         }, 150);
@@ -93,8 +93,8 @@ class PaletteChooser extends EventEmitter {
         this.swatch_container_el.innerHTML = "";
 
         let container = document.createElement("section");
-        container.classList.add("base")
-        this.swatch_container_el.appendChild(container)
+        container.classList.add("base");
+        this.swatch_container_el.appendChild(container);
 
         doc.palette.map((rgb, i) => {
             const div = document.createElement("div");
@@ -103,13 +103,13 @@ class PaletteChooser extends EventEmitter {
             container.appendChild(div);
         });
 
-        this.update_selected("bg")
-        this.update_selected("fg")
+        this.update_selected("bg");
+        this.update_selected("fg");
     }
 
     add_color(button, rgb) {
         doc.update_palette(null, rgb);
-        const hex = rgb_to_hex(rgb)
+        const hex = rgb_to_hex(rgb);
 
         const div = document.createElement("div");
         div.style.backgroundColor = hex;
@@ -138,7 +138,7 @@ class PaletteChooser extends EventEmitter {
 
     set fg(value) {
         this.emit("set_fg", this.fg_index = parseInt(value, 10));
-        this.update_selected("fg")
+        this.update_selected("fg");
     }
 
     get fg() {
@@ -147,11 +147,11 @@ class PaletteChooser extends EventEmitter {
 
     set bg(value) {
         this.emit("set_bg", this.bg_index = parseInt(value, 10));
-        this.update_selected("bg")
+        this.update_selected("bg");
     }
 
     set bg_internal(value) {
-        this.bg = value
+        this.bg = value;
     }
 
     get bg() {
@@ -177,7 +177,7 @@ class PaletteChooser extends EventEmitter {
     async change_palette(lospec_palette_name) {
         senders.send("update_menu_checkboxes", { lospec_palette_name });
         if (lospec_palette_name === null) {
-            await this.load_default_palette()
+            await this.load_default_palette();
         } else {
             await this.load_lospec_palette(lospec_palette_name);
         }
@@ -188,17 +188,17 @@ class PaletteChooser extends EventEmitter {
         for (let i = 0; i < 16; i++) {
             doc.update_palette(i, palette_4bit[i]);
         }
-        this.update_swatches()
+        this.update_swatches();
         //stupid way of forcing redraw on ui elements
         this.fg = this.fg;
     }
 
     async load_lospec_palette(palette_name) {
-        const loaded_palette = lospec_palette(palette_name)
+        const loaded_palette = lospec_palette(palette_name);
         for (let i = 0; i < 16; i++) {
             doc.update_palette(i, hex_to_rbg(loaded_palette[i]));
         }
-        this.update_swatches()
+        this.update_swatches();
         //stupid way of forcing redraw on ui elements
         this.fg = this.fg;
     }
@@ -216,13 +216,13 @@ class PaletteChooser extends EventEmitter {
 
     toggle_fg(index) {
         // TODO: ??
-        if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8)) index += 8
+        if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8)) index += 8;
         this.fg = index;
     }
 
     toggle_bg(index) {
         // TODO: ??
-        if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8)) index += 8
+        if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8)) index += 8;
         this.bg_internal = index;
     }
 }

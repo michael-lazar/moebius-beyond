@@ -65,7 +65,7 @@ function coloured_glyphs(source_canvas, rgb) {
 	return canvas;
 }
 
-cached_backgrounds = {}
+cached_backgrounds = {};
 function coloured_background(font_width, height, rgb) {
 	const hex = rgb_to_hex(rgb);
 	const key = hex;
@@ -78,10 +78,10 @@ function coloured_background(font_width, height, rgb) {
 	return cached_backgrounds[key] = canvas;
 }
 
-cached_glyphs = {}
+cached_glyphs = {};
 function create_coloured_glyph(source_canvas, code, rgb, font_width, height) {
 	const hex = rgb_to_hex(rgb);
-	const key = [hex, code].join('|')
+	const key = [hex, code].join("|");
 	if (cached_glyphs[key]) return cached_glyphs[key];
 
 	const { canvas, ctx } = create_canvas(font_width, height);
@@ -99,9 +99,9 @@ class Font {
 		if (bytes) {
 			//If we load XBIN, we check the font from the XBIN file so we don't need to load a font
 			if (this.name) {
-				this.name = name
+				this.name = name;
 			} else {
-				this.name = "XBIN font"
+				this.name = "XBIN font";
 			}
 		} else {
 			//In case of ans or other non-xbin file, we load the font by its name
