@@ -21,7 +21,7 @@ function ellipse_outline(sx, sy, width, height) {
     const b2 = height * height;
     const fa2 = 4 * a2;
     const fb2 = 4 * b2;
-    coords = [];
+    const coords = [];
     for (
         let px = 0, py = height, sigma = 2 * b2 + a2 * (1 - 2 * height);
         b2 * px <= a2 * py;
@@ -289,7 +289,7 @@ mouse.on("up", (x, y, half_y, button) => {
                     button == mouse.buttons.LEFT ? fg : bg
                 );
                 break;
-            case toolbar.modes.SHADING_BLOCK:
+            case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
                 draw_shaded_block_ellipse(
                     mouse.start.x,
@@ -301,6 +301,7 @@ mouse.on("up", (x, y, half_y, button) => {
                     reduce
                 );
                 break;
+            }
             case toolbar.modes.REPLACE_COLOR:
                 draw_replace_color_block_ellipse(
                     mouse.start.x,

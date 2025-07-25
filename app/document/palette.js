@@ -168,9 +168,10 @@ class PaletteChooser extends EventEmitter {
         selected_el = this.swatch_container_el.querySelector(
             `[data-id="${this[level]}"`
         );
-        if (selected_el) selected_el.classList.add(class_name);
-        else {
-        } // we don't know about this color!
+        if (selected_el) {
+            selected_el.classList.add(class_name);
+        }
+        // else we don't know about this color!
 
         document.getElementById(level).style.backgroundColor = rgb_to_hex(
             doc.palette[this[level]]
@@ -230,8 +231,8 @@ class PaletteChooser extends EventEmitter {
             doc.update_palette(i, palette_4bit[i]);
         }
         this.update_swatches();
-        //stupid way of forcing redraw on ui elements
-        this.fg = this.fg;
+        // stupid way of forcing redraw on ui elements
+        this.fg = this.fg; // eslint-disable-line
     }
 
     async load_lospec_palette(palette_name) {
@@ -240,8 +241,8 @@ class PaletteChooser extends EventEmitter {
             doc.update_palette(i, hex_to_rbg(loaded_palette[i]));
         }
         this.update_swatches();
-        //stupid way of forcing redraw on ui elements
-        this.fg = this.fg;
+        // stupid way of forcing redraw on ui elements
+        this.fg = this.fg; // eslint-disable-line
     }
 
     default_color() {

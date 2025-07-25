@@ -119,7 +119,7 @@ mouse.on("up", (x, y, half_y, button) => {
                 for (let y = sy; y <= dy; y++)
                     brushes.single_custom_block_line(sx, y, dx, y, fg, bg);
                 break;
-            case toolbar.modes.SHADING_BLOCK:
+            case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
                 for (let y = sy; y <= dy; y++)
                     brushes.single_shading_block_line(
@@ -132,6 +132,7 @@ mouse.on("up", (x, y, half_y, button) => {
                         reduce
                     );
                 break;
+            }
             case toolbar.modes.REPLACE_COLOR:
                 for (let y = sy; y <= dy; y++)
                     brushes.single_replace_color_line(sx, y, dx, y, fg, bg);

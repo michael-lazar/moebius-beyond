@@ -10,7 +10,7 @@ const clipboard = require("./clipboard");
 class Cursor {
     draw() {
         switch (this.mode) {
-            case modes.EDITING:
+            case modes.EDITING: {
                 if (this.flashing) return;
                 const { font, render } = doc;
                 this.ctx.globalCompositeOperation = "source-over";
@@ -31,6 +31,7 @@ class Cursor {
                 font.draw_cursor(this.ctx, 0, font.height - 2);
                 this.ctx.clearRect(0, 0, this.canvas.width, font.height - 2);
                 break;
+            }
             case modes.SELECTION:
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 break;
@@ -222,7 +223,7 @@ class Cursor {
                 this.canvas.style.width = `${this.width}px`;
                 this.canvas.style.height = `${this.height}px`;
                 break;
-            case modes.SELECTION:
+            case modes.SELECTION: {
                 this.selection.dx = x;
                 this.selection.dy = y;
                 const { sx, sy, dx, dy } = this.reorientate_selection();
@@ -232,6 +233,7 @@ class Cursor {
                 this.canvas.style.height = `${(dy - sy + 1) * this.height - 4}px`;
                 statusbar.status_bar_info(dx - sx + 1, dy - sy + 1);
                 break;
+            }
             case modes.OPERATION:
                 this.canvas.style.left = `${x * this.width}px`;
                 this.canvas.style.top = `${y * this.height}px`;

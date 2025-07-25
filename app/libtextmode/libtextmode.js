@@ -1025,8 +1025,6 @@ function rotate_code(code) {
             return 220;
         case 187:
             return 188;
-        case 221:
-            return 223;
         case 223:
             return 222;
         default:

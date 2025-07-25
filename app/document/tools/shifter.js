@@ -42,7 +42,7 @@ mouse.on("down", (x, y, half_y, is_legal, button, shift_key) => {
     switch (block.code) {
         case 0:
         case 32:
-        case 255:
+        case 255: {
             doc.start_undo();
             const { fg } = palette;
             doc.change_data(
@@ -53,6 +53,7 @@ mouse.on("down", (x, y, half_y, is_legal, button, shift_key) => {
                 block.bg
             );
             break;
+        }
         case 219:
         case 220:
         case 223:

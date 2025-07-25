@@ -215,7 +215,7 @@ function get_sauce(bytes) {
                 )
                 .toString("utf-8");
             var comments = "";
-            for (i = 0; i < number_of_comments; i++) {
+            for (var i = 0; i < number_of_comments; i++) {
                 var line = rawcomments.substr(i * 64, 64).trim();
                 if (i != number_of_comments - 1) line += "\n";
                 comments += line;

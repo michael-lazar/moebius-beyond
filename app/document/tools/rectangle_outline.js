@@ -199,7 +199,7 @@ mouse.on("up", (x, y, half_y, button) => {
                     }
                 }
                 break;
-            case toolbar.modes.SHADING_BLOCK:
+            case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
                 brushes.single_shading_block_line(
                     sx,
@@ -242,6 +242,7 @@ mouse.on("up", (x, y, half_y, button) => {
                     }
                 }
                 break;
+            }
             case toolbar.modes.REPLACE_COLOR:
                 brushes.single_replace_color_line(sx, sy, dx, sy, fg, bg);
                 if (dy > sy) {
@@ -266,7 +267,7 @@ mouse.on("up", (x, y, half_y, button) => {
                     }
                 }
                 break;
-            case toolbar.modes.BLINK:
+            case toolbar.modes.BLINK: {
                 const unblink = button != mouse.buttons.LEFT;
                 brushes.single_blink_line(sx, sy, dx, sy, unblink);
                 if (dy > sy) {
@@ -289,7 +290,8 @@ mouse.on("up", (x, y, half_y, button) => {
                     }
                 }
                 break;
-            case toolbar.modes.COLORIZE:
+            }
+            case toolbar.modes.COLORIZE: {
                 const colorize_fg = toolbar.colorize_fg ? fg : undefined;
                 const colorize_bg = toolbar.colorize_bg ? bg : undefined;
                 brushes.single_colorize_line(
@@ -329,6 +331,7 @@ mouse.on("up", (x, y, half_y, button) => {
                     }
                 }
                 break;
+            }
         }
     }
 });
