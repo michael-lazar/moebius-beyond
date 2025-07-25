@@ -264,16 +264,6 @@ function lookup_url(font_name) {
             return "../fonts/ibm/CP790.F14";
         case "IBM EGA43 790":
             return "../fonts/ibm/CP790.F08";
-        case "IBM VGA 866":
-            return "../fonts/ibm/CP866.F16";
-        case "IBM VGA50 866":
-            return "../fonts/ibm/CP866.F08";
-        case "IBM VGA25G 866":
-            return "../fonts/ibm/CP866.F19";
-        case "IBM EGA 866":
-            return "../fonts/ibm/CP866.F14";
-        case "IBM EGA43 866":
-            return "../fonts/ibm/CP866.F08";
         case "IBM VGA 867":
             return "../fonts/ibm/CP867.F16";
         case "IBM VGA50 867":
@@ -1027,12 +1017,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP919.F14";
         case "CP919 (8x8)":
             return "../fonts/viler/CP919.F08";
-        case "CP915 (8x16)":
-            return "../fonts/viler/CP915.F16";
-        case "CP915 (8x14)":
-            return "../fonts/viler/CP915.F14";
-        case "CP915 (8x8)":
-            return "../fonts/viler/CP915.F08";
         case "CP914 (8x16)":
             return "../fonts/viler/CP914.F16";
         case "CP914 (8x14)":
@@ -1045,12 +1029,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP913.F14";
         case "CP913 (8x8)":
             return "../fonts/viler/CP913.F08";
-        case "CP912 (8x16)":
-            return "../fonts/viler/CP912.F16";
-        case "CP912 (8x14)":
-            return "../fonts/viler/CP912.F14";
-        case "CP912 (8x8)":
-            return "../fonts/viler/CP912.F08";
         case "CP902 (8x16)":
             return "../fonts/viler/CP902.F16";
         case "CP902 (8x14)":
@@ -1435,60 +1413,24 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP872.F14";
         case "CP872 (8x8)":
             return "../fonts/viler/CP872.F08";
-        case "CP869 (8x16)":
-            return "../fonts/viler/CP869.F16";
-        case "CP869 (8x14)":
-            return "../fonts/viler/CP869.F14";
-        case "CP869 (8x8)":
-            return "../fonts/viler/CP869.F08";
         case "CP867 (8x16)":
             return "../fonts/viler/CP867.F16";
         case "CP867 (8x14)":
             return "../fonts/viler/CP867.F14";
         case "CP867 (8x8)":
             return "../fonts/viler/CP867.F08";
-        case "CP866 (8x16)":
-            return "../fonts/viler/CP866.F16";
-        case "CP866 (8x14)":
-            return "../fonts/viler/CP866.F14";
-        case "CP866 (8x8)":
-            return "../fonts/viler/CP866.F08";
-        case "CP865 (8x16)":
-            return "../fonts/viler/CP865.F16";
-        case "CP865 (8x14)":
-            return "../fonts/viler/CP865.F14";
-        case "CP865 (8x8)":
-            return "../fonts/viler/CP865.F08";
         case "CP864 (8x16)":
             return "../fonts/viler/CP864.F16";
         case "CP864 (8x14)":
             return "../fonts/viler/CP864.F14";
         case "CP864 (8x8)":
             return "../fonts/viler/CP864.F08";
-        case "CP863 (8x16)":
-            return "../fonts/viler/CP863.F16";
-        case "CP863 (8x14)":
-            return "../fonts/viler/CP863.F14";
-        case "CP863 (8x8)":
-            return "../fonts/viler/CP863.F08";
         case "CP862 (8x16)":
             return "../fonts/viler/CP862.F16";
         case "CP862 (8x14)":
             return "../fonts/viler/CP862.F14";
         case "CP862 (8x8)":
             return "../fonts/viler/CP862.F08";
-        case "CP861 (8x16)":
-            return "../fonts/viler/CP861.F16";
-        case "CP861 (8x14)":
-            return "../fonts/viler/CP861.F14";
-        case "CP861 (8x8)":
-            return "../fonts/viler/CP861.F08";
-        case "CP860 (8x16)":
-            return "../fonts/viler/CP860.F16";
-        case "CP860 (8x14)":
-            return "../fonts/viler/CP860.F14";
-        case "CP860 (8x8)":
-            return "../fonts/viler/CP860.F08";
         case "CP859 (8x16)":
             return "../fonts/viler/CP859.F16";
         case "CP859 (8x14)":
@@ -1501,48 +1443,24 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP858.F14";
         case "CP858 (8x8)":
             return "../fonts/viler/CP858.F08";
-        case "CP857 (8x16)":
-            return "../fonts/viler/CP857.F16";
-        case "CP857 (8x14)":
-            return "../fonts/viler/CP857.F14";
-        case "CP857 (8x8)":
-            return "../fonts/viler/CP857.F08";
         case "CP856 (8x16)":
             return "../fonts/viler/CP856.F16";
         case "CP856 (8x14)":
             return "../fonts/viler/CP856.F14";
         case "CP856 (8x8)":
             return "../fonts/viler/CP856.F08";
-        case "CP855 (8x16)":
-            return "../fonts/viler/CP855.F16";
-        case "CP855 (8x14)":
-            return "../fonts/viler/CP855.F14";
-        case "CP855 (8x8)":
-            return "../fonts/viler/CP855.F08";
         case "CP853 (8x16)":
             return "../fonts/viler/CP853.F16";
         case "CP853 (8x14)":
             return "../fonts/viler/CP853.F14";
         case "CP853 (8x8)":
             return "../fonts/viler/CP853.F08";
-        case "CP852 (8x16)":
-            return "../fonts/viler/CP852.F16";
-        case "CP852 (8x14)":
-            return "../fonts/viler/CP852.F14";
-        case "CP852 (8x8)":
-            return "../fonts/viler/CP852.F08";
         case "CP851 (8x16)":
             return "../fonts/viler/CP851.F16";
         case "CP851 (8x14)":
             return "../fonts/viler/CP851.F14";
         case "CP851 (8x8)":
             return "../fonts/viler/CP851.F08";
-        case "CP850 (8x16)":
-            return "../fonts/viler/CP850.F16";
-        case "CP850 (8x14)":
-            return "../fonts/viler/CP850.F14";
-        case "CP850 (8x8)":
-            return "../fonts/viler/CP850.F08";
         case "CP849 (8x16)":
             return "../fonts/viler/CP849.F16";
         case "CP849 (8x14)":
@@ -1633,12 +1551,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP667.F14";
         case "CP667 (8x8)":
             return "../fonts/viler/CP667.F08";
-        case "CP437 (8x16)":
-            return "../fonts/viler/CP437.F16";
-        case "CP437 (8x14)":
-            return "../fonts/viler/CP437.F14";
-        case "CP437 (8x8)":
-            return "../fonts/viler/CP437.F08";
         case "CP113 (8x16)":
             return "../fonts/viler/CP113.F16";
         case "CP113 (8x14)":
@@ -1735,12 +1647,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/HAIK8.F14";
         case "HAIK8 (8x8)":
             return "../fonts/viler/HAIK8.F08";
-        case "CP1251 (8x16)":
-            return "../fonts/viler/CP1251.F16";
-        case "CP1251 (8x14)":
-            return "../fonts/viler/CP1251.F14";
-        case "CP1251 (8x8)":
-            return "../fonts/viler/CP1251.F08";
         case "CP866U (8x16)":
             return "../fonts/viler/CP866U.F16";
         case "CP866U (8x14)":
@@ -1751,38 +1657,14 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP866C.F16";
         case "CP866B (8x16)":
             return "../fonts/viler/CP866B.F16";
-        case "CP866 (8x16)":
-            return "../fonts/viler/CP866.F16";
-        case "CP866 (8x14)":
-            return "../fonts/viler/CP866.F14";
-        case "CP866 (8x8)":
-            return "../fonts/viler/CP866.F08";
-        case "CP865 (8x16)":
-            return "../fonts/viler/CP865.F16";
-        case "CP865 (8x14)":
-            return "../fonts/viler/CP865.F14";
-        case "CP865 (8x8)":
-            return "../fonts/viler/CP865.F08";
         case "CP865_T (8x16)":
             return "../fonts/viler/CP865_T.F16";
         case "CP865_T (8x8)":
             return "../fonts/viler/CP865_T.F08";
-        case "CP850 (8x16)":
-            return "../fonts/viler/CP850.F16";
-        case "CP850 (8x14)":
-            return "../fonts/viler/CP850.F14";
-        case "CP850 (8x8)":
-            return "../fonts/viler/CP850.F08";
         case "CP850_T (8x16)":
             return "../fonts/viler/CP850_T.F16";
         case "CP850_T (8x8)":
             return "../fonts/viler/CP850_T.F08";
-        case "CP437 (8x16)":
-            return "../fonts/viler/CP437.F16";
-        case "CP437 (8x14)":
-            return "../fonts/viler/CP437.F14";
-        case "CP437 (8x8)":
-            return "../fonts/viler/CP437.F08";
         case "CP437_T (8x16)":
             return "../fonts/viler/CP437_T.F16";
         case "CP437_T (8x8)":
@@ -1831,96 +1713,24 @@ function lookup_url(font_name) {
             return "../fonts/viler/CP880.F08";
         case "CP865 (8x19)":
             return "../fonts/viler/CP865.F19";
-        case "CP865 (8x16)":
-            return "../fonts/viler/CP865.F16";
-        case "CP865 (8x14)":
-            return "../fonts/viler/CP865.F14";
-        case "CP865 (8x8)":
-            return "../fonts/viler/CP865.F08";
-        case "CP864 (8x16)":
-            return "../fonts/viler/CP864.F16";
-        case "CP864 (8x14)":
-            return "../fonts/viler/CP864.F14";
-        case "CP864 (8x8)":
-            return "../fonts/viler/CP864.F08";
         case "CP863 (8x19)":
             return "../fonts/viler/CP863.F19";
-        case "CP863 (8x16)":
-            return "../fonts/viler/CP863.F16";
-        case "CP863 (8x14)":
-            return "../fonts/viler/CP863.F14";
-        case "CP863 (8x8)":
-            return "../fonts/viler/CP863.F08";
-        case "CP862 (8x16)":
-            return "../fonts/viler/CP862.F16";
-        case "CP862 (8x14)":
-            return "../fonts/viler/CP862.F14";
-        case "CP862 (8x8)":
-            return "../fonts/viler/CP862.F08";
         case "CP861 (8x19)":
             return "../fonts/viler/CP861.F19";
-        case "CP861 (8x16)":
-            return "../fonts/viler/CP861.F16";
-        case "CP861 (8x14)":
-            return "../fonts/viler/CP861.F14";
-        case "CP861 (8x8)":
-            return "../fonts/viler/CP861.F08";
         case "CP860 (8x19)":
             return "../fonts/viler/CP860.F19";
-        case "CP860 (8x16)":
-            return "../fonts/viler/CP860.F16";
-        case "CP860 (8x14)":
-            return "../fonts/viler/CP860.F14";
-        case "CP860 (8x8)":
-            return "../fonts/viler/CP860.F08";
         case "CP853 (8x19)":
             return "../fonts/viler/CP853.F19";
-        case "CP853 (8x16)":
-            return "../fonts/viler/CP853.F16";
-        case "CP853 (8x14)":
-            return "../fonts/viler/CP853.F14";
-        case "CP853 (8x8)":
-            return "../fonts/viler/CP853.F08";
         case "CP852 (8x19)":
             return "../fonts/viler/CP852.F19";
-        case "CP852 (8x16)":
-            return "../fonts/viler/CP852.F16";
-        case "CP852 (8x14)":
-            return "../fonts/viler/CP852.F14";
-        case "CP852 (8x8)":
-            return "../fonts/viler/CP852.F08";
         case "CP851 (8x19)":
             return "../fonts/viler/CP851.F19";
-        case "CP851 (8x16)":
-            return "../fonts/viler/CP851.F16";
-        case "CP851 (8x14)":
-            return "../fonts/viler/CP851.F14";
-        case "CP851 (8x8)":
-            return "../fonts/viler/CP851.F08";
         case "CP850 (8x19)":
             return "../fonts/viler/CP850.F19";
-        case "CP850 (8x16)":
-            return "../fonts/viler/CP850.F16";
-        case "CP850 (8x14)":
-            return "../fonts/viler/CP850.F14";
-        case "CP850 (8x8)":
-            return "../fonts/viler/CP850.F08";
         case "CP437 (8x19)":
             return "../fonts/viler/CP437.F19";
-        case "CP437 (8x16)":
-            return "../fonts/viler/CP437.F16";
-        case "CP437 (8x14)":
-            return "../fonts/viler/CP437.F14";
-        case "CP437 (8x8)":
-            return "../fonts/viler/CP437.F08";
         case "CP113 (8x19)":
             return "../fonts/viler/CP113.F19";
-        case "CP113 (8x16)":
-            return "../fonts/viler/CP113.F16";
-        case "CP113 (8x14)":
-            return "../fonts/viler/CP113.F14";
-        case "CP113 (8x8)":
-            return "../fonts/viler/CP113.F08";
         case "CP112 (8x19)":
             return "../fonts/viler/CP112.F19";
         case "CP112 (8x16)":
@@ -2329,14 +2139,10 @@ function lookup_url(font_name) {
             return "../fonts/viler/&TURKISH.F14";
         case "RUSSIAN (8x14)":
             return "../fonts/viler/&RUSSIAN.F14";
-        case "POLISH (8x14)":
-            return "../fonts/viler/&POLISH.F14";
         case "HEBREW (8x14)":
             return "../fonts/viler/&HEBREW.F14";
         case "GREEK (8x14)":
             return "../fonts/viler/&GREEK.F14";
-        case "GAELIC (8x14)":
-            return "../fonts/viler/&GAELIC.F14";
         case "FARSI (8x14)":
             return "../fonts/viler/&FARSI.F14";
         case "EUROPE (8x14)":
@@ -2391,56 +2197,16 @@ function lookup_url(font_name) {
             return "../fonts/viler/SUPER.F14";
         case "STRETCH (8x14)":
             return "../fonts/viler/STRETCH.F14";
-        case "STANDARD (8x14)":
-            return "../fonts/viler/STANDARD.F14";
         case "SMALL (8x10)":
             return "../fonts/viler/SMALL.F10";
-        case "SLANT (8x14)":
-            return "../fonts/viler/SLANT.F14";
         case "SCRIPT (8x14)":
             return "../fonts/viler/SCRIPT.F14";
-        case "SANSERIF (8x14)":
-            return "../fonts/viler/SANSERIF.F14";
-        case "MEDIEVAL (8x14)":
-            return "../fonts/viler/MEDIEVAL.F14";
-        case "LCD (8x14)":
-            return "../fonts/viler/LCD.F14";
-        case "HRKGREEK (8x14)":
-            return "../fonts/viler/HRKGREEK.F14";
-        case "HOLLOW (8x14)":
-            return "../fonts/viler/HOLLOW.F14";
-        case "HERCULES (8x14)":
-            return "../fonts/viler/HERCULES.F14";
-        case "HERCULES (8x10)":
-            return "../fonts/viler/HERCULES.F10";
-        case "HERCULES (8x8)":
-            return "../fonts/viler/HERCULES.F08";
-        case "HERCITAL (8x8)":
-            return "../fonts/viler/HERCITAL.F08";
-        case "FUTURE (8x14)":
-            return "../fonts/viler/FUTURE.F14";
-        case "COURIER (8x14)":
-            return "../fonts/viler/COURIER.F14";
-        case "COMPUTER (8x14)":
-            return "../fonts/viler/COMPUTER.F14";
         case "CHESSPT3 (8x16)":
             return "../fonts/viler/CHESSPT3.F16";
         case "CHESSPT2 (8x16)":
             return "../fonts/viler/CHESSPT2.F16";
         case "CHESSPT1 (8x16)":
             return "../fonts/viler/CHESSPT1.F16";
-        case "BROADWAY (8x14)":
-            return "../fonts/viler/BROADWAY.F14";
-        case "BOLD (8x14)":
-            return "../fonts/viler/BOLD.F14";
-        case "BLOCK (8x14)":
-            return "../fonts/viler/BLOCK.F14";
-        case "BLCKSNSF (8x10)":
-            return "../fonts/viler/BLCKSNSF.F10";
-        case "BIGSF (8x14)":
-            return "../fonts/viler/BIGSF.F14";
-        case "BIGSERIF (8x16)":
-            return "../fonts/viler/BIGSERIF.F16";
         case "VGAHEB92 (8x16)":
             return "../fonts/viler/VGAHEB92.F16";
         case "LOADHEB (8x16)":
@@ -2499,8 +2265,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/SMEGA88.F08";
         case "SMEGA (8x14)":
             return "../fonts/viler/SMEGA.F14";
-        case "SMALL (8x10)":
-            return "../fonts/viler/SMALL.F10";
         case "SIMPLE (8x16)":
             return "../fonts/viler/SIMPLE.F16";
         case "SIMPAGAR (8x16)":
@@ -2695,12 +2459,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/INVERTED.F14";
         case "ICONS (8x14)":
             return "../fonts/viler/ICONS.F14";
-        case "CP866 (8x16)":
-            return "../fonts/viler/CP866.F16";
-        case "CP866 (8x14)":
-            return "../fonts/viler/CP866.F14";
-        case "CP866 (8x8)":
-            return "../fonts/viler/CP866.F08";
         case "BACKWARD (8x14)":
             return "../fonts/viler/BACKWARD.F14";
         case "THINSCRP (8x14)":
@@ -3541,16 +3299,12 @@ function lookup_url(font_name) {
             return "../fonts/viler/SWISSBOX.F16";
         case "SWISSAV2 (8x16)":
             return "../fonts/viler/SWISSAV2.F16";
-        case "SWISS (8x16)":
-            return "../fonts/viler/SWISS.F16";
         case "SWISS-AV (8x16)":
             return "../fonts/viler/SWISS-AV.F16";
         case "SUPER (8x16)":
             return "../fonts/viler/SUPER.F16";
         case "SUBSUP (8x16)":
             return "../fonts/viler/SUBSUP.F16";
-        case "STRETCH (8x14)":
-            return "../fonts/viler/STRETCH.F14";
         case "STANDARD (8x16)":
             return "../fonts/viler/STANDARD.F16";
         case "SQUARE (8x12)":
@@ -3575,12 +3329,8 @@ function lookup_url(font_name) {
             return "../fonts/viler/SCRAWL2.F16";
         case "SANSERIX (8x16)":
             return "../fonts/viler/SANSERIX.F16";
-        case "SANSERIF (8x16)":
-            return "../fonts/viler/SANSERIF.F16";
         case "RUSSIAN (8x16)":
             return "../fonts/viler/RUSSIAN.F16";
-        case "RUSSIAN (8x14)":
-            return "../fonts/viler/RUSSIAN.F14";
         case "RUSSIAN (8x8)":
             return "../fonts/viler/RUSSIAN.F08";
         case "RUNIC (8x14)":
@@ -3699,8 +3449,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/GREEK2.F14";
         case "GREEK (8x16)":
             return "../fonts/viler/GREEK.F16";
-        case "GREEK (8x14)":
-            return "../fonts/viler/GREEK.F14";
         case "GRCKSSRF (8x16)":
             return "../fonts/viler/GRCKSSRF.F16";
         case "GRCKSSRF (8x14)":
@@ -3843,7 +3591,6 @@ function lookup_url(font_name) {
             return "../fonts/viler/40C-TYPE.F24";
         case "9THWAVE (8x14)":
             return "../fonts/viler/9THWAVE.F14";
-
         default:
             return "../fonts/ibm/CP437.F16";
     }
