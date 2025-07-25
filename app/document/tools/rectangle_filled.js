@@ -1,39 +1,49 @@
 const doc = require("../doc");
-const {tools, toolbar} = require("../ui/ui");
+const { tools, toolbar } = require("../ui/ui");
 const mouse = require("../input/mouse");
 const keyboard = require("../input/keyboard");
 const brushes = require("./brushes");
 const palette = require("../palette");
-const {Overlay} = require("./overlay");
-const {on} = require("../../senders");
+const { Overlay } = require("./overlay");
+const { on } = require("../../senders");
 let enabled = false;
 let overlay;
 let clear = false;
 
 tools.on("start", (mode) => {
-    enabled = (mode == tools.modes.RECTANGLE_FILLED);
+    enabled = mode == tools.modes.RECTANGLE_FILLED;
     if (enabled) toolbar.show_brush();
 });
 
 function reorientate(sx, sy, dx, dy) {
-    const [new_sx, new_dx] = (sx < dx) ? [sx, dx] : [dx, sx];
-    const [new_sy, new_dy] = (sy < dy) ? [sy, dy] : [dy, sy];
-    return {sx: new_sx, sy: new_sy, dx: new_dx, dy: new_dy};
+    const [new_sx, new_dx] = sx < dx ? [sx, dx] : [dx, sx];
+    const [new_sy, new_dy] = sy < dy ? [sy, dy] : [dy, sy];
+    return { sx: new_sx, sy: new_sy, dx: new_dx, dy: new_dy };
 }
 
 function half_block_rectangle_overlay(sx, sy, dx, dy, col) {
     const font = doc.font;
-    overlay.update(sx * font.width, Math.floor(sy * font.height / 2), (dx - sx + 1) * font.width, Math.ceil((dy - sy + 1) * font.height / 2));
+    overlay.update(
+        sx * font.width,
+        Math.floor((sy * font.height) / 2),
+        (dx - sx + 1) * font.width,
+        Math.ceil(((dy - sy + 1) * font.height) / 2)
+    );
     overlay.background_color(font, col);
 }
 
 function rectangle_overlay(sx, sy, dx, dy, col) {
     const font = doc.font;
-    overlay.update(sx * font.width, sy * font.height, (dx - sx + 1) * font.width, (dy - sy + 1) * font.height);
+    overlay.update(
+        sx * font.width,
+        sy * font.height,
+        (dx - sx + 1) * font.width,
+        (dy - sy + 1) * font.height
+    );
     overlay.background_color(font, col);
 }
 
-mouse.on("down",(x, y, half_y, is_legal, button, shift_key) => {
+mouse.on("down", (x, y, half_y, is_legal, button, shift_key) => {
     if (!enabled) return;
     clear = shift_key;
     overlay = new Overlay();
@@ -42,21 +52,38 @@ mouse.on("down",(x, y, half_y, is_legal, button, shift_key) => {
 
 mouse.on("to", (x, y, half_y, button) => {
     if (!enabled) return;
-    const {fg, bg} = palette;
+    const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
-        const {sx, sy, dx, dy} = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
+        const { sx, sy, dx, dy } = reorientate(
+            mouse.start.x,
+            mouse.start.half_y,
+            x,
+            half_y
+        );
         if (clear) {
             half_block_rectangle_overlay(sx, sy, dx, dy, 0);
         } else {
-            half_block_rectangle_overlay(sx, sy, dx, dy, (button == mouse.buttons.LEFT) ? fg : bg);
+            half_block_rectangle_overlay(
+                sx,
+                sy,
+                dx,
+                dy,
+                button == mouse.buttons.LEFT ? fg : bg
+            );
         }
         return;
     }
-    const {sx, sy, dx, dy} = reorientate(mouse.start.x, mouse.start.y, x, y);
+    const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.y, x, y);
     if (clear) {
         rectangle_overlay(sx, sy, dx, dy, 0);
     } else {
-        rectangle_overlay(sx, sy, dx, dy, (button == mouse.buttons.LEFT) ? fg : bg);
+        rectangle_overlay(
+            sx,
+            sy,
+            dx,
+            dy,
+            button == mouse.buttons.LEFT ? fg : bg
+        );
     }
 });
 
@@ -64,37 +91,71 @@ mouse.on("up", (x, y, half_y, button) => {
     if (!enabled) return;
     overlay.destroy();
     doc.start_undo();
-    const {fg, bg} = palette;
+    const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
-        const {sx, sy, dx, dy} = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
+        const { sx, sy, dx, dy } = reorientate(
+            mouse.start.x,
+            mouse.start.half_y,
+            x,
+            half_y
+        );
         if (clear) {
-            for (let y = sy; y <= dy; y++) brushes.single_half_block_line(sx, y, dx, y, 0);
+            for (let y = sy; y <= dy; y++)
+                brushes.single_half_block_line(sx, y, dx, y, 0);
         } else {
-            const col = (button == mouse.buttons.LEFT) ? fg : bg;
-            for (let y = sy; y <= dy; y++) brushes.single_half_block_line(sx, y, dx, y, col);
+            const col = button == mouse.buttons.LEFT ? fg : bg;
+            for (let y = sy; y <= dy; y++)
+                brushes.single_half_block_line(sx, y, dx, y, col);
         }
         return;
     }
-    const {sx, sy, dx, dy} = reorientate(mouse.start.x, mouse.start.y, x, y);
+    const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.y, x, y);
     if (clear) {
-        for (let y = sy; y <= dy; y++) brushes.single_clear_block_line(sx, y, dx, y);
+        for (let y = sy; y <= dy; y++)
+            brushes.single_clear_block_line(sx, y, dx, y);
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:
-                for (let y = sy; y <= dy; y++) brushes.single_custom_block_line(sx, y, dx, y, fg, bg);
+                for (let y = sy; y <= dy; y++)
+                    brushes.single_custom_block_line(sx, y, dx, y, fg, bg);
                 break;
             case toolbar.modes.SHADING_BLOCK:
-                const reduce = (button != mouse.buttons.LEFT);
-                for (let y = sy; y <= dy; y++) brushes.single_shading_block_line(sx, y, dx, y, fg, bg, reduce);
+                const reduce = button != mouse.buttons.LEFT;
+                for (let y = sy; y <= dy; y++)
+                    brushes.single_shading_block_line(
+                        sx,
+                        y,
+                        dx,
+                        y,
+                        fg,
+                        bg,
+                        reduce
+                    );
                 break;
             case toolbar.modes.REPLACE_COLOR:
-                for (let y = sy; y <= dy; y++) brushes.single_replace_color_line(sx, y, dx, y, fg, bg);
+                for (let y = sy; y <= dy; y++)
+                    brushes.single_replace_color_line(sx, y, dx, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
-                for (let y = sy; y <= dy; y++) brushes.single_blink_line(sx, y, dx, y, button != mouse.buttons.LEFT);
+                for (let y = sy; y <= dy; y++)
+                    brushes.single_blink_line(
+                        sx,
+                        y,
+                        dx,
+                        y,
+                        button != mouse.buttons.LEFT
+                    );
                 break;
             case toolbar.modes.COLORIZE:
-                for (let y = sy; y <= dy; y++) brushes.single_colorize_line(sx, y, dx, y, toolbar.colorize_fg ? fg : undefined, toolbar.colorize_bg ? bg : undefined);
+                for (let y = sy; y <= dy; y++)
+                    brushes.single_colorize_line(
+                        sx,
+                        y,
+                        dx,
+                        y,
+                        toolbar.colorize_fg ? fg : undefined,
+                        toolbar.colorize_bg ? bg : undefined
+                    );
                 break;
         }
     }

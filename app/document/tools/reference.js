@@ -1,4 +1,4 @@
-const {tools, toolbar} = require("../ui/ui");
+const { tools, toolbar } = require("../ui/ui");
 
 let enabled = false;
 
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 tools.on("start", (mode) => {
-    enabled = (mode === tools.modes.REFERENCE);
+    enabled = mode === tools.modes.REFERENCE;
     if (enabled) {
         toolbar.show_reference();
         reference_image.classList.add("selected");
@@ -23,7 +23,6 @@ tools.on("start", (mode) => {
         document.body.addEventListener("pointermove", pointer_move, true);
         document.body.addEventListener("pointerup", pointer_up, true);
         document.body.addEventListener("pointerout", pointer_out, true);
-
     } else {
         reference_image.classList.remove("selected");
         viewport.classList.remove("reference-tool");
@@ -33,7 +32,6 @@ tools.on("start", (mode) => {
         document.body.removeEventListener("pointerout", pointer_out, true);
     }
 });
-
 
 function move_reference(y, x) {
     reference_image.style.top = `${y}px`;
@@ -46,11 +44,11 @@ function pointer_down(event) {
 
     mouse_start_pos = {
         y: event.clientY,
-        x: event.clientX
+        x: event.clientX,
     };
     reference_start_pos = {
         y: parseFloat(getComputedStyle(reference_image).top) || 0,
-        x: parseFloat(getComputedStyle(reference_image).left) || 0
+        x: parseFloat(getComputedStyle(reference_image).left) || 0,
     };
 }
 
@@ -69,6 +67,9 @@ function pointer_move(event) {
     if (mouse_start_pos) {
         const y_offset = event.clientY - mouse_start_pos.y;
         const x_offset = event.clientX - mouse_start_pos.x;
-        move_reference(reference_start_pos.y + y_offset, reference_start_pos.x + x_offset);
+        move_reference(
+            reference_start_pos.y + y_offset,
+            reference_start_pos.x + x_offset
+        );
     }
 }

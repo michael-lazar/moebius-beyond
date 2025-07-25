@@ -7,12 +7,12 @@
 ### Fixed
 
 - Fixed the new zoom system to better support trackpads.
-  - Two-finger pinch on trackpad will zoom the canvas.
-  - Two-finger touch on trackpad will pan the canvas.
-  - Added magnetic snapping at 10% zoom intervals.
-  - Added sensitivity threshold to prevent accidental panning.
-  - Added a velocity curve to the zooming to make it more
-    consistent at different scales.
+    - Two-finger pinch on trackpad will zoom the canvas.
+    - Two-finger touch on trackpad will pan the canvas.
+    - Added magnetic snapping at 10% zoom intervals.
+    - Added sensitivity threshold to prevent accidental panning.
+    - Added a velocity curve to the zooming to make it more
+      consistent at different scales.
 
 ## v3.2.0 (2025-07-22)
 
@@ -24,13 +24,13 @@
 ### Changed
 
 - Overhauled the zooming system for the main canvas.
-  - The canvas now zooms independently from other elements in the UI.
-  - Mousewheel zooming is smoother and more responsive.
-  - Mousewheel zooming is anchored to the mouse pointer position.
-  - Added more zoom menu items with preset levels from 10% to 500%.
-  - Added middle mouse button click-and-drag to pan the canvas.
-  - Added middle mouse button double-click to reset zoom to 100%.
-  - Fixed window scrolling when moving the cursor while zoomed in.
+    - The canvas now zooms independently from other elements in the UI.
+    - Mousewheel zooming is smoother and more responsive.
+    - Mousewheel zooming is anchored to the mouse pointer position.
+    - Added more zoom menu items with preset levels from 10% to 500%.
+    - Added middle mouse button click-and-drag to pan the canvas.
+    - Added middle mouse button double-click to reset zoom to 100%.
+    - Fixed window scrolling when moving the cursor while zoomed in.
 
 ### Fixed
 
@@ -49,7 +49,7 @@
 
 - Fixed broken links in the Help menu and removed outdated URLs.
 - Fixed GSJCI fonts not loading correctly.
-- Fixed "Share Online" menu option to upload .ans files to 16colors. 
+- Fixed "Share Online" menu option to upload .ans files to 16colors.
 - Fixed "Load Custom Font" menu option to work again.
 - Fixed "Open Reference Image" menu option & hotkey to work again.
 - Fixed the debug menu showing even if it had not been enabled.
@@ -58,7 +58,7 @@
 
 ### Removed
 
-- Removed miscellaneous server/client code. The server feature of 
+- Removed miscellaneous server/client code. The server feature of
   moebius does not work with this fork, and I have no intention of
   supporting it going forward.
 - Removed the discord rich presence feature.
@@ -68,7 +68,7 @@
 
 ### Fixed
 
-- Fixed a bug preventing Shift+Mouse Wheel Up from changing the reference image 
+- Fixed a bug preventing Shift+Mouse Wheel Up from changing the reference image
   opacity.
 - Right-justifying a line will no longer reset the background color.
 - Remapped the hotkeys for Insert/Delete Row/Column to avoid conflicting with

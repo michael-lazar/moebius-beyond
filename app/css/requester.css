@@ -4,7 +4,8 @@ body {
     overflow: hidden;
 }
 
-#resize_requester, #sauce_requester {
+#resize_requester,
+#sauce_requester {
     font-size: 13px;
     margin: 0 auto;
     overflow: hidden;
@@ -48,7 +49,8 @@ label {
     width: 105px;
 }
 
-input, textarea {
+input,
+textarea {
     background: none;
     outline: none;
     color: white;
@@ -65,11 +67,11 @@ input {
     border: 1px solid var(--mid-color);
 }
 
-input[type=text] {
+input[type="text"] {
     width: 170px;
 }
 
-input[type=number] {
+input[type="number"] {
     margin-left: 8px;
     width: 100px;
 }
@@ -106,7 +108,7 @@ button:active {
 #comments {
     overflow-y: scroll;
     font-size: 100%;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
     padding: 2px;
     width: 66ch;
 }

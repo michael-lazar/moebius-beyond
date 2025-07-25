@@ -2,16 +2,28 @@ function $(name) {
     return document.getElementById(name);
 }
 
-function bytes_to_blocks({columns, rows, bytes}) {
+function bytes_to_blocks({ columns, rows, bytes }) {
     const data = new Array(columns * rows);
     for (let i = 0, j = 0; i < data.length; i++, j++) {
-        data[i] = {code: bytes[j++], bg: bytes[j] >> 4, fg: bytes[j] & 0xf};
+        data[i] = { code: bytes[j++], bg: bytes[j] >> 4, fg: bytes[j] & 0xf };
     }
     return data;
 }
 
 class Sauce {
-    constructor({columns, rows, title = "", author = "", group = "", date, filesize = 0, ice_colors = false, use_9px_font = false, font_name = "Default", comments = ""} = {}) {
+    constructor({
+        columns,
+        rows,
+        title = "",
+        author = "",
+        group = "",
+        date,
+        filesize = 0,
+        ice_colors = false,
+        use_9px_font = false,
+        font_name = "Default",
+        comments = "",
+    } = {}) {
         this.columns = columns;
         this.rows = rows;
         this.title = title;
@@ -44,16 +56,16 @@ function current_date() {
     return `${year}${month}${day}`;
 }
 
-const data_type_types = {CHARACTER: 1, BIN: 5, XBIN: 6};
-const file_type_types = {NONE: 0, ANS_FILETYPE: 1};
+const data_type_types = { CHARACTER: 1, BIN: 5, XBIN: 6 };
+const file_type_types = { NONE: 0, ANS_FILETYPE: 1 };
 
 function add_comments_bytes(rawcomments, sauce_bytes) {
     var comments = "";
     var commentlines = rawcomments.split("\n");
-    for (var i = 0; i<commentlines.length; i++) {
+    for (var i = 0; i < commentlines.length; i++) {
         var s = 0;
         while (commentlines[i].length > 0) {
-            var line = commentlines[i].substr((s * 64), 64).trim();
+            var line = commentlines[i].substr(s * 64, 64).trim();
             if (line.length == 0) break;
             s++;
             line = line.padEnd(64, " ");
@@ -76,10 +88,10 @@ function comments_length(rawcomments) {
     } else {
         var commentlines = rawcomments.split("\n");
         var count = 0;
-        for (var i = 0; i<commentlines.length; i++) {
+        for (var i = 0; i < commentlines.length; i++) {
             var s = 0;
             while (commentlines[i].length > 0) {
-                var line = commentlines[i].substr((s * 64), 64).trim();
+                var line = commentlines[i].substr(s * 64, 64).trim();
                 if (line.length == 0) break;
                 s++;
                 count++;
@@ -97,7 +109,7 @@ function pad(text, length) {
     return out_bytes;
 }
 
-function add_sauce_bytes({doc, data_type, file_type, bytes: file_bytes}) {
+function add_sauce_bytes({ doc, data_type, file_type, bytes: file_bytes }) {
     let bytes = new Uint8Array(128);
     add_text(bytes, 0, "SAUCE00", 7);
     bytes.set(pad(doc.title, 35), 7);
@@ -128,7 +140,8 @@ function add_sauce_bytes({doc, data_type, file_type, bytes: file_bytes}) {
         } else {
             bytes[105] += 1 << 1;
         }
-        if (doc.font_name) add_text(bytes, 106, doc.font_name, doc.font_name.length);
+        if (doc.font_name)
+            add_text(bytes, 106, doc.font_name, doc.font_name.length);
     }
     if (doc.comments.length) bytes = add_comments_bytes(doc.comments, bytes);
     const merged_bytes = new Int8Array(file_bytes.length + 1 + bytes.length);
@@ -138,16 +151,31 @@ function add_sauce_bytes({doc, data_type, file_type, bytes: file_bytes}) {
     return merged_bytes;
 }
 
-function add_sauce_for_ans({doc, bytes}) {
-    return add_sauce_bytes({doc, data_type: data_type_types.CHARACTER, file_type: file_type_types.ANS_FILETYPE, bytes});
+function add_sauce_for_ans({ doc, bytes }) {
+    return add_sauce_bytes({
+        doc,
+        data_type: data_type_types.CHARACTER,
+        file_type: file_type_types.ANS_FILETYPE,
+        bytes,
+    });
 }
 
-function add_sauce_for_bin({doc, bytes}) {
-    return add_sauce_bytes({doc, data_type: data_type_types.BIN, file_type: file_type_types.NONE, bytes});
+function add_sauce_for_bin({ doc, bytes }) {
+    return add_sauce_bytes({
+        doc,
+        data_type: data_type_types.BIN,
+        file_type: file_type_types.NONE,
+        bytes,
+    });
 }
 
-function add_sauce_for_xbin({doc, bytes}) {
-    return add_sauce_bytes({doc, data_type: data_type_types.XBIN, file_type: file_type_types.NONE, bytes});
+function add_sauce_for_xbin({ doc, bytes }) {
+    return add_sauce_bytes({
+        doc,
+        data_type: data_type_types.XBIN,
+        file_type: file_type_types.NONE,
+        bytes,
+    });
 }
 
 function bytes_to_utf8(bytes, offset, size) {
@@ -157,12 +185,19 @@ function bytes_to_utf8(bytes, offset, size) {
 function get_sauce(bytes) {
     if (bytes.length >= 128) {
         const sauce_bytes = bytes.slice(-128);
-        if (bytes_to_utf8(sauce_bytes, 0, 5) == "SAUCE" && bytes_to_utf8(sauce_bytes, 5, 2) == "00") {
+        if (
+            bytes_to_utf8(sauce_bytes, 0, 5) == "SAUCE" &&
+            bytes_to_utf8(sauce_bytes, 5, 2) == "00"
+        ) {
             const title = bytes_to_utf8(sauce_bytes, 7, 35);
             const author = bytes_to_utf8(sauce_bytes, 42, 20);
             const group = bytes_to_utf8(sauce_bytes, 62, 20);
             const date = bytes_to_utf8(sauce_bytes, 82, 8);
-            let filesize = (sauce_bytes[93] << 24) + (sauce_bytes[92] << 16) + (sauce_bytes[91] << 8) + sauce_bytes[90];
+            let filesize =
+                (sauce_bytes[93] << 24) +
+                (sauce_bytes[92] << 16) +
+                (sauce_bytes[91] << 8) +
+                sauce_bytes[90];
             const datatype = sauce_bytes[94];
             let columns, rows;
             if (datatype == 5) {
@@ -173,23 +208,43 @@ function get_sauce(bytes) {
                 rows = (sauce_bytes[99] << 8) + sauce_bytes[98];
             }
             const number_of_comments = sauce_bytes[104];
-            const rawcomments = bytes.subarray(bytes.length - (number_of_comments * 64) - 128, bytes.length - 128).toString("utf-8");
+            const rawcomments = bytes
+                .subarray(
+                    bytes.length - number_of_comments * 64 - 128,
+                    bytes.length - 128
+                )
+                .toString("utf-8");
             var comments = "";
-            for (i=0; i<number_of_comments; i++) {
+            for (i = 0; i < number_of_comments; i++) {
                 var line = rawcomments.substr(i * 64, 64).trim();
-                if (i != (number_of_comments-1)) line += "\n";
+                if (i != number_of_comments - 1) line += "\n";
                 comments += line;
             }
             const flags = sauce_bytes[105];
             const ice_colors = (flags & 0x01) == 1;
-            const use_9px_font = (flags >> 1 & 0x02) == 2;
-            let font_name = bytes_to_utf8(sauce_bytes, 106, 22).replace(/\0/g, "");
+            const use_9px_font = ((flags >> 1) & 0x02) == 2;
+            let font_name = bytes_to_utf8(sauce_bytes, 106, 22).replace(
+                /\0/g,
+                ""
+            );
             if (font_name == "") font_name = "Default";
             if (filesize == 0) {
                 filesize = bytes.length = 128;
                 if (number_of_comments) filesize -= number_of_comments * 64 + 5;
             }
-            return new Sauce({columns, rows, title, author, group, date, filesize, ice_colors, use_9px_font, font_name, comments});
+            return new Sauce({
+                columns,
+                rows,
+                title,
+                author,
+                group,
+                date,
+                filesize,
+                ice_colors,
+                use_9px_font,
+                font_name,
+                comments,
+            });
         }
     }
     const sauce = new Sauce();
@@ -239,7 +294,7 @@ class Textmode {
     add_to_palette(rgb, key = null) {
         key = key || Object.values(rgb).join("|");
         this.palette_array.push(rgb);
-        return this.palette_hashmap[key] = this.palette_array.length - 1;
+        return (this.palette_hashmap[key] = this.palette_array.length - 1);
     }
 }
 
@@ -258,7 +313,7 @@ function resize_canvas(doc, columns, rows) {
     const min_columns = Math.min(doc.columns, columns);
     const new_data = new Array(columns * rows);
     for (let i = 0; i < new_data.length; i++) {
-        new_data[i] = ({code: 32, fg: 7, bg: 0});
+        new_data[i] = { code: 32, fg: 7, bg: 0 };
     }
     for (let y = 0; y < min_rows; y++) {
         for (let x = 0; x < min_columns; x++) {
@@ -269,10 +324,19 @@ function resize_canvas(doc, columns, rows) {
     doc.columns = columns;
     doc.rows = rows;
     if (client) {
-        const {send} = require("../senders");
+        const { send } = require("../senders");
         $("drawing_grid").classList.add("hidden");
         send("uncheck_all_guides");
     }
 }
 
-module.exports = {bytes_to_blocks, bytes_to_utf8, current_date, Textmode, add_sauce_for_ans, add_sauce_for_bin, add_sauce_for_xbin, resize_canvas};
+module.exports = {
+    bytes_to_blocks,
+    bytes_to_utf8,
+    current_date,
+    Textmode,
+    add_sauce_for_ans,
+    add_sauce_for_bin,
+    add_sauce_for_xbin,
+    resize_canvas,
+};

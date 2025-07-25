@@ -56,7 +56,10 @@ function update_frame() {
         scale_factor *= get_zoom_level();
 
         const width = Math.min(Math.ceil(view_rect.width / scale_factor), 260);
-        const height = Math.min(Math.ceil(view_rect.height / scale_factor), render.height / (render.width / 260));
+        const height = Math.min(
+            Math.ceil(view_rect.height / scale_factor),
+            render.height / (render.width / 260)
+        );
         const top = Math.ceil(viewport.scrollTop / scale_factor);
         const left = Math.ceil(viewport.scrollLeft / scale_factor);
         const preview = $("preview");
@@ -66,7 +69,8 @@ function update_frame() {
         view_frame.style.left = `${20 + left}px`;
         if (top < preview.scrollTop) preview.scrollTop = top;
         const preview_height = preview.getBoundingClientRect().height;
-        if (top > preview_height + preview.scrollTop - height - 2) preview.scrollTop = top - preview_height + height + 2;
+        if (top > preview_height + preview.scrollTop - height - 2)
+            preview.scrollTop = top - preview_height + height + 2;
     }
 }
 
@@ -77,17 +81,24 @@ function add(new_render) {
     const blink_on_container = $("blink_on_container");
     const preview = $("preview");
     if (render) {
-        for (const canvas of render.ice_color_collection) ice_color_container.removeChild(canvas);
-        for (const canvas of render.blink_off_collection) blink_off_container.removeChild(canvas);
-        for (const canvas of render.blink_on_collection) blink_on_container.removeChild(canvas);
-        for (const canvas of render.preview_collection) preview.removeChild(canvas);
+        for (const canvas of render.ice_color_collection)
+            ice_color_container.removeChild(canvas);
+        for (const canvas of render.blink_off_collection)
+            blink_off_container.removeChild(canvas);
+        for (const canvas of render.blink_on_collection)
+            blink_on_container.removeChild(canvas);
+        for (const canvas of render.preview_collection)
+            preview.removeChild(canvas);
     }
     render = new_render;
     $("canvas_container").style.width = `${render.width}px`;
     $("canvas_container").style.height = `${render.height}px`;
-    for (const canvas of render.ice_color_collection) ice_color_container.appendChild(canvas);
-    for (const canvas of render.blink_off_collection) blink_off_container.appendChild(canvas);
-    for (const canvas of render.blink_on_collection) blink_on_container.appendChild(canvas);
+    for (const canvas of render.ice_color_collection)
+        ice_color_container.appendChild(canvas);
+    for (const canvas of render.blink_off_collection)
+        blink_off_container.appendChild(canvas);
+    for (const canvas of render.blink_on_collection)
+        blink_on_container.appendChild(canvas);
     for (const canvas of render.preview_collection) preview.appendChild(canvas);
     show("view_frame");
     update_frame();
@@ -128,18 +139,29 @@ function unregister_button(event) {
     }
 }
 
-window.addEventListener("DOMContentLoaded", (event) => {
-    $("viewport").addEventListener("scroll", event => update_frame(), true);
-    window.addEventListener("resize", event => update_frame(), true);
-    $("preview").addEventListener("mousedown", mouse_down, true);
-    $("preview").addEventListener("mousemove", mouse_move, true);
-    $("preview").addEventListener("mouseup", unregister_button, true);
-    $("preview").addEventListener("mouseout", unregister_button, true);
-}, true);
+window.addEventListener(
+    "DOMContentLoaded",
+    (event) => {
+        $("viewport").addEventListener(
+            "scroll",
+            (event) => update_frame(),
+            true
+        );
+        window.addEventListener("resize", (event) => update_frame(), true);
+        $("preview").addEventListener("mousedown", mouse_down, true);
+        $("preview").addEventListener("mousemove", mouse_move, true);
+        $("preview").addEventListener("mouseup", unregister_button, true);
+        $("preview").addEventListener("mouseout", unregister_button, true);
+    },
+    true
+);
 
 function goto_row(row) {
-    const rows_in_view = Math.floor($("viewport").getBoundingClientRect().height / doc.font.height);
-    $("viewport").scrollTop = (row - Math.floor(rows_in_view / 2)) * doc.font.height;
+    const rows_in_view = Math.floor(
+        $("viewport").getBoundingClientRect().height / doc.font.height
+    );
+    $("viewport").scrollTop =
+        (row - Math.floor(rows_in_view / 2)) * doc.font.height;
 }
 
 doc.on("render", () => add(doc.render));

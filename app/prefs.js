@@ -20,7 +20,8 @@ const default_values = {
     discord: false,
     use_backup: false,
     backup_folder: "",
-    fkeys: [ // Stolen mercilously from Pablo, thanks Curtis!
+    fkeys: [
+        // Stolen mercilously from Pablo, thanks Curtis!
         [218, 191, 192, 217, 196, 179, 195, 180, 193, 194, 32, 32],
         [201, 187, 200, 188, 205, 186, 204, 185, 202, 203, 32, 32],
         [213, 184, 212, 190, 205, 179, 198, 181, 207, 209, 32, 32],
@@ -45,17 +46,23 @@ const default_values = {
     default_fkeys: 5,
     server: "",
     pass: "",
-    saved_servers: []
+    saved_servers: [],
 };
 const fs = require("fs");
 const JSON5 = require("json5");
-const prefs = (fs.existsSync(file)) ? JSON5.parse(fs.readFileSync(file, "utf-8")) : default_values;
+const prefs = fs.existsSync(file)
+    ? JSON5.parse(fs.readFileSync(file, "utf-8"))
+    : default_values;
 
-if (prefs.fkeys == undefined || prefs.fkeys.length == 16) prefs.fkeys = default_values.fkeys;
+if (prefs.fkeys == undefined || prefs.fkeys.length == 16)
+    prefs.fkeys = default_values.fkeys;
 
 function set(key, value) {
     prefs[key] = value;
-    fs.writeFileSync(path.join(electron.app.getPath("userData"), "preferences.json"), JSON5.stringify(prefs, undefined, "  "));
+    fs.writeFileSync(
+        path.join(electron.app.getPath("userData"), "preferences.json"),
+        JSON5.stringify(prefs, undefined, "  ")
+    );
 }
 
 function assign_default(key) {
@@ -77,4 +84,4 @@ function send(win) {
     for (const key of Object.keys(prefs)) win.send(key, prefs[key]);
 }
 
-module.exports = {set, get, get_all, send};
+module.exports = { set, get, get_all, send };

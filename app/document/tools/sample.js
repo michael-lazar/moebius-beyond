@@ -1,13 +1,13 @@
-const {tools, toolbar} = require("../ui/ui");
+const { tools, toolbar } = require("../ui/ui");
 const mouse = require("../input/mouse");
 const keyboard = require("../input/keyboard");
 const palette = require("../palette");
 const doc = require("../doc");
-const {on} = require("../../senders");
+const { on } = require("../../senders");
 let enabled = false;
 
 tools.on("start", (mode) => {
-    enabled = (mode == tools.modes.SAMPLE);
+    enabled = mode == tools.modes.SAMPLE;
     if (enabled) toolbar.show_sample();
 });
 

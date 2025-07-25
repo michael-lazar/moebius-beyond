@@ -1,84 +1,137 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Preferences</title>
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/preferences.css">
-    <script src="../windows/preferences.js"></script>
-</head>
-<body>
-    <form>
-        <div>
-            <label class="text_box" for="nick">Nickname:</label><input type="text" name="nick" id="nick" value="" autofocus>
-        </div>
-        <div>
-            <label class="text_box" for="nick">Group:</label><input type="text" name="group" id="group" value="" autofocus>
-        </div>
-        <div>
-            <label for="use_numpad">Use Numpad Keys as Function Keys:</label><input type="checkbox" name="use_numpad" id="use_numpad">
-        </div>
-        <div>
-            <label for="use_shift">Use Shift and Movement to Select:</label><input type="checkbox" name="use_shift" id="use_shift">
-        </div>
-        <div>
-            <label for="chunked_undo">Chunked Undo for Freehand Tools:</label><input type="checkbox" name="chunked_undo" id="chunked_undo">
-        </div>
-        <div>
-            <label for="use_flashing_cursor">Use Flashing Box-type Cursor:</label><input type="checkbox" name="use_flashing_cursor" id="use_flashing_cursor">
-        </div>
-        <div>
-            <label for="hide_scrollbars">Hide Scrollbars:</label><input type="checkbox" name="hide_scrollbars" id="hide_scrollbars">
-        </div>
-        <div>
-            <label for="unsaved_changes">Reminders for Unsaved Changes:</label><input type="checkbox" name="unsaved_changes" id="unsaved_changes">
-        </div>
-        <div>
-            <label for="use_pixel_aliasing">Smooth Blocks When Zooming:</label><input type="checkbox" name="use_pixel_aliasing" id="use_pixel_aliasing">
-        </div>
-        <div>
-            <label class="number_box" for="scroll_margin">Scroll Margin:</label><input type="number" name="scroll_margin" id="scroll_margin">
-        </div>
-        <div>
-            <label class="number_box" for="new_document_rows">Rows for New Documents:</label><input type="number" name="new_document_rows" id="new_document_rows">
-        </div>
-        <div>
-            <label for="retention">Retain Files Pasted Online For:</label>
-            <select name="retention" id="retention">
-                <option value="300">5 Minutes</option>
-                <option value="900">15 Minutes</option>
-                <option value="3600">1 Hour</option>
-                <option value="7200">2 Hours</option>
-                <option value="43200">12 Hours</option>
-                <option value="86400">1 Day</option>
-                <option value="172800">2 Days</option>
-                <option value="604800">1 Week</option>
-                <option value="1209600">2 Weeks</option>
-                <option value="2678400">1 Month</option>
-                <option value="8035200" selected>3 Months</option>
-                <option value="31536000">1 Year</option>
-                <option value="0">Forever</option>
-            </select>
-        </div>
-        <div>
-            <label for="smallscale_guide">80×25 Guide Turned on by Default:</label><input type="checkbox" name="smallscale_guide" id="smallscale_guide">
-        </div>
-        <div>
-            <label for="debug">Enable Debug Menu:</label><input type="checkbox" name="debug" id="debug">
-        </div>
-        <div>
-            <label for="ignore_hdpi">Ignore Windows HiDPI (requires relaunch):</label><input type="checkbox" name="ignore_hdpi" id="ignore_hdpi">
-        </div>
-        <div>
-            <label for="use_backup">Save Hourly Timestamped Backups:</label><input type="checkbox" name="use_backup" id="use_backup">
-            <div id="timestamp_box">
-                <div id="backup_folder"></div>
-                <button id="backup_choose">Choose…</button>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Preferences</title>
+        <link rel="stylesheet" href="../css/global.css" />
+        <link rel="stylesheet" href="../css/preferences.css" />
+        <script src="../windows/preferences.js"></script>
+    </head>
+    <body>
+        <form>
+            <div>
+                <label class="text_box" for="nick">Nickname:</label
+                ><input type="text" name="nick" id="nick" value="" autofocus />
             </div>
-        </div>
-        <div id="reset_fkeys_container">
-            <button id="reset_fkeys">Reset Function Key Definitions</button>
-        </div>
-    </form>
-</body>
+            <div>
+                <label class="text_box" for="nick">Group:</label
+                ><input
+                    type="text"
+                    name="group"
+                    id="group"
+                    value=""
+                    autofocus
+                />
+            </div>
+            <div>
+                <label for="use_numpad">Use Numpad Keys as Function Keys:</label
+                ><input type="checkbox" name="use_numpad" id="use_numpad" />
+            </div>
+            <div>
+                <label for="use_shift">Use Shift and Movement to Select:</label
+                ><input type="checkbox" name="use_shift" id="use_shift" />
+            </div>
+            <div>
+                <label for="chunked_undo"
+                    >Chunked Undo for Freehand Tools:</label
+                ><input type="checkbox" name="chunked_undo" id="chunked_undo" />
+            </div>
+            <div>
+                <label for="use_flashing_cursor"
+                    >Use Flashing Box-type Cursor:</label
+                ><input
+                    type="checkbox"
+                    name="use_flashing_cursor"
+                    id="use_flashing_cursor"
+                />
+            </div>
+            <div>
+                <label for="hide_scrollbars">Hide Scrollbars:</label
+                ><input
+                    type="checkbox"
+                    name="hide_scrollbars"
+                    id="hide_scrollbars"
+                />
+            </div>
+            <div>
+                <label for="unsaved_changes"
+                    >Reminders for Unsaved Changes:</label
+                ><input
+                    type="checkbox"
+                    name="unsaved_changes"
+                    id="unsaved_changes"
+                />
+            </div>
+            <div>
+                <label for="use_pixel_aliasing"
+                    >Smooth Blocks When Zooming:</label
+                ><input
+                    type="checkbox"
+                    name="use_pixel_aliasing"
+                    id="use_pixel_aliasing"
+                />
+            </div>
+            <div>
+                <label class="number_box" for="scroll_margin"
+                    >Scroll Margin:</label
+                ><input type="number" name="scroll_margin" id="scroll_margin" />
+            </div>
+            <div>
+                <label class="number_box" for="new_document_rows"
+                    >Rows for New Documents:</label
+                ><input
+                    type="number"
+                    name="new_document_rows"
+                    id="new_document_rows"
+                />
+            </div>
+            <div>
+                <label for="retention">Retain Files Pasted Online For:</label>
+                <select name="retention" id="retention">
+                    <option value="300">5 Minutes</option>
+                    <option value="900">15 Minutes</option>
+                    <option value="3600">1 Hour</option>
+                    <option value="7200">2 Hours</option>
+                    <option value="43200">12 Hours</option>
+                    <option value="86400">1 Day</option>
+                    <option value="172800">2 Days</option>
+                    <option value="604800">1 Week</option>
+                    <option value="1209600">2 Weeks</option>
+                    <option value="2678400">1 Month</option>
+                    <option value="8035200" selected>3 Months</option>
+                    <option value="31536000">1 Year</option>
+                    <option value="0">Forever</option>
+                </select>
+            </div>
+            <div>
+                <label for="smallscale_guide"
+                    >80×25 Guide Turned on by Default:</label
+                ><input
+                    type="checkbox"
+                    name="smallscale_guide"
+                    id="smallscale_guide"
+                />
+            </div>
+            <div>
+                <label for="debug">Enable Debug Menu:</label
+                ><input type="checkbox" name="debug" id="debug" />
+            </div>
+            <div>
+                <label for="ignore_hdpi"
+                    >Ignore Windows HiDPI (requires relaunch):</label
+                ><input type="checkbox" name="ignore_hdpi" id="ignore_hdpi" />
+            </div>
+            <div>
+                <label for="use_backup">Save Hourly Timestamped Backups:</label
+                ><input type="checkbox" name="use_backup" id="use_backup" />
+                <div id="timestamp_box">
+                    <div id="backup_folder"></div>
+                    <button id="backup_choose">Choose…</button>
+                </div>
+            </div>
+            <div id="reset_fkeys_container">
+                <button id="reset_fkeys">Reset Function Key Definitions</button>
+            </div>
+        </form>
+    </body>
 </html>

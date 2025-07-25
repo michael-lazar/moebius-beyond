@@ -1,12 +1,30 @@
 const electron = require("electron");
-const {send, open_box} = require("../senders");
+const { send, open_box } = require("../senders");
 let backup_folder_value;
 
 function $(name) {
     return document.getElementById(name);
 }
 
-function prefs({nick, group, use_numpad, use_shift, chunked_undo, use_flashing_cursor, use_pixel_aliasing, hide_scrollbars, unsaved_changes, scroll_margin, new_document_rows, retention, smallscale_guide, debug, ignore_hdpi, use_backup, backup_folder}) {
+function prefs({
+    nick,
+    group,
+    use_numpad,
+    use_shift,
+    chunked_undo,
+    use_flashing_cursor,
+    use_pixel_aliasing,
+    hide_scrollbars,
+    unsaved_changes,
+    scroll_margin,
+    new_document_rows,
+    retention,
+    smallscale_guide,
+    debug,
+    ignore_hdpi,
+    use_backup,
+    backup_folder,
+}) {
     $("nick").value = nick;
     $("group").value = group;
     $("use_numpad").checked = use_numpad;
@@ -24,11 +42,12 @@ function prefs({nick, group, use_numpad, use_shift, chunked_undo, use_flashing_c
     $("ignore_hdpi").checked = ignore_hdpi;
     $("use_backup").checked = use_backup;
     backup_folder_value = backup_folder;
-    $("backup_folder").innerText = (backup_folder == "") ? "No Backup Folder Set" : backup_folder;
+    $("backup_folder").innerText =
+        backup_folder == "" ? "No Backup Folder Set" : backup_folder;
 }
 
 function update(key, value) {
-    electron.ipcRenderer.send("update_prefs", {key, value});
+    electron.ipcRenderer.send("update_prefs", { key, value });
 }
 
 function nick() {
@@ -96,8 +115,14 @@ function use_backup() {
 }
 
 function choose_folder() {
-    const defaultPath = (backup_folder_value && backup_folder_value != "") ? backup_folder_value : electron.remote.app.getPath("documents");
-    const files = open_box({defaultPath, properties: ["openDirectory", "createDirectory"]});
+    const defaultPath =
+        backup_folder_value && backup_folder_value != ""
+            ? backup_folder_value
+            : electron.remote.app.getPath("documents");
+    const files = open_box({
+        defaultPath,
+        properties: ["openDirectory", "createDirectory"],
+    });
     if (files) {
         const folder = files[0];
         $("backup_folder").innerText = folder;
@@ -106,7 +131,8 @@ function choose_folder() {
 }
 
 function reset_fkeys() {
-    update("fkeys", [ // Stolen mercilously from Pablo, thanks Curtis!
+    update("fkeys", [
+        // Stolen mercilously from Pablo, thanks Curtis!
         [218, 191, 192, 217, 196, 179, 195, 180, 193, 194, 32, 32],
         [201, 187, 200, 188, 205, 186, 204, 185, 202, 203, 32, 32],
         [213, 184, 212, 190, 205, 179, 198, 181, 207, 209, 32, 32],
@@ -131,41 +157,107 @@ function reset_fkeys() {
 }
 
 function override_submit(event) {
-    if (event.code == "Enter" || event.code == "NumpadEnter") event.preventDefault();
+    if (event.code == "Enter" || event.code == "NumpadEnter")
+        event.preventDefault();
 }
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    $("nick").addEventListener("keydown", override_submit, true);
-    $("nick").addEventListener("input", (event) => nick(), true);
-    $("group").addEventListener("keydown", override_submit, true);
-    $("group").addEventListener("input", (event) => group(), true);
-    $("use_numpad").addEventListener("change", (event) => use_numpad(), true);
-    $("use_shift").addEventListener("change", (event) => use_shift(), true);
-    $("chunked_undo").addEventListener("change", (event) => chunked_undo(), true);
-    $("use_flashing_cursor").addEventListener("change", (event) => use_flashing_cursor(), true);
-    $("hide_scrollbars").addEventListener("change", (event) => hide_scrollbars(), true);
-    $("unsaved_changes").addEventListener("change", (event) => unsaved_changes(), true);
-    $("use_pixel_aliasing").addEventListener("change", (event) => use_pixel_aliasing(), true);
-    $("scroll_margin").addEventListener("input", (event) => scroll_margin(), true);
-    $("scroll_margin").addEventListener("keydown", override_submit, true);
-    $("new_document_rows").addEventListener("input", (event) => new_document_rows(), true);
-    $("new_document_rows").addEventListener("keydown", override_submit, true);
-    $("retention").addEventListener("change", retention, true);
-    $("smallscale_guide").addEventListener("change", (event) => smallscale_guide(), true);
-    $("debug").addEventListener("change", (event) => debug(), true);
-    $("ignore_hdpi").addEventListener("change", (event) => ignore_hdpi(), true);
-    $("use_backup").addEventListener("change", (event) => use_backup(), true);
-    $("backup_choose").addEventListener("click", (event) => {
-        choose_folder();
-        event.preventDefault();
-    }, true);
-    $("reset_fkeys").addEventListener("click", (event) => {
-        reset_fkeys();
-        event.preventDefault();
-    }, true);
-    document.body.addEventListener("keydown", (event) => {
-        if (event.code == "Escape") electron.remote.getCurrentWindow().close();
-    }, true);
-}, true);
+document.addEventListener(
+    "DOMContentLoaded",
+    (event) => {
+        $("nick").addEventListener("keydown", override_submit, true);
+        $("nick").addEventListener("input", (event) => nick(), true);
+        $("group").addEventListener("keydown", override_submit, true);
+        $("group").addEventListener("input", (event) => group(), true);
+        $("use_numpad").addEventListener(
+            "change",
+            (event) => use_numpad(),
+            true
+        );
+        $("use_shift").addEventListener("change", (event) => use_shift(), true);
+        $("chunked_undo").addEventListener(
+            "change",
+            (event) => chunked_undo(),
+            true
+        );
+        $("use_flashing_cursor").addEventListener(
+            "change",
+            (event) => use_flashing_cursor(),
+            true
+        );
+        $("hide_scrollbars").addEventListener(
+            "change",
+            (event) => hide_scrollbars(),
+            true
+        );
+        $("unsaved_changes").addEventListener(
+            "change",
+            (event) => unsaved_changes(),
+            true
+        );
+        $("use_pixel_aliasing").addEventListener(
+            "change",
+            (event) => use_pixel_aliasing(),
+            true
+        );
+        $("scroll_margin").addEventListener(
+            "input",
+            (event) => scroll_margin(),
+            true
+        );
+        $("scroll_margin").addEventListener("keydown", override_submit, true);
+        $("new_document_rows").addEventListener(
+            "input",
+            (event) => new_document_rows(),
+            true
+        );
+        $("new_document_rows").addEventListener(
+            "keydown",
+            override_submit,
+            true
+        );
+        $("retention").addEventListener("change", retention, true);
+        $("smallscale_guide").addEventListener(
+            "change",
+            (event) => smallscale_guide(),
+            true
+        );
+        $("debug").addEventListener("change", (event) => debug(), true);
+        $("ignore_hdpi").addEventListener(
+            "change",
+            (event) => ignore_hdpi(),
+            true
+        );
+        $("use_backup").addEventListener(
+            "change",
+            (event) => use_backup(),
+            true
+        );
+        $("backup_choose").addEventListener(
+            "click",
+            (event) => {
+                choose_folder();
+                event.preventDefault();
+            },
+            true
+        );
+        $("reset_fkeys").addEventListener(
+            "click",
+            (event) => {
+                reset_fkeys();
+                event.preventDefault();
+            },
+            true
+        );
+        document.body.addEventListener(
+            "keydown",
+            (event) => {
+                if (event.code == "Escape")
+                    electron.remote.getCurrentWindow().close();
+            },
+            true
+        );
+    },
+    true
+);
 
 electron.ipcRenderer.on("prefs", (event, opts) => prefs(opts));

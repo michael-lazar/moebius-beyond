@@ -1,60 +1,60 @@
 directories:
-  output: dist
-  buildResources: build
+    output: dist
+    buildResources: build
 appId: org.andyherbert.moebius
 productName: MoebiusXBIN
 copyright: Copyright © 2020 Andy Herbert
 extraResources:
-  - from: build/ans
-    to: ans
-    filter: ["*.ans", "*.xb"] 
-  - from: build/png
-    to: png
-    filter: "*.png"
+    - from: build/ans
+      to: ans
+      filter: ["*.ans", "*.xb"]
+    - from: build/png
+      to: png
+      filter: "*.png"
 fileAssociations:
-  - ext: .ans
-    name: ANSI Art
-    role: Editor
-    icon: document_icon.icns
-  - ext: .bin
-    name: Binary Text
-    role: Editor
-    icon: document_icon.icns
-  - ext: .xb
-    name: XBin
-    role: Editor
-    icon: document_icon.icns
-  - ext: .diz
-    name: Description in Zip File
-    role: Editor
-    icon: document_icon.icns
-  - ext: .nfo
-    name: Release Information
-    role: Editor
-    icon: document_icon.icns
-  - ext: .asc
-    name: ASCII Art
-    role: Editor
-    icon: document_icon.icns
+    - ext: .ans
+      name: ANSI Art
+      role: Editor
+      icon: document_icon.icns
+    - ext: .bin
+      name: Binary Text
+      role: Editor
+      icon: document_icon.icns
+    - ext: .xb
+      name: XBin
+      role: Editor
+      icon: document_icon.icns
+    - ext: .diz
+      name: Description in Zip File
+      role: Editor
+      icon: document_icon.icns
+    - ext: .nfo
+      name: Release Information
+      role: Editor
+      icon: document_icon.icns
+    - ext: .asc
+      name: ASCII Art
+      role: Editor
+      icon: document_icon.icns
 mac:
-  artifactName: MoebiusXBIN.dmg
-  category: public.app-category.graphics-design
-  target: dmg
-  darkModeSupport: true
+    artifactName: MoebiusXBIN.dmg
+    category: public.app-category.graphics-design
+    target: dmg
+    darkModeSupport: true
 win:
-  artifactName: MoebiusXBIN.Setup.exe
-  target:
-  - target: nsis
-    arch: [x64, ia32]
-  - target: portable
-    arch: [x64, ia32]
+    artifactName: MoebiusXBIN.Setup.exe
+    target:
+        - target: nsis
+          arch: [x64, ia32]
+        - target: portable
+          arch: [x64, ia32]
 portable:
-  artifactName: MoebiusXBIN.exe
+    artifactName: MoebiusXBIN.exe
 linux:
-  artifactName: MoebiusXBIN.${ext}
-  target: 
-  - target: rpm
-  - target: deb
-  description: Moebius is a new ANSI and ASCII Editor for Linux, MacOS, and Windows. The major feature that differentiates it from PabloDraw is the 'half-block' brush which allows editing in a style closer to Photoshop than a text editor, although you can still use the function and cursor keys to draw with, and you should find that most of the text editing features from PabloDraw are carried over to this editor.
-  category: Graphics
+    artifactName: MoebiusXBIN.${ext}
+    target:
+        - target: rpm
+        - target: deb
+    description: Moebius is a new ANSI and ASCII Editor for Linux, MacOS, and Windows. The major feature that differentiates it from PabloDraw is the 'half-block' brush which allows editing in a style closer to Photoshop than a text editor, although you can still use the function and cursor keys to draw with, and you should find that most of the text editing features from PabloDraw are carried over to this editor.
+    category: Graphics
 electronVersion: 8.5.2
