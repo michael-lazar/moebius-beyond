@@ -71,7 +71,7 @@ function coloured_glyphs(source_canvas, rgb) {
     return canvas;
 }
 
-cached_backgrounds = {};
+let cached_backgrounds = {};
 function coloured_background(font_width, height, rgb) {
     const hex = rgb_to_hex(rgb);
     const key = hex;
@@ -84,7 +84,7 @@ function coloured_background(font_width, height, rgb) {
     return (cached_backgrounds[key] = canvas);
 }
 
-cached_glyphs = {};
+let cached_glyphs = {};
 function create_coloured_glyph(source_canvas, code, rgb, font_width, height) {
     const hex = rgb_to_hex(rgb);
     const key = [hex, code].join("|");

@@ -320,7 +320,7 @@ class Screen {
         const tmp_x = this.x;
         this.x = 0;
         while (this.x < this.columns) {
-            putc();
+            this.put();
         }
         this.x = tmp_x;
     }
@@ -411,22 +411,20 @@ class Ansi extends Textmode {
                         screen.move(sequence.values[1], sequence.values[0]);
                         break;
                     case sequence.ERASE_DISPLAY:
-                        switch (
-                            sequence.values[0]
-                            // case erase_display_types.UNTIL_END_OF_SCREEN: screen.clear_until_end_of_screen(); break;
-                            // case erase_display_types.FROM_START_OF_SCREEN: screen.clear_from_start_of_screen(); break;
-                            // case erase_display_types.CLEAR_SCREEN: screen.clear(); break;
-                        ) {
-                        }
+                        // TODO: Implement erase display functionality
+                        // switch (sequence.values[0]) {
+                        //     case erase_display_types.UNTIL_END_OF_SCREEN: screen.clear_until_end_of_screen(); break;
+                        //     case erase_display_types.FROM_START_OF_SCREEN: screen.clear_from_start_of_screen(); break;
+                        //     case erase_display_types.CLEAR_SCREEN: screen.clear(); break;
+                        // }
                         break;
                     case sequence_type.ERASE_LINE:
-                        switch (
-                            sequence.values[0]
-                            // case erase_line_types.UNTIL_END_OF_LINE: screen.clear_until_end_of_line(); break;
-                            // case erase_line_types.FROM_START_OF_LINE: screen.clear_from_start_of_line(); break;
-                            // case erase_line_types.CLEAR_LINE: screen.clear_line(); break;
-                        ) {
-                        }
+                        // TODO: Implement erase line functionality
+                        // switch (sequence.values[0]) {
+                        //     case erase_line_types.UNTIL_END_OF_LINE: screen.clear_until_end_of_line(); break;
+                        //     case erase_line_types.FROM_START_OF_LINE: screen.clear_from_start_of_line(); break;
+                        //     case erase_line_types.CLEAR_LINE: screen.clear_line(); break;
+                        // }
                         break;
                     case sequence_type.SGR:
                         for (const value of sequence.values) {

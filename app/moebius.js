@@ -1,6 +1,6 @@
 const prefs = require("./prefs");
 const electron = require("electron");
-const window = require("./window");
+const window = require("./window"); // eslint-disable-line no-redeclare
 const menu = require("./menu");
 const touchbar = require("./touchbar");
 const path = require("path");

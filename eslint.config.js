@@ -26,6 +26,7 @@ module.exports = [
                 sessionStorage: "readonly",
                 alert: "readonly",
                 fetch: "readonly",
+                Request: "readonly",
                 setTimeout: "readonly",
                 clearTimeout: "readonly",
                 setInterval: "readonly",
