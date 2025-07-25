@@ -30,12 +30,7 @@ function half_block_rectangle_overlay(sx, sy, dx, dy, col) {
         Math.ceil(((dy - sy + 1) * font.height) / 2)
     );
     overlay.fill_style(font, col);
-    overlay.fill_rect(
-        0,
-        0,
-        (dx - sx) * font.width,
-        Math.floor(font.height / 2)
-    );
+    overlay.fill_rect(0, 0, (dx - sx) * font.width, Math.floor(font.height / 2));
     if (dy > sy) {
         overlay.fill_rect(
             0,
@@ -43,12 +38,7 @@ function half_block_rectangle_overlay(sx, sy, dx, dy, col) {
             (dx - sx) * font.width,
             Math.floor(font.height / 2)
         );
-        overlay.fill_rect(
-            0,
-            0,
-            font.width,
-            (dy - sy) * Math.floor(font.height / 2)
-        );
+        overlay.fill_rect(0, 0, font.width, (dy - sy) * Math.floor(font.height / 2));
         overlay.fill_rect(
             (dx - sx) * font.width,
             0,
@@ -69,19 +59,9 @@ function rectangle_overlay(sx, sy, dx, dy, col) {
     overlay.fill_style(font, col);
     overlay.fill_rect(0, 0, (dx - sx) * font.width, font.height);
     if (dy > sy) {
-        overlay.fill_rect(
-            0,
-            (dy - sy) * font.height,
-            (dx - sx) * font.width,
-            font.height
-        );
+        overlay.fill_rect(0, (dy - sy) * font.height, (dx - sx) * font.width, font.height);
         overlay.fill_rect(0, 0, font.width, (dy - sy) * font.height);
-        overlay.fill_rect(
-            (dx - sx) * font.width,
-            0,
-            font.width,
-            (dy - sy + 1) * font.height
-        );
+        overlay.fill_rect((dx - sx) * font.width, 0, font.width, (dy - sy + 1) * font.height);
     }
 }
 
@@ -96,22 +76,11 @@ mouse.on("to", (x, y, half_y, button) => {
     if (!enabled) return;
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
-        const { sx, sy, dx, dy } = reorientate(
-            mouse.start.x,
-            mouse.start.half_y,
-            x,
-            half_y
-        );
+        const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
         if (clear) {
             half_block_rectangle_overlay(sx, sy, dx, dy, 0);
         } else {
-            half_block_rectangle_overlay(
-                sx,
-                sy,
-                dx,
-                dy,
-                button == mouse.buttons.LEFT ? fg : bg
-            );
+            half_block_rectangle_overlay(sx, sy, dx, dy, button == mouse.buttons.LEFT ? fg : bg);
         }
         return;
     }
@@ -119,13 +88,7 @@ mouse.on("to", (x, y, half_y, button) => {
     if (clear) {
         rectangle_overlay(sx, sy, dx, dy, 0);
     } else {
-        rectangle_overlay(
-            sx,
-            sy,
-            dx,
-            dy,
-            button == mouse.buttons.LEFT ? fg : bg
-        );
+        rectangle_overlay(sx, sy, dx, dy, button == mouse.buttons.LEFT ? fg : bg);
     }
 });
 
@@ -135,12 +98,7 @@ mouse.on("up", (x, y, half_y, button) => {
     doc.start_undo();
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
-        const { sx, sy, dx, dy } = reorientate(
-            mouse.start.x,
-            mouse.start.half_y,
-            x,
-            half_y
-        );
+        const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
         if (clear) {
             brushes.single_half_block_line(sx, sy, dx, sy, 0);
             if (dy > sy) {
@@ -180,65 +138,19 @@ mouse.on("up", (x, y, half_y, button) => {
                 if (dy > sy) {
                     brushes.single_custom_block_line(sx, dy, dx, dy, fg, bg);
                     if (dy > sy + 1) {
-                        brushes.single_custom_block_line(
-                            sx,
-                            sy + 1,
-                            sx,
-                            dy - 1,
-                            fg,
-                            bg
-                        );
-                        brushes.single_custom_block_line(
-                            dx,
-                            sy + 1,
-                            dx,
-                            dy - 1,
-                            fg,
-                            bg
-                        );
+                        brushes.single_custom_block_line(sx, sy + 1, sx, dy - 1, fg, bg);
+                        brushes.single_custom_block_line(dx, sy + 1, dx, dy - 1, fg, bg);
                     }
                 }
                 break;
             case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
-                brushes.single_shading_block_line(
-                    sx,
-                    sy,
-                    dx,
-                    sy,
-                    fg,
-                    bg,
-                    reduce
-                );
+                brushes.single_shading_block_line(sx, sy, dx, sy, fg, bg, reduce);
                 if (dy > sy) {
-                    brushes.single_shading_block_line(
-                        sx,
-                        dy,
-                        dx,
-                        dy,
-                        fg,
-                        bg,
-                        reduce
-                    );
+                    brushes.single_shading_block_line(sx, dy, dx, dy, fg, bg, reduce);
                     if (dy > sy + 1) {
-                        brushes.single_shading_block_line(
-                            sx,
-                            sy + 1,
-                            sx,
-                            dy - 1,
-                            fg,
-                            bg,
-                            reduce
-                        );
-                        brushes.single_shading_block_line(
-                            dx,
-                            sy + 1,
-                            dx,
-                            dy - 1,
-                            fg,
-                            bg,
-                            reduce
-                        );
+                        brushes.single_shading_block_line(sx, sy + 1, sx, dy - 1, fg, bg, reduce);
+                        brushes.single_shading_block_line(dx, sy + 1, dx, dy - 1, fg, bg, reduce);
                     }
                 }
                 break;
@@ -248,22 +160,8 @@ mouse.on("up", (x, y, half_y, button) => {
                 if (dy > sy) {
                     brushes.single_replace_color_line(sx, dy, dx, dy, fg, bg);
                     if (dy > sy + 1) {
-                        brushes.single_replace_color_line(
-                            sx,
-                            sy + 1,
-                            sx,
-                            dy - 1,
-                            fg,
-                            bg
-                        );
-                        brushes.single_replace_color_line(
-                            dx,
-                            sy + 1,
-                            dx,
-                            dy - 1,
-                            fg,
-                            bg
-                        );
+                        brushes.single_replace_color_line(sx, sy + 1, sx, dy - 1, fg, bg);
+                        brushes.single_replace_color_line(dx, sy + 1, dx, dy - 1, fg, bg);
                     }
                 }
                 break;
@@ -273,20 +171,8 @@ mouse.on("up", (x, y, half_y, button) => {
                 if (dy > sy) {
                     brushes.single_blink_line(sx, dy, dx, dy, unblink);
                     if (dy > sy + 1) {
-                        brushes.single_blink_line(
-                            sx,
-                            sy + 1,
-                            sx,
-                            dy - 1,
-                            unblink
-                        );
-                        brushes.single_blink_line(
-                            dx,
-                            sy + 1,
-                            dx,
-                            dy - 1,
-                            unblink
-                        );
+                        brushes.single_blink_line(sx, sy + 1, sx, dy - 1, unblink);
+                        brushes.single_blink_line(dx, sy + 1, dx, dy - 1, unblink);
                     }
                 }
                 break;
@@ -294,23 +180,9 @@ mouse.on("up", (x, y, half_y, button) => {
             case toolbar.modes.COLORIZE: {
                 const colorize_fg = toolbar.colorize_fg ? fg : undefined;
                 const colorize_bg = toolbar.colorize_bg ? bg : undefined;
-                brushes.single_colorize_line(
-                    sx,
-                    sy,
-                    dx,
-                    sy,
-                    colorize_fg,
-                    colorize_bg
-                );
+                brushes.single_colorize_line(sx, sy, dx, sy, colorize_fg, colorize_bg);
                 if (dy > sy) {
-                    brushes.single_colorize_line(
-                        sx,
-                        dy,
-                        dx,
-                        dy,
-                        colorize_fg,
-                        colorize_bg
-                    );
+                    brushes.single_colorize_line(sx, dy, dx, dy, colorize_fg, colorize_bg);
                     if (dy > sy + 1) {
                         brushes.single_colorize_line(
                             sx,

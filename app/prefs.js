@@ -50,12 +50,9 @@ const default_values = {
 };
 const fs = require("fs");
 const JSON5 = require("json5");
-const prefs = fs.existsSync(file)
-    ? JSON5.parse(fs.readFileSync(file, "utf-8"))
-    : default_values;
+const prefs = fs.existsSync(file) ? JSON5.parse(fs.readFileSync(file, "utf-8")) : default_values;
 
-if (prefs.fkeys == undefined || prefs.fkeys.length == 16)
-    prefs.fkeys = default_values.fkeys;
+if (prefs.fkeys == undefined || prefs.fkeys.length == 16) prefs.fkeys = default_values.fkeys;
 
 function set(key, value) {
     prefs[key] = value;

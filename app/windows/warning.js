@@ -19,9 +19,7 @@ document.addEventListener(
 document.addEventListener(
     "DOMContentLoaded",
     (event) => {
-        document
-            .getElementById("cancel")
-            .addEventListener("click", (event) => cancel(), true);
+        document.getElementById("cancel").addEventListener("click", (event) => cancel(), true);
     },
     true
 );

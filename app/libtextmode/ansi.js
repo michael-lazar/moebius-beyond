@@ -1,9 +1,4 @@
-const {
-    palette_4bit,
-    base_palette_index,
-    index_to_ansi,
-    rgb_to_ansi,
-} = require("./palette");
+const { palette_4bit, base_palette_index, index_to_ansi, rgb_to_ansi } = require("./palette");
 const { Textmode, add_sauce_for_ans } = require("./textmode");
 const { cp437_to_unicode_bytes } = require("./encodings");
 
@@ -278,9 +273,7 @@ class Screen {
         const tmp_x = this.x;
         const tmp_y = this.y;
         this.x = 0;
-        while (
-            !(this.x == this.columns && this.y == this.bottom_of_screen - 1)
-        ) {
+        while (!(this.x == this.columns && this.y == this.bottom_of_screen - 1)) {
             this.put();
         }
         this.x = tmp_x;
@@ -545,13 +538,10 @@ function build_ansi_palette(palette, bit_depth) {
         case 4:
             return palette.map((rgb, i) => `5;${index_to_ansi(i)}`);
         case 8:
-            return palette.map(
-                (rgb) => `5;${index_to_ansi(rgb_to_ansi(rgb, 8))}`
-            );
+            return palette.map((rgb) => `5;${index_to_ansi(rgb_to_ansi(rgb, 8))}`);
         case 24:
             return palette.map(
-                (rgb, i) =>
-                    `2;${i < 16 ? index_to_ansi(i) : Object.values(rgb).join(";")}`
+                (rgb, i) => `2;${i < 16 ? index_to_ansi(i) : Object.values(rgb).join(";")}`
             );
         default:
             return palette.map((rgb, i) => {
@@ -565,11 +555,7 @@ function build_ansi_palette(palette, bit_depth) {
     }
 }
 
-function encode_as_ansi(
-    doc,
-    save_without_sauce,
-    { utf8 = false, bit_depth = 24 } = {}
-) {
+function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 } = {}) {
     if (utf8) return encode_as_utf8ansi(doc, bit_depth);
 
     let output = [27, 91, 48, 109];
@@ -619,10 +605,7 @@ function encode_as_ansi(
             bg = bg - 8;
         }
 
-        if (
-            (!fg_tc && current_bold && !bold) ||
-            (!bg_tc && current_blink && !blink)
-        ) {
+        if ((!fg_tc && current_bold && !bold) || (!bg_tc && current_blink && !blink)) {
             sgr.push(0);
             current_fg = 7;
             current_bg = 0;
@@ -697,8 +680,7 @@ function encode_as_utf8ansi(doc, bit_depth) {
 
         if (i && i % doc.columns === 0) {
             output.push(...to_bytes("[0m\r\n"));
-            for (let bytes of Object.values(current_sgr))
-                output.push(27, ...bytes);
+            for (let bytes of Object.values(current_sgr)) output.push(27, ...bytes);
             current_sgr = {};
         }
 

@@ -54,22 +54,11 @@ mouse.on("to", (x, y, half_y, button) => {
     if (!enabled) return;
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
-        const { sx, sy, dx, dy } = reorientate(
-            mouse.start.x,
-            mouse.start.half_y,
-            x,
-            half_y
-        );
+        const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
         if (clear) {
             half_block_rectangle_overlay(sx, sy, dx, dy, 0);
         } else {
-            half_block_rectangle_overlay(
-                sx,
-                sy,
-                dx,
-                dy,
-                button == mouse.buttons.LEFT ? fg : bg
-            );
+            half_block_rectangle_overlay(sx, sy, dx, dy, button == mouse.buttons.LEFT ? fg : bg);
         }
         return;
     }
@@ -77,13 +66,7 @@ mouse.on("to", (x, y, half_y, button) => {
     if (clear) {
         rectangle_overlay(sx, sy, dx, dy, 0);
     } else {
-        rectangle_overlay(
-            sx,
-            sy,
-            dx,
-            dy,
-            button == mouse.buttons.LEFT ? fg : bg
-        );
+        rectangle_overlay(sx, sy, dx, dy, button == mouse.buttons.LEFT ? fg : bg);
     }
 });
 
@@ -93,26 +76,18 @@ mouse.on("up", (x, y, half_y, button) => {
     doc.start_undo();
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
-        const { sx, sy, dx, dy } = reorientate(
-            mouse.start.x,
-            mouse.start.half_y,
-            x,
-            half_y
-        );
+        const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
         if (clear) {
-            for (let y = sy; y <= dy; y++)
-                brushes.single_half_block_line(sx, y, dx, y, 0);
+            for (let y = sy; y <= dy; y++) brushes.single_half_block_line(sx, y, dx, y, 0);
         } else {
             const col = button == mouse.buttons.LEFT ? fg : bg;
-            for (let y = sy; y <= dy; y++)
-                brushes.single_half_block_line(sx, y, dx, y, col);
+            for (let y = sy; y <= dy; y++) brushes.single_half_block_line(sx, y, dx, y, col);
         }
         return;
     }
     const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.y, x, y);
     if (clear) {
-        for (let y = sy; y <= dy; y++)
-            brushes.single_clear_block_line(sx, y, dx, y);
+        for (let y = sy; y <= dy; y++) brushes.single_clear_block_line(sx, y, dx, y);
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:
@@ -122,15 +97,7 @@ mouse.on("up", (x, y, half_y, button) => {
             case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
                 for (let y = sy; y <= dy; y++)
-                    brushes.single_shading_block_line(
-                        sx,
-                        y,
-                        dx,
-                        y,
-                        fg,
-                        bg,
-                        reduce
-                    );
+                    brushes.single_shading_block_line(sx, y, dx, y, fg, bg, reduce);
                 break;
             }
             case toolbar.modes.REPLACE_COLOR:
@@ -139,13 +106,7 @@ mouse.on("up", (x, y, half_y, button) => {
                 break;
             case toolbar.modes.BLINK:
                 for (let y = sy; y <= dy; y++)
-                    brushes.single_blink_line(
-                        sx,
-                        y,
-                        dx,
-                        y,
-                        button != mouse.buttons.LEFT
-                    );
+                    brushes.single_blink_line(sx, y, dx, y, button != mouse.buttons.LEFT);
                 break;
             case toolbar.modes.COLORIZE:
                 for (let y = sy; y <= dy; y++)

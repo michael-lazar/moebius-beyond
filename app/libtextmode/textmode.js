@@ -140,8 +140,7 @@ function add_sauce_bytes({ doc, data_type, file_type, bytes: file_bytes }) {
         } else {
             bytes[105] += 1 << 1;
         }
-        if (doc.font_name)
-            add_text(bytes, 106, doc.font_name, doc.font_name.length);
+        if (doc.font_name) add_text(bytes, 106, doc.font_name, doc.font_name.length);
     }
     if (doc.comments.length) bytes = add_comments_bytes(doc.comments, bytes);
     const merged_bytes = new Int8Array(file_bytes.length + 1 + bytes.length);
@@ -209,10 +208,7 @@ function get_sauce(bytes) {
             }
             const number_of_comments = sauce_bytes[104];
             const rawcomments = bytes
-                .subarray(
-                    bytes.length - number_of_comments * 64 - 128,
-                    bytes.length - 128
-                )
+                .subarray(bytes.length - number_of_comments * 64 - 128, bytes.length - 128)
                 .toString("utf-8");
             var comments = "";
             for (var i = 0; i < number_of_comments; i++) {
@@ -223,10 +219,7 @@ function get_sauce(bytes) {
             const flags = sauce_bytes[105];
             const ice_colors = (flags & 0x01) == 1;
             const use_9px_font = ((flags >> 1) & 0x02) == 2;
-            let font_name = bytes_to_utf8(sauce_bytes, 106, 22).replace(
-                /\0/g,
-                ""
-            );
+            let font_name = bytes_to_utf8(sauce_bytes, 106, 22).replace(/\0/g, "");
             if (font_name == "") font_name = "Default";
             if (filesize == 0) {
                 filesize = bytes.length = 128;

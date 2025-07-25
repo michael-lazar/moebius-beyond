@@ -14,9 +14,7 @@ tools.on("start", (mode) => {
 function fill(x, y, col) {
     const block = doc.get_half_block(x, y);
     if (block.is_blocky) {
-        const target_color = block.is_top
-            ? block.upper_block_color
-            : block.lower_block_color;
+        const target_color = block.is_top ? block.upper_block_color : block.lower_block_color;
         if (target_color == col) return;
         doc.start_undo();
         const queue = [{ to: { x, y }, from: { x, y } }];
@@ -50,72 +48,33 @@ function fill(x, y, col) {
                         from: Object.assign(coord.to),
                     });
             } else if (block.is_vertically_blocky) {
-                if (
-                    coord.from.y == coord.to.y - 1 &&
-                    block.left_block_color == target_color
-                ) {
-                    doc.change_data(
-                        coord.to.x,
-                        block.text_y,
-                        221,
-                        col,
-                        block.right_block_color
-                    );
+                if (coord.from.y == coord.to.y - 1 && block.left_block_color == target_color) {
+                    doc.change_data(coord.to.x, block.text_y, 221, col, block.right_block_color);
                 } else if (
                     coord.from.y == coord.to.y - 1 &&
                     block.right_block_color == target_color
                 ) {
-                    doc.change_data(
-                        coord.to.x,
-                        block.text_y,
-                        222,
-                        col,
-                        block.left_block_color
-                    );
+                    doc.change_data(coord.to.x, block.text_y, 222, col, block.left_block_color);
                 } else if (
                     coord.from.y == coord.to.y + 1 &&
                     block.right_block_color == target_color
                 ) {
-                    doc.change_data(
-                        coord.to.x,
-                        block.text_y,
-                        222,
-                        col,
-                        block.left_block_color
-                    );
+                    doc.change_data(coord.to.x, block.text_y, 222, col, block.left_block_color);
                 } else if (
                     coord.from.y == coord.to.y + 1 &&
                     block.left_block_color == target_color
                 ) {
-                    doc.change_data(
-                        coord.to.x,
-                        block.text_y,
-                        221,
-                        col,
-                        block.right_block_color
-                    );
+                    doc.change_data(coord.to.x, block.text_y, 221, col, block.right_block_color);
                 } else if (
                     coord.from.x == coord.to.x - 1 &&
                     block.left_block_color == target_color
                 ) {
-                    doc.change_data(
-                        coord.to.x,
-                        block.text_y,
-                        221,
-                        col,
-                        block.right_block_color
-                    );
+                    doc.change_data(coord.to.x, block.text_y, 221, col, block.right_block_color);
                 } else if (
                     coord.from.x == coord.to.x + 1 &&
                     block.right_block_color == target_color
                 ) {
-                    doc.change_data(
-                        coord.to.x,
-                        block.text_y,
-                        222,
-                        col,
-                        block.left_block_color
-                    );
+                    doc.change_data(coord.to.x, block.text_y, 222, col, block.left_block_color);
                 }
             }
         }

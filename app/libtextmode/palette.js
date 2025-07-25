@@ -4360,11 +4360,7 @@ module.exports = {
 
     base_palette_index({ r, g, b }) {
         for (let i in palette_4bit) {
-            if (
-                r === palette_4bit[i].r &&
-                g === palette_4bit[i].g &&
-                b === palette_4bit[i].b
-            )
+            if (r === palette_4bit[i].r && g === palette_4bit[i].g && b === palette_4bit[i].b)
                 return i;
         }
         return -1;
@@ -4375,9 +4371,7 @@ module.exports = {
     },
 
     rgb_to_hex({ r, g, b }) {
-        return (
-            "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
-        );
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     },
 
     rgb_to_xbin({ r, g, b }) {
@@ -4385,9 +4379,7 @@ module.exports = {
     },
 
     hex_to_rbg(hex) {
-        const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || [
-            0, 0, 0,
-        ];
+        const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || [0, 0, 0];
         return {
             r: parseInt(m[1], 16),
             g: parseInt(m[2], 16),
@@ -4422,18 +4414,11 @@ module.exports = {
         options.push([base_index, base_distance]);
 
         // find the nearest color on the cube map.
-        const cube_index =
-            16 +
-            f((b / 255) * 5) +
-            6 * f((g / 255) * 5) +
-            36 * f((r / 255) * 5);
+        const cube_index = 16 + f((b / 255) * 5) + 6 * f((g / 255) * 5) + 36 * f((r / 255) * 5);
         options.push([cube_index, rgb_distance(rgb, palette_8bit[cube_index])]);
 
         // find the nearest color on in the greyscale ramp (clamping to 255 because "precision").
-        const grey_index = Math.min(
-            255,
-            232 + f(((rgb.r + rgb.g + rgb.b) / 2.8 / 255) * 23)
-        );
+        const grey_index = Math.min(255, 232 + f(((rgb.r + rgb.g + rgb.b) / 2.8 / 255) * 23));
         options.push([grey_index, rgb_distance(rgb, palette_8bit[grey_index])]);
 
         // return the index with the closest match.

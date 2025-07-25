@@ -157,26 +157,22 @@ class KeyboardEvent extends events.EventEmitter {
         if (darwin) {
             switch (event.code) {
                 case "ArrowLeft":
-                    if (event.shiftKey && use_shift)
-                        this.emit("start_selection");
+                    if (event.shiftKey && use_shift) this.emit("start_selection");
                     this.emit("start_of_row");
                     event.preventDefault();
                     return;
                 case "ArrowUp":
-                    if (event.shiftKey && use_shift)
-                        this.emit("start_selection");
+                    if (event.shiftKey && use_shift) this.emit("start_selection");
                     this.emit("page_up");
                     event.preventDefault();
                     return;
                 case "ArrowRight":
-                    if (event.shiftKey && use_shift)
-                        this.emit("start_selection");
+                    if (event.shiftKey && use_shift) this.emit("start_selection");
                     this.emit("end_of_row");
                     event.preventDefault();
                     return;
                 case "ArrowDown":
-                    if (event.shiftKey && use_shift)
-                        this.emit("start_selection");
+                    if (event.shiftKey && use_shift) this.emit("start_selection");
                     this.emit("page_down");
                     event.preventDefault();
                     return;
@@ -359,11 +355,7 @@ class KeyboardEvent extends events.EventEmitter {
         document.addEventListener(
             "DOMContentLoaded",
             () => {
-                document.body.addEventListener(
-                    "keydown",
-                    (event) => this.keydown(event),
-                    true
-                );
+                document.body.addEventListener("keydown", (event) => this.keydown(event), true);
             },
             true
         );

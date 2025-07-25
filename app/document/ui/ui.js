@@ -31,9 +31,7 @@ function open_reference_image({ file } = {}) {
         file = files[0];
     }
 
-    $("reference_image").src = electron.nativeImage
-        .createFromPath(file)
-        .toDataURL();
+    $("reference_image").src = electron.nativeImage.createFromPath(file).toDataURL();
     $("reference_image").classList.remove("closed");
     set_var("reference-control-opacity", 1.0);
 
@@ -59,19 +57,13 @@ function reset_reference_image() {
     $("reference_image").style.left = "0";
 
     $("reference_opacity_value").value = 40;
-    $("reference_opacity_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 
     $("reference_size_value").value = doc.columns;
-    $("reference_size_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 
     $("reference_angle_value").value = 0;
-    $("reference_angle_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function toggle_reference_image(visible) {
@@ -102,16 +94,12 @@ function hide_reference_image() {
 
 function increase_reference_image_opacity() {
     $("reference_opacity_value").stepUp(1);
-    $("reference_opacity_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_opacity() {
     $("reference_opacity_value").stepDown(1);
-    $("reference_opacity_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_opacity_value(event) {
@@ -121,38 +109,28 @@ function on_update_reference_opacity_value(event) {
 
 function increase_reference_image_size() {
     $("reference_size_value").stepUp(1);
-    $("reference_size_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_size() {
     $("reference_size_value").stepDown(1);
-    $("reference_size_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_size_value(event) {
     if (Number.isNaN(event.target.value)) return;
-    let width = doc.use_9px_font
-        ? event.target.value * 9
-        : event.target.value * 8;
+    let width = doc.use_9px_font ? event.target.value * 9 : event.target.value * 8;
     $("reference_image").style.width = `${width}px`;
 }
 
 function increase_reference_image_angle() {
     $("reference_angle_value").stepUp(1);
-    $("reference_angle_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_angle() {
     $("reference_angle_value").stepDown(1);
-    $("reference_angle_value").dispatchEvent(
-        new Event("input", { bubbles: true })
-    );
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_angle_value(event) {
@@ -161,9 +139,7 @@ function on_update_reference_angle_value(event) {
 }
 
 on("open_reference_image", (event) => open_reference_image());
-on("toggle_reference_image", (event, visible) =>
-    toggle_reference_image(visible)
-);
+on("toggle_reference_image", (event, visible) => toggle_reference_image(visible));
 on("clear_reference_image", (event) => clear_reference_image());
 
 function set_text(name, text) {
@@ -241,10 +217,8 @@ function toggle_petscii_guide(visible) {
 }
 
 function rescale_guide() {
-    $("guide").style.width =
-        `${doc.render.font.width * Math.min(doc.columns, guide_columns)}px`;
-    $("guide").style.height =
-        `${doc.render.font.height * Math.min(doc.rows, guide_rows)}px`;
+    $("guide").style.width = `${doc.render.font.width * Math.min(doc.columns, guide_columns)}px`;
+    $("guide").style.height = `${doc.render.font.height * Math.min(doc.rows, guide_rows)}px`;
     if (doc.columns >= guide_columns) {
         $("guide").classList.add("guide_column");
     } else {
@@ -302,18 +276,12 @@ function rescale_drawinggrid() {
     }
 }
 
-on("toggle_smallscale_guide", (event, visible) =>
-    toggle_smallscale_guide(visible)
-);
+on("toggle_smallscale_guide", (event, visible) => toggle_smallscale_guide(visible));
 on("toggle_square_guide", (event, visible) => toggle_square_guide(visible));
-on("toggle_instagram_guide", (event, visible) =>
-    toggle_instagram_guide(visible)
-);
+on("toggle_instagram_guide", (event, visible) => toggle_instagram_guide(visible));
 on("toggle_file_id_guide", (event, visible) => toggle_file_id_guide(visible));
 on("toggle_petscii_guide", (event, visible) => toggle_petscii_guide(visible));
-on("toggle_drawinggrid", (event, visible, columns) =>
-    toggle_drawinggrid(visible, columns)
-);
+on("toggle_drawinggrid", (event, visible, columns) => toggle_drawinggrid(visible, columns));
 
 doc.on("render", () => rescale_guide());
 doc.on("render", () => rescale_drawinggrid());
@@ -415,19 +383,11 @@ function set_canvas_zoom(factor) {
 }
 
 function zoom_in(mouseX, mouseY) {
-    zoom_with_anchor(
-        Math.min(current_zoom_factor() + 0.2, 5.0),
-        mouseX,
-        mouseY
-    );
+    zoom_with_anchor(Math.min(current_zoom_factor() + 0.2, 5.0), mouseX, mouseY);
 }
 
 function zoom_out(mouseX, mouseY) {
-    zoom_with_anchor(
-        Math.max(current_zoom_factor() - 0.2, 0.2),
-        mouseX,
-        mouseY
-    );
+    zoom_with_anchor(Math.max(current_zoom_factor() - 0.2, 0.2), mouseX, mouseY);
 }
 
 function zoom_with_anchor(newZoom, mouseX, mouseY) {
@@ -770,12 +730,7 @@ class Toolbar extends events.EventEmitter {
         const ctx = canvas.getContext("2d");
         for (let y = 0, code = 0; y < 16; y++) {
             for (let x = 0; x < 16; x++, code++) {
-                font.draw(
-                    ctx,
-                    { code, fg, bg },
-                    x * cell_width,
-                    y * cell_height
-                );
+                font.draw(ctx, { code, fg, bg }, x * cell_width, y * cell_height);
             }
         }
     }
@@ -844,8 +799,7 @@ class Toolbar extends events.EventEmitter {
 
     redraw_fkeys() {
         if (!doc.render) return;
-        for (let i = 0; i < 12; i++)
-            this.draw_fkey(`f${i + 1}`, this.fkeys[this.fkey_index][i]);
+        for (let i = 0; i < 12; i++) this.draw_fkey(`f${i + 1}`, this.fkeys[this.fkey_index][i]);
         $("fkey_chooser_num").textContent = `${this.fkey_index + 1}`;
     }
 
@@ -865,15 +819,11 @@ class Toolbar extends events.EventEmitter {
     }
 
     previous_character_set() {
-        this.change_fkeys(
-            this.fkey_index == 0 ? this.fkeys.length - 1 : this.fkey_index - 1
-        );
+        this.change_fkeys(this.fkey_index == 0 ? this.fkeys.length - 1 : this.fkey_index - 1);
     }
 
     next_character_set() {
-        this.change_fkeys(
-            this.fkey_index + 1 == this.fkeys.length ? 0 : this.fkey_index + 1
-        );
+        this.change_fkeys(this.fkey_index + 1 == this.fkeys.length ? 0 : this.fkey_index + 1);
     }
 
     increase_brush_size() {
@@ -936,8 +886,7 @@ class Toolbar extends events.EventEmitter {
     }
 
     fkey_clicker(i) {
-        return (event) =>
-            this.emit("key_typed", this.fkeys[this.fkey_index][i]);
+        return (event) => this.emit("key_typed", this.fkeys[this.fkey_index][i]);
     }
 
     fkey_pref_clicker(num) {
@@ -997,10 +946,8 @@ class Toolbar extends events.EventEmitter {
                 $("colorize_bg").classList.remove("brush_mode_ghosted");
                 break;
         }
-        if (this.colorize_fg)
-            $("colorize_fg").classList.add("brush_mode_selected");
-        if (this.colorize_bg)
-            $("colorize_bg").classList.add("brush_mode_selected");
+        if (this.colorize_fg) $("colorize_fg").classList.add("brush_mode_selected");
+        if (this.colorize_bg) $("colorize_bg").classList.add("brush_mode_selected");
     }
 
     set_sample(x, y) {
@@ -1018,8 +965,7 @@ class Toolbar extends events.EventEmitter {
     }
 
     change_custom_brush(num) {
-        if (this.mode != this.modes.CUSTOM_BLOCK)
-            this.change_mode(this.modes.CUSTOM_BLOCK);
+        if (this.mode != this.modes.CUSTOM_BLOCK) this.change_mode(this.modes.CUSTOM_BLOCK);
         this.custom_block_index = this.fkeys[this.fkey_index][num];
         this.draw_custom_block();
     }
@@ -1061,9 +1007,7 @@ class Toolbar extends events.EventEmitter {
         this.colorize_bg = false;
         this.brush_size = 1;
         this.custom_block_index = 176;
-        on("show_toolbar", (event, visible) =>
-            set_var_px("toolbar-height", visible ? 48 : 0)
-        );
+        on("show_toolbar", (event, visible) => set_var_px("toolbar-height", visible ? 48 : 0));
         palette.on("set_fg", () => {
             this.redraw_fkeys();
             this.draw_custom_block();
@@ -1091,11 +1035,7 @@ class Toolbar extends events.EventEmitter {
             "DOMContentLoaded",
             (event) => {
                 for (let i = 0; i < 12; i++)
-                    $(`f${i + 1}`).addEventListener(
-                        "mousedown",
-                        this.fkey_clicker(i),
-                        true
-                    );
+                    $(`f${i + 1}`).addEventListener("mousedown", this.fkey_clicker(i), true);
                 for (let i = 0; i < 12; i++)
                     $(`f${i + 1}_pref`).addEventListener(
                         "mousedown",
@@ -1150,22 +1090,10 @@ class Toolbar extends events.EventEmitter {
                     this.change_mode(this.modes.COLORIZE);
                 });
                 this.change_mode(this.modes.HALF_BLOCK);
-                $("reference_open").addEventListener(
-                    "click",
-                    open_reference_image
-                );
-                $("reference_show").addEventListener(
-                    "click",
-                    show_reference_image
-                );
-                $("reference_hide").addEventListener(
-                    "click",
-                    hide_reference_image
-                );
-                $("reference_reset").addEventListener(
-                    "click",
-                    reset_reference_image
-                );
+                $("reference_open").addEventListener("click", open_reference_image);
+                $("reference_show").addEventListener("click", show_reference_image);
+                $("reference_hide").addEventListener("click", hide_reference_image);
+                $("reference_reset").addEventListener("click", reset_reference_image);
                 $("reference_opacity_minus").addEventListener(
                     "click",
                     decrease_reference_image_opacity
@@ -1178,26 +1106,14 @@ class Toolbar extends events.EventEmitter {
                     "input",
                     on_update_reference_opacity_value
                 );
-                $("reference_size_minus").addEventListener(
-                    "click",
-                    decrease_reference_image_size
-                );
-                $("reference_size_plus").addEventListener(
-                    "click",
-                    increase_reference_image_size
-                );
-                $("reference_size_value").addEventListener(
-                    "input",
-                    on_update_reference_size_value
-                );
+                $("reference_size_minus").addEventListener("click", decrease_reference_image_size);
+                $("reference_size_plus").addEventListener("click", increase_reference_image_size);
+                $("reference_size_value").addEventListener("input", on_update_reference_size_value);
                 $("reference_angle_minus").addEventListener(
                     "click",
                     decrease_reference_image_angle
                 );
-                $("reference_angle_plus").addEventListener(
-                    "click",
-                    increase_reference_image_angle
-                );
+                $("reference_angle_plus").addEventListener("click", increase_reference_image_angle);
                 $("reference_angle_value").addEventListener(
                     "input",
                     on_update_reference_angle_value
@@ -1206,9 +1122,7 @@ class Toolbar extends events.EventEmitter {
             true
         );
 
-        keyboard.on("move_charlist", (direction) =>
-            this.move_charlist(direction)
-        );
+        keyboard.on("move_charlist", (direction) => this.move_charlist(direction));
     }
 }
 

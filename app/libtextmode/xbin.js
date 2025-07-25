@@ -1,9 +1,4 @@
-const {
-    bytes_to_utf8,
-    bytes_to_blocks,
-    Textmode,
-    add_sauce_for_xbin,
-} = require("./textmode");
+const { bytes_to_utf8, bytes_to_blocks, Textmode, add_sauce_for_xbin } = require("./textmode");
 const { palette_4bit, xbin_to_rgb, rgb_to_xbin } = require("./palette");
 const repeating = {
     NONE: 0,
@@ -44,10 +39,7 @@ function uncompress({ bytes, columns, rows }) {
                 break;
             case repeating.BOTH_CHARACTERS_AND_ATTRIBUTES:
                 for (
-                    let k = 0,
-                        code = bytes[i++],
-                        bg = bytes[i] >> 4,
-                        fg = bytes[i++] & 0xf;
+                    let k = 0, code = bytes[i++], bg = bytes[i] >> 4, fg = bytes[i++] & 0xf;
                     k <= count;
                     j++, k++
                 ) {
@@ -62,10 +54,7 @@ function uncompress({ bytes, columns, rows }) {
 class XBin extends Textmode {
     constructor(bytes) {
         super(bytes);
-        if (
-            (bytes_to_utf8(this.bytes, 0, 4) != "XBIN") |
-            (this.bytes[4] != 0x1a)
-        ) {
+        if ((bytes_to_utf8(this.bytes, 0, 4) != "XBIN") | (this.bytes[4] != 0x1a)) {
             throw "Error whilst attempting to load XBin file: Unexpected header.";
         }
         this.columns = (this.bytes[6] << 8) + this.bytes[5];
@@ -97,10 +86,7 @@ class XBin extends Textmode {
         }
         if (font_flag) {
             this.font_name = "Custom";
-            this.font_bytes = this.bytes.subarray(
-                i,
-                i + 256 * this.font_height
-            );
+            this.font_bytes = this.bytes.subarray(i, i + 256 * this.font_height);
             i += 256 * this.font_height;
         }
         if (compress_flag) {

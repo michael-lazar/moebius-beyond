@@ -10,10 +10,7 @@ function generate_font_canvas(bitmask, height, length) {
     for (let i = 0, y = 0, char = 0; i < bitmask.length; i++) {
         for (let x = 0, byte = bitmask[i]; x < 8; x++) {
             if ((byte >> x) & 1) {
-                image_data.data.set(
-                    rgba,
-                    (y * canvas.width + (8 - 1 - x) + char * 8) * 4
-                );
+                image_data.data.set(rgba, (y * canvas.width + (8 - 1 - x) + char * 8) * 4);
             }
         }
         if ((i + 1) % height === 0) {
@@ -28,22 +25,9 @@ function generate_font_canvas(bitmask, height, length) {
 }
 
 function add_ninth_bit_to_canvas(canvas, length) {
-    const { canvas: new_canvas, ctx } = create_canvas(
-        9 * length,
-        canvas.height
-    );
+    const { canvas: new_canvas, ctx } = create_canvas(9 * length, canvas.height);
     for (let char = 0; char < length; char++) {
-        ctx.drawImage(
-            canvas,
-            char * 8,
-            0,
-            8,
-            canvas.height,
-            char * 9,
-            0,
-            8,
-            canvas.height
-        );
+        ctx.drawImage(canvas, char * 8, 0, 8, canvas.height, char * 9, 0, 8, canvas.height);
         if (char >= 0xc0 && char <= 0xdf) {
             ctx.drawImage(
                 canvas,
@@ -129,19 +113,13 @@ class Font {
         this.length = 256;
         this.use_9px_font = use_9px_font;
 
-        this.canvas = generate_font_canvas(
-            this.bitmask,
-            this.height,
-            this.length
-        );
+        this.canvas = generate_font_canvas(this.bitmask, this.height, this.length);
         if (this.use_9px_font) {
             this.width += 1;
             this.canvas = add_ninth_bit_to_canvas(this.canvas, this.length);
         }
 
-        this.glyphs = this.palette.map((rgb) =>
-            coloured_glyphs(this.canvas, rgb)
-        );
+        this.glyphs = this.palette.map((rgb) => coloured_glyphs(this.canvas, rgb));
         this.backgrounds = this.palette.map((rgb) =>
             coloured_background(this.width, this.height, rgb)
         );
@@ -149,22 +127,12 @@ class Font {
     }
 
     replace_cache_at(index, rgb) {
-        this.backgrounds[index] = coloured_background(
-            this.width,
-            this.height,
-            rgb
-        );
+        this.backgrounds[index] = coloured_background(this.width, this.height, rgb);
         this.glyphs[index] = coloured_glyphs(this.canvas, rgb);
     }
 
     draw(ctx, block, x, y) {
-        ctx.drawImage(
-            this.get_background_for(block.bg),
-            x,
-            y,
-            this.width,
-            this.height
-        );
+        ctx.drawImage(this.get_background_for(block.bg), x, y, this.width, this.height);
         ctx.drawImage(
             this.get_glyphs_for(block.fg),
             block.code * this.width,
@@ -203,8 +171,7 @@ class Font {
 
     get_glyphs_for(index) {
         return (this.glyphs[index] =
-            this.glyphs[index] ||
-            coloured_glyphs(this.canvas, this.get_rgb(index)));
+            this.glyphs[index] || coloured_glyphs(this.canvas, this.get_rgb(index)));
     }
 
     get_background_for(index) {

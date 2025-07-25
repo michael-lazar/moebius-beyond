@@ -112,11 +112,7 @@ body.dark .panel > div {
     height: 30px;
     margin: 8px;
     border: 1px solid rgba(0, 0, 0, 0.6);
-    background-image: -webkit-linear-gradient(
-        top,
-        rgb(34, 37, 43),
-        rgb(30, 31, 35)
-    );
+    background-image: -webkit-linear-gradient(top, rgb(34, 37, 43), rgb(30, 31, 35));
     cursor: pointer;
 }
 
@@ -138,11 +134,7 @@ body.dark .panel > div {
     margin: 8px 0;
     padding: 1px;
     color: rgba(255, 255, 255, 0.3);
-    background-image: -webkit-linear-gradient(
-        top,
-        rgb(34, 37, 43),
-        rgb(30, 31, 35)
-    );
+    background-image: -webkit-linear-gradient(top, rgb(34, 37, 43), rgb(30, 31, 35));
     border: 1px solid rgba(0, 0, 0, 0.6);
     text-align: center;
     width: 4ch;
@@ -203,11 +195,7 @@ body.dark .panel > div {
     border-color: rgba(255, 255, 255, 0.4);
     color: rgba(255, 255, 255, 0.8);
     text-shadow: 0px -1px rgba(0, 0, 0, 0.2);
-    background-image: -webkit-linear-gradient(
-        top,
-        rgba(96, 108, 136, 0.6),
-        rgba(83, 96, 127, 0.6)
-    );
+    background-image: -webkit-linear-gradient(top, rgba(96, 108, 136, 0.6), rgba(83, 96, 127, 0.6));
 }
 
 #half_block {
@@ -268,11 +256,7 @@ body.dark .panel > div {
     border-color: rgba(255, 255, 255, 0.4);
     color: rgba(255, 255, 255, 0.8);
     text-shadow: 0px -1px rgba(0, 0, 0, 0.2);
-    background-image: -webkit-linear-gradient(
-        top,
-        rgba(96, 108, 136, 0.6),
-        rgba(83, 96, 127, 0.6)
-    );
+    background-image: -webkit-linear-gradient(top, rgba(96, 108, 136, 0.6), rgba(83, 96, 127, 0.6));
 }
 
 .brush_mode_ghosted {

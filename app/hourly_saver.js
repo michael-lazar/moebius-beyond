@@ -5,10 +5,7 @@ const fs = require("fs");
 
 function files_match(file_1, file_2) {
     return (
-        crypto
-            .createHash("sha1")
-            .update(fs.readFileSync(file_1))
-            .digest("hex") ==
+        crypto.createHash("sha1").update(fs.readFileSync(file_1)).digest("hex") ==
         crypto.createHash("sha1").update(fs.readFileSync(file_2)).digest("hex")
     );
 }
@@ -29,20 +26,12 @@ class HourlySaver extends events.EventEmitter {
         hour = hour < 10 ? "0" + hour : hour;
         min = min < 10 ? "0" + min : min;
         sec = sec < 10 ? "0" + sec : sec;
-        const timestamp =
-            year + "-" + month + "-" + day + "T" + hour + min + sec;
-        return path.join(
-            backup_folder,
-            `${parsed_file.name} - ${timestamp}${parsed_file.ext}`
-        );
+        const timestamp = year + "-" + month + "-" + day + "T" + hour + min + sec;
+        return path.join(backup_folder, `${parsed_file.name} - ${timestamp}${parsed_file.ext}`);
     }
 
     keep_if_changes(file) {
-        if (
-            this.last_file &&
-            this.last_file != file &&
-            fs.existsSync(this.last_file)
-        ) {
+        if (this.last_file && this.last_file != file && fs.existsSync(this.last_file)) {
             if (files_match(this.last_file, file)) {
                 fs.unlinkSync(file);
                 return false;

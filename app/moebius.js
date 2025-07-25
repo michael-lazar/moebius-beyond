@@ -9,9 +9,7 @@ let last_win_pos;
 const darwin = process.platform == "darwin";
 const win32 = process.platform == "win32";
 const linux = process.platform == "linux";
-const frameless = darwin
-    ? { frame: false, titleBarStyle: "hiddenInset" }
-    : { frame: true };
+const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
 let prevent_splash_screen_at_startup = false;
 let splash_screen;
 const { new_win } = require("./window");
@@ -20,10 +18,7 @@ const { new_win } = require("./window");
 // picker, which is nicer than the one that's provided by chromium. At some
 // time in the future, this may no longer be true, in which case it would be
 // fine to remove this line if it causes other issues with forms.
-electron.app.commandLine.appendSwitch(
-    "disable-features",
-    "FormControlsRefresh"
-);
+electron.app.commandLine.appendSwitch("disable-features", "FormControlsRefresh");
 
 function cleanup(id) {
     menu.cleanup(id);
@@ -58,11 +53,7 @@ async function new_document_window() {
     prefs.send(win);
     win.on("focus", (event) => {
         if (darwin) {
-            if (
-                docs[win.id] &&
-                docs[win.id].modal &&
-                !docs[win.id].modal.isDestroyed()
-            ) {
+            if (docs[win.id] && docs[win.id].modal && !docs[win.id].modal.isDestroyed()) {
                 electron.Menu.setApplicationMenu(menu.modal_menu);
             } else {
                 electron.Menu.setApplicationMenu(docs[win.id].menu);
@@ -73,11 +64,7 @@ async function new_document_window() {
         // win.openDevTools({mode: "detach"});
     });
     win.on("close", (event) => {
-        if (
-            prefs.get("unsaved_changes") &&
-            docs[win.id].edited &&
-            !docs[win.id].destroyed
-        ) {
+        if (prefs.get("unsaved_changes") && docs[win.id].edited && !docs[win.id].destroyed) {
             event.preventDefault();
             win.send("check_before_closing");
         } else {
@@ -161,42 +148,25 @@ function open_in_new_window(win) {
     if (win && docs[win.id].open_in_current_window) {
         return false;
     }
-    return (
-        !win || docs[win.id].network || docs[win.id].file || docs[win.id].edited
-    );
+    return !win || docs[win.id].network || docs[win.id].file || docs[win.id].edited;
 }
 
 function open(win) {
     if (darwin && win) electron.Menu.setApplicationMenu(menu.modal_menu);
-    const files = electron.dialog.showOpenDialogSync(
-        open_in_new_window(win) ? undefined : win,
-        {
-            filters: [
-                {
-                    name: "TextArt",
-                    extensions: [
-                        "ans",
-                        "xb",
-                        "bin",
-                        "diz",
-                        "asc",
-                        "txt",
-                        "nfo",
-                    ],
-                },
-                { name: "All Files", extensions: ["*"] },
-            ],
-            properties: ["openFile", "multiSelections"],
-        }
-    );
+    const files = electron.dialog.showOpenDialogSync(open_in_new_window(win) ? undefined : win, {
+        filters: [
+            {
+                name: "TextArt",
+                extensions: ["ans", "xb", "bin", "diz", "asc", "txt", "nfo"],
+            },
+            { name: "All Files", extensions: ["*"] },
+        ],
+        properties: ["openFile", "multiSelections"],
+    });
     if (darwin && win) electron.Menu.setApplicationMenu(docs[win.id].menu);
     if (!files) return;
     for (const file of files) {
-        if (
-            win &&
-            !check_if_file_is_already_open(file) &&
-            !open_in_new_window(win)
-        ) {
+        if (win && !check_if_file_is_already_open(file) && !open_in_new_window(win)) {
             win.send("open_file", file);
             docs[win.id].file = file;
         } else {
@@ -320,9 +290,7 @@ function update_prefs(key, value) {
     for (const id of Object.keys(docs)) docs[id].win.send(key, value);
 }
 
-electron.ipcMain.on("update_prefs", (event, { key, value }) =>
-    update_prefs(key, value)
-);
+electron.ipcMain.on("update_prefs", (event, { key, value }) => update_prefs(key, value));
 
 electron.ipcMain.on("show_rendering_modal", async (event, { id }) => {
     docs[id].modal = await window.new_modal("app/html/rendering.html", {
@@ -349,49 +317,41 @@ electron.ipcMain.on("set_doc_menu", (event, { id }) => {
 });
 
 function add_darwin_window_menu_handler(id) {
-    docs[id].modal.on("close", () =>
-        electron.Menu.setApplicationMenu(docs[id].menu)
-    );
+    docs[id].modal.on("close", () => electron.Menu.setApplicationMenu(docs[id].menu));
     electron.Menu.setApplicationMenu(menu.modal_menu);
 }
 
-electron.ipcMain.on(
-    "get_sauce_info",
-    async (event, { id, title, author, group, comments }) => {
-        docs[id].modal = await window.new_modal(
-            "app/html/sauce.html",
-            {
-                width: 600,
-                height: 340,
-                parent: docs[id].win,
-                frame: false,
-                ...get_centered_xy(id, 350, 340),
-            },
-            touchbar.get_sauce_info
-        );
-        if (darwin) add_darwin_window_menu_handler(id);
+electron.ipcMain.on("get_sauce_info", async (event, { id, title, author, group, comments }) => {
+    docs[id].modal = await window.new_modal(
+        "app/html/sauce.html",
+        {
+            width: 600,
+            height: 340,
+            parent: docs[id].win,
+            frame: false,
+            ...get_centered_xy(id, 350, 340),
+        },
+        touchbar.get_sauce_info
+    );
+    if (darwin) add_darwin_window_menu_handler(id);
+    docs[id].modal.send("set_sauce_info", {
+        title,
+        author,
+        group,
+        comments,
+    });
+    event.returnValue = true;
+});
+
+electron.ipcMain.on("update_sauce", (event, { id, title, author, group, comments }) => {
+    if (docs[id] && docs[id].modal && !docs[id].modal.isDestroyed())
         docs[id].modal.send("set_sauce_info", {
             title,
             author,
             group,
             comments,
         });
-        event.returnValue = true;
-    }
-);
-
-electron.ipcMain.on(
-    "update_sauce",
-    (event, { id, title, author, group, comments }) => {
-        if (docs[id] && docs[id].modal && !docs[id].modal.isDestroyed())
-            docs[id].modal.send("set_sauce_info", {
-                title,
-                author,
-                group,
-                comments,
-            });
-    }
-);
+});
 
 function get_centered_xy(id, width, height) {
     const pos = docs[id].win.getPosition();
@@ -401,30 +361,27 @@ function get_centered_xy(id, width, height) {
     return { x, y };
 }
 
-electron.ipcMain.on(
-    "select_attribute",
-    async (event, { id, fg, bg, palette }) => {
-        if (docs[id].modal && !docs[id].modal.isDestroyed()) {
-            docs[id].modal.close();
-            event.returnValue = true;
-            return;
-        }
-        docs[id].modal = await window.new_modal(
-            "app/html/select_attribute.html",
-            {
-                width: 340,
-                height: 340,
-                parent: docs[id].win,
-                frame: false,
-                ...get_centered_xy(id, 340, 340),
-            },
-            touchbar.select_attribute
-        );
-        if (darwin) add_darwin_window_menu_handler(id);
-        docs[id].modal.send("select_attribute", { fg, bg, palette });
+electron.ipcMain.on("select_attribute", async (event, { id, fg, bg, palette }) => {
+    if (docs[id].modal && !docs[id].modal.isDestroyed()) {
+        docs[id].modal.close();
         event.returnValue = true;
+        return;
     }
-);
+    docs[id].modal = await window.new_modal(
+        "app/html/select_attribute.html",
+        {
+            width: 340,
+            height: 340,
+            parent: docs[id].win,
+            frame: false,
+            ...get_centered_xy(id, 340, 340),
+        },
+        touchbar.select_attribute
+    );
+    if (darwin) add_darwin_window_menu_handler(id);
+    docs[id].modal.send("select_attribute", { fg, bg, palette });
+    event.returnValue = true;
+});
 
 electron.ipcMain.on(
     "fkey_prefs",
@@ -455,43 +412,33 @@ electron.ipcMain.on(
     }
 );
 
-electron.ipcMain.on(
-    "set_fkey",
-    async (event, { id, num, fkey_index, code }) => {
-        const fkeys = prefs.get("fkeys");
-        if (num == -1) {
-            docs[id].win.send("set_custom_block", code);
-        } else {
-            fkeys[fkey_index][num] = code;
-            update_prefs("fkeys", fkeys);
-        }
+electron.ipcMain.on("set_fkey", async (event, { id, num, fkey_index, code }) => {
+    const fkeys = prefs.get("fkeys");
+    if (num == -1) {
+        docs[id].win.send("set_custom_block", code);
+    } else {
+        fkeys[fkey_index][num] = code;
+        update_prefs("fkeys", fkeys);
     }
-);
+});
 
 electron.ipcMain.on("ready", async (event, { id }) => {
     if (splash_screen && !splash_screen.isDestroyed()) splash_screen.close();
-    if (prefs.get("smallscale_guide"))
-        docs[id].win.send("toggle_smallscale_guide", true);
+    if (prefs.get("smallscale_guide")) docs[id].win.send("toggle_smallscale_guide", true);
 });
 
-electron.ipcMain.on(
-    "show_controlcharacters",
-    async (event, { id, method, destroy_when_done }) => {
-        docs[id].modal = await window.new_modal(
-            "app/html/controlcharacters.html",
-            {
-                width: 640,
-                height: 400,
-                parent: docs[id].win,
-                frame: false,
-                ...get_centered_xy(id, 640, 400),
-            }
-        );
-        if (darwin) add_darwin_window_menu_handler(id);
-        docs[id].modal.send("get_save_data", { method, destroy_when_done });
-        event.returnValue = true;
-    }
-);
+electron.ipcMain.on("show_controlcharacters", async (event, { id, method, destroy_when_done }) => {
+    docs[id].modal = await window.new_modal("app/html/controlcharacters.html", {
+        width: 640,
+        height: 400,
+        parent: docs[id].win,
+        frame: false,
+        ...get_centered_xy(id, 640, 400),
+    });
+    if (darwin) add_darwin_window_menu_handler(id);
+    docs[id].modal.send("get_save_data", { method, destroy_when_done });
+    event.returnValue = true;
+});
 
 electron.ipcMain.on("show_warning", async (event, { id, title, content }) => {
     docs[id].modal = await window.new_modal("app/html/warning.html", {
@@ -528,8 +475,7 @@ electron.app.on("ready", (event) => {
         process.argv.length > 1 &&
         require("path").parse(process.argv[0]).name != "electron"
     ) {
-        for (let i = 1; i < process.argv.length; i++)
-            open_file(process.argv[i]);
+        for (let i = 1; i < process.argv.length; i++) open_file(process.argv[i]);
     } else {
         if (!prevent_splash_screen_at_startup) show_splash_screen();
     }
@@ -550,11 +496,7 @@ if (win32 && prefs.get("ignore_hdpi")) {
 }
 
 if (darwin) {
-    electron.systemPreferences.setUserDefault(
-        "NSDisabledDictationMenuItem",
-        "boolean",
-        true
-    );
+    electron.systemPreferences.setUserDefault("NSDisabledDictationMenuItem", "boolean", true);
     electron.systemPreferences.setUserDefault(
         "NSDisabledCharacterPaletteMenuItem",
         "boolean",

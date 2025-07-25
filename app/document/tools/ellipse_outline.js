@@ -105,12 +105,7 @@ function full_block_ellipse_overlay(sx, sy, dx, dy, col) {
     if (!coords) return;
     overlay.fill_style(font, col);
     for (const coord of coords)
-        overlay.fill_rect(
-            coord.x * font.width,
-            coord.y * font.height,
-            font.width,
-            font.height
-        );
+        overlay.fill_rect(coord.x * font.width, coord.y * font.height, font.width, font.height);
 }
 
 function draw_half_block_ellipse(sx, sy, dx, dy, col) {
@@ -135,8 +130,7 @@ function draw_custom_block_ellipse(sx, sy, dx, dy, fg, bg) {
 function draw_shaded_block_ellipse(sx, sy, dx, dy, fg, bg, reduce) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
-    for (const coord of coords)
-        brushes.shading_block(coord.x, coord.y, fg, bg, reduce);
+    for (const coord of coords) brushes.shading_block(coord.x, coord.y, fg, bg, reduce);
 }
 
 function draw_replace_color_block_ellipse(sx, sy, dx, dy, to, from) {
@@ -162,8 +156,7 @@ function draw_blink_ellipse(sx, sy, dx, dy, unblink) {
         const block = doc.at(coord.x, coord.y);
         if (
             block &&
-            ((!unblink && block.bg < 8) ||
-                (unblink && block.bg > 7 && block.bg < 16)) &&
+            ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 16)) &&
             block.code !== 0 &&
             block.code !== 32 &&
             block.code !== 255
@@ -206,13 +199,7 @@ mouse.on("to", (x, y, half_y, button) => {
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         if (clear) {
-            half_block_ellipse_overlay(
-                mouse.start.x,
-                mouse.start.half_y,
-                x,
-                half_y,
-                0
-            );
+            half_block_ellipse_overlay(mouse.start.x, mouse.start.half_y, x, half_y, 0);
         } else {
             half_block_ellipse_overlay(
                 mouse.start.x,
@@ -244,13 +231,7 @@ mouse.on("up", (x, y, half_y, button) => {
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         if (clear) {
-            draw_half_block_ellipse(
-                mouse.start.x,
-                mouse.start.half_y,
-                x,
-                half_y,
-                0
-            );
+            draw_half_block_ellipse(mouse.start.x, mouse.start.half_y, x, half_y, 0);
         } else {
             draw_half_block_ellipse(
                 mouse.start.x,
@@ -267,37 +248,15 @@ mouse.on("up", (x, y, half_y, button) => {
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:
-                draw_custom_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg
-                );
+                draw_custom_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
-                draw_shaded_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg,
-                    reduce
-                );
+                draw_shaded_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg, reduce);
                 break;
             }
             case toolbar.modes.REPLACE_COLOR:
-                draw_replace_color_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg
-                );
+                draw_replace_color_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
                 draw_blink_ellipse(

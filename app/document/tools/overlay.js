@@ -11,13 +11,11 @@ class Overlay {
     }
 
     hide() {
-        if (!this.canvas.classList.contains("hidden"))
-            this.canvas.classList.add("hidden");
+        if (!this.canvas.classList.contains("hidden")) this.canvas.classList.add("hidden");
     }
 
     show() {
-        if (this.canvas.classList.contains("hidden"))
-            this.canvas.classList.remove("hidden");
+        if (this.canvas.classList.contains("hidden")) this.canvas.classList.remove("hidden");
     }
 
     fill_style(font, col) {
@@ -35,8 +33,7 @@ class Overlay {
     destroy() {
         this.destroyed = true;
         const editing_layer = document.getElementById("editing_layer");
-        if (editing_layer.contains(this.canvas))
-            editing_layer.removeChild(this.canvas);
+        if (editing_layer.contains(this.canvas)) editing_layer.removeChild(this.canvas);
     }
 
     update(x, y, width, height) {

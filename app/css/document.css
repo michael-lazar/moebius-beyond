@@ -15,10 +15,7 @@
 #toolbar {
     position: relative;
     float: right;
-    width: calc(
-        100% - var(--preview-width) - var(--charlist-width) -
-            var(--sidebar-width)
-    );
+    width: calc(100% - var(--preview-width) - var(--charlist-width) - var(--sidebar-width));
     height: var(--toolbar-height);
 }
 .tool {
@@ -156,15 +153,11 @@ body.dark #current_colors > canvas {
     background-image: url("../img/selected_bg.png");
 }
 #swatches div.selected_fg.selected_bg {
-    background-image:
-        url("../img/selected_fg.png"), url("../img/selected_bg.png");
+    background-image: url("../img/selected_fg.png"), url("../img/selected_bg.png");
 }
 #viewport {
     float: left;
-    width: calc(
-        100% - var(--sidebar-width) - var(--preview-width) -
-            var(--charlist-width) - 1px
-    );
+    width: calc(100% - var(--sidebar-width) - var(--preview-width) - var(--charlist-width) - 1px);
     height: calc(100% - var(--toolbar-height) - var(--statusbar-height) - 1px);
     border-top: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
@@ -172,11 +165,7 @@ body.dark #current_colors > canvas {
     overflow: auto;
     touch-action: none;
     cursor:
-        -webkit-image-set(
-                url("../img/crosshair.png") 1x,
-                url("../img/crosshair_2x.png") 2x
-            )
-            15 15,
+        -webkit-image-set(url("../img/crosshair.png") 1x, url("../img/crosshair_2x.png") 2x) 15 15,
         crosshair;
 }
 #viewport.reference-tool {

@@ -97,11 +97,7 @@
                 <div>
                     <div class="button" id="half_block">Half Block</div>
                     <div class="button" id="custom_block">
-                        <canvas
-                            id="custom_block_canvas"
-                            width="8"
-                            height="16"
-                        ></canvas>
+                        <canvas id="custom_block_canvas" width="8" height="16"></canvas>
                     </div>
                     <div class="button" id="shading_block">Shading</div>
                     <div class="button" id="replace_color">Replace</div>
@@ -134,20 +130,11 @@
             <div class="panel hidden" id="reference_panel">
                 <div>
                     <div class="button" id="reference_open">Open...</div>
-                    <div class="button reference-control" id="reference_show">
-                        Show
-                    </div>
-                    <div class="button reference-control" id="reference_hide">
-                        Hide
-                    </div>
-                    <div class="button reference-control" id="reference_reset">
-                        Reset
-                    </div>
+                    <div class="button reference-control" id="reference_show">Show</div>
+                    <div class="button reference-control" id="reference_hide">Hide</div>
+                    <div class="button reference-control" id="reference_reset">Reset</div>
                     <div class="label">Opacity<br />(%):</div>
-                    <div
-                        class="button reference-control button-left"
-                        id="reference_opacity_minus"
-                    >
+                    <div class="button reference-control button-left" id="reference_opacity_minus">
                         -
                     </div>
                     <input
@@ -159,17 +146,11 @@
                         step="10"
                         value="40"
                     />
-                    <div
-                        class="button reference-control button-right"
-                        id="reference_opacity_plus"
-                    >
+                    <div class="button reference-control button-right" id="reference_opacity_plus">
                         +
                     </div>
                     <div class="label">Width<br />(ch):</div>
-                    <div
-                        class="button reference-control button-left"
-                        id="reference_size_minus"
-                    >
+                    <div class="button reference-control button-left" id="reference_size_minus">
                         -
                     </div>
                     <input
@@ -180,17 +161,11 @@
                         step="2"
                         value="25"
                     />
-                    <div
-                        class="button reference-control button-right"
-                        id="reference_size_plus"
-                    >
+                    <div class="button reference-control button-right" id="reference_size_plus">
                         +
                     </div>
                     <div class="label">Angle<br />(°):</div>
-                    <div
-                        class="button reference-control button-left"
-                        id="reference_angle_minus"
-                    >
+                    <div class="button reference-control button-left" id="reference_angle_minus">
                         -
                     </div>
                     <input
@@ -202,10 +177,7 @@
                         max="360"
                         value="0"
                     />
-                    <div
-                        class="button reference-control button-right"
-                        id="reference_angle_plus"
-                    >
+                    <div class="button reference-control button-right" id="reference_angle_plus">
                         +
                     </div>
                 </div>
@@ -218,19 +190,10 @@
                 <div id="blink_on_container"></div>
                 <div id="editing_layer"></div>
                 <div id="reference_layer">
-                    <img
-                        id="reference_image"
-                        class="hidden closed"
-                        src=""
-                        alt=""
-                    />
+                    <img id="reference_image" class="hidden closed" src="" alt="" />
                 </div>
                 <div id="guide" class="hidden"></div>
-                <div
-                    id="drawing_grid"
-                    style="opacity: 0.4"
-                    class="hidden"
-                ></div>
+                <div id="drawing_grid" style="opacity: 0.4" class="hidden"></div>
             </div>
         </div>
         <div id="statusbar">
@@ -238,16 +201,12 @@
                 <div id="use_9px_font_toggle">
                     Letter Spacing <span id="use_9px_font">Off</span>
                 </div>
-                <div id="ice_colors_toggle">
-                    iCE Colors <span id="ice_colors">Off</span>
-                </div>
+                <div id="ice_colors_toggle">iCE Colors <span id="ice_colors">Off</span></div>
             </div>
             <div id="mid_info">
                 <div id="dimensions">
-                    <span id="columns">0</span> Column<span id="columns_s"
-                        >s</span
-                    >
-                    × <span id="rows">0</span> Row<span id="rows_s">s</span>
+                    <span id="columns">0</span> Column<span id="columns_s">s</span> ×
+                    <span id="rows">0</span> Row<span id="rows_s">s</span>
                 </div>
             </div>
             <div id="right_info">

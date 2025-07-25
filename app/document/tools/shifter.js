@@ -45,46 +45,22 @@ mouse.on("down", (x, y, half_y, is_legal, button, shift_key) => {
         case 255: {
             doc.start_undo();
             const { fg } = palette;
-            doc.change_data(
-                x,
-                y,
-                button == mouse.buttons.LEFT ? 222 : 221,
-                fg,
-                block.bg
-            );
+            doc.change_data(x, y, button == mouse.buttons.LEFT ? 222 : 221, fg, block.bg);
             break;
         }
         case 219:
         case 220:
         case 223:
             doc.start_undo();
-            doc.change_data(
-                x,
-                y,
-                button == mouse.buttons.LEFT ? 221 : 222,
-                block.fg,
-                block.bg
-            );
+            doc.change_data(x, y, button == mouse.buttons.LEFT ? 221 : 222, block.fg, block.bg);
             break;
         case 221:
             doc.start_undo();
-            doc.change_data(
-                x,
-                y,
-                button == mouse.buttons.LEFT ? 32 : 219,
-                block.fg,
-                block.bg
-            );
+            doc.change_data(x, y, button == mouse.buttons.LEFT ? 32 : 219, block.fg, block.bg);
             break;
         case 222:
             doc.start_undo();
-            doc.change_data(
-                x,
-                y,
-                button == mouse.buttons.LEFT ? 219 : 32,
-                block.fg,
-                block.bg
-            );
+            doc.change_data(x, y, button == mouse.buttons.LEFT ? 219 : 32, block.fg, block.bg);
             break;
     }
 });

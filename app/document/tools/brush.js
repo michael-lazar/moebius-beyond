@@ -60,9 +60,7 @@ function draw_cursor_outline(x, y, half_y) {
     }
 
     let sx = (x - Math.floor(toolbar.brush_size / 2)) * font.width;
-    let sy =
-        (y - Math.floor(toolbar.brush_size / 2)) *
-        (font.height / height_scalar);
+    let sy = (y - Math.floor(toolbar.brush_size / 2)) * (font.height / height_scalar);
     let width = toolbar.brush_size * font.width;
     let height = (toolbar.brush_size * font.height) / height_scalar;
 
@@ -97,14 +95,7 @@ function mouse_handler(skip_first) {
         const { fg, bg } = palette;
         if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
             if (shift_key) {
-                brushes.half_block_line(
-                    mouse.x,
-                    mouse.half_y,
-                    x,
-                    half_y,
-                    0,
-                    skip_first
-                );
+                brushes.half_block_line(mouse.x, mouse.half_y, x, half_y, 0, skip_first);
             } else {
                 brushes.half_block_line(
                     mouse.x,
@@ -120,15 +111,7 @@ function mouse_handler(skip_first) {
         } else {
             switch (toolbar.mode) {
                 case toolbar.modes.CUSTOM_BLOCK:
-                    brushes.custom_block_line(
-                        mouse.x,
-                        mouse.y,
-                        x,
-                        y,
-                        fg,
-                        bg,
-                        skip_first
-                    );
+                    brushes.custom_block_line(mouse.x, mouse.y, x, y, fg, bg, skip_first);
                     break;
                 case toolbar.modes.SHADING_BLOCK:
                     brushes.shading_block_line(
@@ -143,15 +126,7 @@ function mouse_handler(skip_first) {
                     );
                     break;
                 case toolbar.modes.REPLACE_COLOR:
-                    brushes.replace_color_line(
-                        mouse.x,
-                        mouse.y,
-                        x,
-                        y,
-                        fg,
-                        bg,
-                        skip_first
-                    );
+                    brushes.replace_color_line(mouse.x, mouse.y, x, y, fg, bg, skip_first);
                     break;
                 case toolbar.modes.BLINK:
                     brushes.blink_line(
@@ -211,13 +186,7 @@ function mouse_up(x, y, half_y, button, single_point, shift_key) {
                 brushes.replace_color_line(last_xy.x, last_xy.y, x, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
-                brushes.blink_line(
-                    last_xy.x,
-                    last_xy.y,
-                    x,
-                    y,
-                    button != mouse.buttons.LEFT
-                );
+                brushes.blink_line(last_xy.x, last_xy.y, x, y, button != mouse.buttons.LEFT);
                 break;
             case toolbar.modes.COLORIZE:
                 brushes.colorize_line(

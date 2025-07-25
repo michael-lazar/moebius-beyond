@@ -8,9 +8,7 @@ function copy(blocks) {
     for (let y = 0, i = 0; y < blocks.rows; y++) {
         text.push("");
         for (let x = 0; x < blocks.columns; x++, i++) {
-            text[text.length - 1] += libtextmode.cp437_to_unicode(
-                blocks.data[i].code
-            );
+            text[text.length - 1] += libtextmode.cp437_to_unicode(blocks.data[i].code);
         }
     }
     electron.clipboard.write({
@@ -21,14 +19,8 @@ function copy(blocks) {
 
 function paste_blocks() {
     try {
-        const blocks = JSON.parse(
-            electron.clipboard.readHTML().replace(/^<[^>]+>/, "")
-        );
-        if (
-            blocks.columns &&
-            blocks.rows &&
-            blocks.data.length == blocks.columns * blocks.rows
-        ) {
+        const blocks = JSON.parse(electron.clipboard.readHTML().replace(/^<[^>]+>/, ""));
+        if (blocks.columns && blocks.rows && blocks.data.length == blocks.columns * blocks.rows) {
             return blocks;
         } else {
             throw "catch!";
@@ -36,9 +28,7 @@ function paste_blocks() {
     } catch (err) {
         const text = electron.clipboard.readText();
         if (text.length) {
-            const lines = text
-                .split("\n")
-                .map((line) => line.replace(/\r$/, ""));
+            const lines = text.split("\n").map((line) => line.replace(/\r$/, ""));
             if (!lines.length) return;
             const columns = Math.max.apply(
                 null,
@@ -50,8 +40,7 @@ function paste_blocks() {
             for (let y = 0, i = 0; y < rows; y++) {
                 for (let x = 0; x < columns; x++, i++) {
                     data[i] = {
-                        code:
-                            x >= lines[y].length ? 32 : lines[y].charCodeAt(x),
+                        code: x >= lines[y].length ? 32 : lines[y].charCodeAt(x),
                         fg,
                         bg,
                     };

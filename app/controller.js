@@ -33,12 +33,7 @@ async function process_save(
 ) {
     var ctrl = false;
     doc.data.forEach((block, index) => {
-        if (
-            block.code == 9 ||
-            block.code == 10 ||
-            block.code == 13 ||
-            block.code == 26
-        )
+        if (block.code == 9 || block.code == 10 || block.code == 13 || block.code == 26)
             ctrl = true;
     });
     if (ctrl && ignore_controlcharacters == false) {
@@ -123,11 +118,11 @@ async function share_online_xbin() {
 }
 
 function check_before_closing() {
-    const choice = msg_box(
-        "Save this document?",
-        "This document contains unsaved changes.",
-        { buttons: ["Save", "Cancel", "Don't Save"], defaultId: 0, cancelId: 1 }
-    );
+    const choice = msg_box("Save this document?", "This document contains unsaved changes.", {
+        buttons: ["Save", "Cancel", "Don't Save"],
+        defaultId: 0,
+        cancelId: 1,
+    });
     if (choice == 0) {
         save(true);
     } else if (choice == 2) {
@@ -181,9 +176,7 @@ function use_backup(value) {
 // electron.remote.getCurrentWebContents().openDevTools();
 on("new_document", (event, opts) => doc.new_document(opts));
 on("revert_to_last_save", (event, opts) => doc.open(doc.file));
-on("show_file_in_folder", (event, opts) =>
-    electron.shell.showItemInFolder(doc.file)
-);
+on("show_file_in_folder", (event, opts) => electron.shell.showItemInFolder(doc.file));
 on("duplicate", (event, opts) =>
     send("new_document", {
         columns: doc.columns,
@@ -196,10 +189,8 @@ on("duplicate", (event, opts) =>
         font_bytes: doc.font_bytes,
     })
 );
-on(
-    "process_save",
-    (event, { method, destroy_when_done, ignore_controlcharacters }) =>
-        process_save(method, destroy_when_done, ignore_controlcharacters)
+on("process_save", (event, { method, destroy_when_done, ignore_controlcharacters }) =>
+    process_save(method, destroy_when_done, ignore_controlcharacters)
 );
 on("save", (event, opts) => process_save("save"));
 on("save_as", (event, opts) => process_save("save_as"));
@@ -212,8 +203,6 @@ on("export_font", (event, opts) => export_font());
 on("export_as_utf8", (event) => export_as_utf8());
 on("export_as_png", (event) => export_as_png());
 on("export_as_apng", (event) => export_as_apng());
-on("remove_ice_colors", (event) =>
-    send("new_document", remove_ice_colors(doc))
-);
+on("remove_ice_colors", (event) => send("new_document", remove_ice_colors(doc)));
 on("backup_folder", (event, folder) => (backup_folder = folder));
 on("use_backup", (event, value) => use_backup(value));

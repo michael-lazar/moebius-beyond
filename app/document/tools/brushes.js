@@ -69,13 +69,7 @@ function custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
                 y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
                 y++
             ) {
-                doc.change_data(
-                    coord.x + x,
-                    coord.y + y,
-                    toolbar.custom_block_index,
-                    fg,
-                    bg
-                );
+                doc.change_data(coord.x + x, coord.y + y, toolbar.custom_block_index, fg, bg);
             }
         }
     }
@@ -121,51 +115,25 @@ function shading_block(x, y, fg, bg, reduce) {
     }
 }
 
-function single_shading_block_line(
-    sx,
-    sy,
-    dx,
-    dy,
-    fg,
-    bg,
-    reduce,
-    skip_first = false
-) {
+function single_shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
     const coords = line(sx, sy, dx, dy, skip_first);
     for (const coord of coords) shading_block(coord.x, coord.y, fg, bg, reduce);
 }
 
-function shading_block_line(
-    sx,
-    sy,
-    dx,
-    dy,
-    fg,
-    bg,
-    reduce,
-    skip_first = false
-) {
+function shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
     const coords = line(sx, sy, dx, dy, skip_first);
     for (const coord of coords) {
         for (
             let brush_size_x = -Math.floor(toolbar.brush_size / 2);
-            brush_size_x <
-            -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
+            brush_size_x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
             brush_size_x++
         ) {
             for (
                 let brush_size_y = -Math.floor(toolbar.brush_size / 2);
-                brush_size_y <
-                -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
+                brush_size_y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
                 brush_size_y++
             ) {
-                shading_block(
-                    coord.x + brush_size_x,
-                    coord.y + brush_size_y,
-                    fg,
-                    bg,
-                    reduce
-                );
+                shading_block(coord.x + brush_size_x, coord.y + brush_size_y, fg, bg, reduce);
             }
         }
     }
@@ -195,15 +163,7 @@ function clear_block_line(sx, sy, dx, dy, skip_first = false) {
     }
 }
 
-function single_replace_color_line(
-    sx,
-    sy,
-    dx,
-    dy,
-    to,
-    from,
-    skip_first = false
-) {
+function single_replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
     const coords = line(sx, sy, dx, dy, skip_first);
     for (const coord of coords) {
         const block = doc.at(coord.x, coord.y);
@@ -251,8 +211,7 @@ function single_blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
         const block = doc.at(coord.x, coord.y);
         if (
             block &&
-            ((!unblink && block.bg < 8) ||
-                (unblink && block.bg > 7 && block.bg < 15)) &&
+            ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 15)) &&
             block.code !== 0 &&
             block.code !== 32 &&
             block.code !== 255
@@ -283,8 +242,7 @@ function blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
                 const block = doc.at(coord.x + x, coord.y + y);
                 if (
                     block &&
-                    ((!unblink && block.bg < 8) ||
-                        (unblink && block.bg > 7 && block.bg < 16)) &&
+                    ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 16)) &&
                     block.code !== 0 &&
                     block.code !== 32 &&
                     block.code !== 255

@@ -2186,12 +2186,7 @@ const bare_edit = {
 
 const window_menu_items = {
     label: "Window",
-    submenu: [
-        { role: "minimize" },
-        { role: "zoom" },
-        { type: "separator" },
-        { role: "front" },
-    ],
+    submenu: [{ role: "minimize" }, { role: "zoom" }, { type: "separator" }, { role: "front" }],
 };
 
 const help_menu_items = {
@@ -2234,9 +2229,7 @@ const help_menu_items = {
             label: "ANSI Art Tutorials at 16Colors",
             id: "changelog",
             click(item) {
-                electron.shell.openExternal(
-                    "https://16colo.rs/tags/content/tutorial"
-                );
+                electron.shell.openExternal("https://16colo.rs/tags/content/tutorial");
             },
         },
         {
@@ -2918,19 +2911,17 @@ function viler_font_menu_items(win) {
     return Object.keys(viler_font_list).map((menu_title) => {
         return {
             label: menu_title,
-            submenu: Object.keys(viler_font_list[menu_title]).map(
-                (font_name) => {
-                    return {
-                        label: font_name,
-                        id: font_name,
-                        click(item) {
-                            win.send("change_font", font_name);
-                        },
-                        type: "checkbox",
-                        checked: false,
-                    };
-                }
-            ),
+            submenu: Object.keys(viler_font_list[menu_title]).map((font_name) => {
+                return {
+                    label: font_name,
+                    id: font_name,
+                    click(item) {
+                        win.send("change_font", font_name);
+                    },
+                    type: "checkbox",
+                    checked: false,
+                };
+            }),
         };
     });
 }
@@ -3263,11 +3254,7 @@ function view_menu_template(win) {
                                 label: "1x1",
                                 id: "drawinggrid_1x1",
                                 click(item) {
-                                    win.send(
-                                        "toggle_drawinggrid",
-                                        item.checked,
-                                        1
-                                    );
+                                    win.send("toggle_drawinggrid", item.checked, 1);
                                 },
                                 type: "checkbox",
                                 checked: false,
@@ -3276,11 +3263,7 @@ function view_menu_template(win) {
                                 label: "4x2",
                                 id: "drawinggrid_4x2",
                                 click(item) {
-                                    win.send(
-                                        "toggle_drawinggrid",
-                                        item.checked,
-                                        4
-                                    );
+                                    win.send("toggle_drawinggrid", item.checked, 4);
                                 },
                                 type: "checkbox",
                                 checked: false,
@@ -3289,11 +3272,7 @@ function view_menu_template(win) {
                                 label: "6x3",
                                 id: "drawinggrid_6x3",
                                 click(item) {
-                                    win.send(
-                                        "toggle_drawinggrid",
-                                        item.checked,
-                                        6
-                                    );
+                                    win.send("toggle_drawinggrid", item.checked, 6);
                                 },
                                 type: "checkbox",
                                 checked: false,
@@ -3302,11 +3281,7 @@ function view_menu_template(win) {
                                 label: "8x4",
                                 id: "drawinggrid_8x4",
                                 click(item) {
-                                    win.send(
-                                        "toggle_drawinggrid",
-                                        item.checked,
-                                        8
-                                    );
+                                    win.send("toggle_drawinggrid", item.checked, 8);
                                 },
                                 type: "checkbox",
                                 checked: false,
@@ -3315,11 +3290,7 @@ function view_menu_template(win) {
                                 label: "12x6",
                                 id: "drawinggrid_12x6",
                                 click(item) {
-                                    win.send(
-                                        "toggle_drawinggrid",
-                                        item.checked,
-                                        12
-                                    );
+                                    win.send("toggle_drawinggrid", item.checked, 12);
                                 },
                                 type: "checkbox",
                                 checked: false,
@@ -3328,11 +3299,7 @@ function view_menu_template(win) {
                                 label: "16x8",
                                 id: "drawinggrid_16x8",
                                 click(item) {
-                                    win.send(
-                                        "toggle_drawinggrid",
-                                        item.checked,
-                                        16
-                                    );
+                                    win.send("toggle_drawinggrid", item.checked, 16);
                                 },
                                 type: "checkbox",
                                 checked: false,
@@ -3704,15 +3671,12 @@ electron.ipcMain.on("disable_selection_menu_items", (event, { id }) =>
     disable_selection_menu_items(id)
 );
 
-electron.ipcMain.on(
-    "disable_selection_menu_items_except_deselect_and_crop",
-    (event, { id }) => {
-        disable_selection_menu_items(id);
-        enable(id, "deselect");
-        enable(id, "crop");
-        enable(id, "export_selection");
-    }
-);
+electron.ipcMain.on("disable_selection_menu_items_except_deselect_and_crop", (event, { id }) => {
+    disable_selection_menu_items(id);
+    enable(id, "deselect");
+    enable(id, "crop");
+    enable(id, "export_selection");
+});
 
 electron.ipcMain.on("enable_operation_menu_items", (event, { id }) => {
     enable(id, "stamp");
@@ -3852,12 +3816,9 @@ electron.ipcMain.on(
             lospec_palette_name,
         }
     ) => {
-        if (insert_mode != undefined)
-            set_check(id, "toggle_insert_mode", insert_mode);
-        if (overwrite_mode != undefined)
-            set_check(id, "overwrite_mode", overwrite_mode);
-        if (use_9px_font != undefined)
-            set_check(id, "use_9px_font", use_9px_font);
+        if (insert_mode != undefined) set_check(id, "toggle_insert_mode", insert_mode);
+        if (overwrite_mode != undefined) set_check(id, "overwrite_mode", overwrite_mode);
+        if (use_9px_font != undefined) set_check(id, "use_9px_font", use_9px_font);
         if (ice_colors != undefined) set_check(id, "ice_colors", ice_colors);
         if (actual_size != undefined) set_check(id, "actual_size", actual_size);
         if (lospec_palette_name !== undefined) {
@@ -3882,51 +3843,23 @@ electron.ipcMain.on(
     }
 );
 
-electron.ipcMain.on("uncheck_transparent", (event, { id }) =>
-    uncheck(id, "transparent")
-);
-electron.ipcMain.on("uncheck_underneath", (event, { id }) =>
-    uncheck(id, "underneath")
-);
-electron.ipcMain.on("check_underneath", (event, { id }) =>
-    check(id, "underneath")
-);
+electron.ipcMain.on("uncheck_transparent", (event, { id }) => uncheck(id, "transparent"));
+electron.ipcMain.on("uncheck_underneath", (event, { id }) => uncheck(id, "underneath"));
+electron.ipcMain.on("check_underneath", (event, { id }) => check(id, "underneath"));
 electron.ipcMain.on("uncheck_over", (event, { id }) => uncheck(id, "over"));
 electron.ipcMain.on("check_over", (event, { id }) => check(id, "over"));
 
-electron.ipcMain.on("check_smallscale_guide", (event, { id }) =>
-    check(id, "smallscale_guide")
-);
-electron.ipcMain.on("check_square_guide", (event, { id }) =>
-    check(id, "square_guide")
-);
-electron.ipcMain.on("check_instagram_guide", (event, { id }) =>
-    check(id, "instagram_guide")
-);
-electron.ipcMain.on("check_file_id_guide", (event, { id }) =>
-    check(id, "file_id_guide")
-);
-electron.ipcMain.on("check_petscii_guide", (event, { id }) =>
-    check(id, "petscii_guide")
-);
-electron.ipcMain.on("check_drawinggrid_1x1", (event, { id }) =>
-    check(id, "drawinggrid_1x1")
-);
-electron.ipcMain.on("check_drawinggrid_4x2", (event, { id }) =>
-    check(id, "drawinggrid_4x2")
-);
-electron.ipcMain.on("check_drawinggrid_6x3", (event, { id }) =>
-    check(id, "drawinggrid_6x3")
-);
-electron.ipcMain.on("check_drawinggrid_8x4", (event, { id }) =>
-    check(id, "drawinggrid_8x4")
-);
-electron.ipcMain.on("check_drawinggrid_12x6", (event, { id }) =>
-    check(id, "drawinggrid_12x6")
-);
-electron.ipcMain.on("check_drawinggrid_16x8", (event, { id }) =>
-    check(id, "drawinggrid_16x8")
-);
+electron.ipcMain.on("check_smallscale_guide", (event, { id }) => check(id, "smallscale_guide"));
+electron.ipcMain.on("check_square_guide", (event, { id }) => check(id, "square_guide"));
+electron.ipcMain.on("check_instagram_guide", (event, { id }) => check(id, "instagram_guide"));
+electron.ipcMain.on("check_file_id_guide", (event, { id }) => check(id, "file_id_guide"));
+electron.ipcMain.on("check_petscii_guide", (event, { id }) => check(id, "petscii_guide"));
+electron.ipcMain.on("check_drawinggrid_1x1", (event, { id }) => check(id, "drawinggrid_1x1"));
+electron.ipcMain.on("check_drawinggrid_4x2", (event, { id }) => check(id, "drawinggrid_4x2"));
+electron.ipcMain.on("check_drawinggrid_6x3", (event, { id }) => check(id, "drawinggrid_6x3"));
+electron.ipcMain.on("check_drawinggrid_8x4", (event, { id }) => check(id, "drawinggrid_8x4"));
+electron.ipcMain.on("check_drawinggrid_12x6", (event, { id }) => check(id, "drawinggrid_12x6"));
+electron.ipcMain.on("check_drawinggrid_16x8", (event, { id }) => check(id, "drawinggrid_16x8"));
 electron.ipcMain.on("uncheck_all_guides", (event, { id }) => {
     uncheck(id, "smallscale_guide");
     uncheck(id, "square_guide");

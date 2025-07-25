@@ -67,9 +67,6 @@ function pointer_move(event) {
     if (mouse_start_pos) {
         const y_offset = event.clientY - mouse_start_pos.y;
         const x_offset = event.clientX - mouse_start_pos.x;
-        move_reference(
-            reference_start_pos.y + y_offset,
-            reference_start_pos.x + x_offset
-        );
+        move_reference(reference_start_pos.y + y_offset, reference_start_pos.x + x_offset);
     }
 }

@@ -3,15 +3,7 @@ const { send, msg_box } = require("../../senders");
 const doc = require("../doc");
 const { open_reference_image } = require("../ui/ui");
 
-const document_extensions = [
-    ".ans",
-    ".asc",
-    ".diz",
-    ".nfo",
-    ".txt",
-    ".xb",
-    ".bin",
-];
+const document_extensions = [".ans", ".asc", ".diz", ".nfo", ".txt", ".xb", ".bin"];
 const reference_extensions = [".png", ".jpg", ".jpeg"];
 const font_extensions = [
     ".f06",
@@ -58,17 +50,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const ext = path.extname(file.name).toLowerCase();
 
         if (document_extensions.includes(ext)) {
-            const choice = msg_box(
-                "Open file",
-                `Open ${file.name} in the editor.`,
-                {
-                    buttons: [
-                        "Open in New Window",
-                        "Replace Current File",
-                        "Cancel",
-                    ],
-                }
-            );
+            const choice = msg_box("Open file", `Open ${file.name} in the editor.`, {
+                buttons: ["Open in New Window", "Replace Current File", "Cancel"],
+            });
             if (choice === 0) {
                 send("open_file", { file: file.path });
             } else if (choice === 1) {
@@ -86,13 +70,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 open_reference_image({ file: file.path });
             }
         } else if (font_extensions.includes(ext)) {
-            const choice = msg_box(
-                "Load Font",
-                `Load file ${file.name} as the current font.`,
-                {
-                    buttons: ["Load Font", "Cancel"],
-                }
-            );
+            const choice = msg_box("Load Font", `Load file ${file.name} as the current font.`, {
+                buttons: ["Load Font", "Cancel"],
+            });
             if (choice === 0) {
                 doc.load_custom_font({ file: file.path });
             }

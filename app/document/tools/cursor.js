@@ -15,9 +15,7 @@ class Cursor {
                 const { font, render } = doc;
                 this.ctx.globalCompositeOperation = "source-over";
                 this.ctx.drawImage(
-                    render.ice_color_collection[
-                        Math.floor(this.y / render.maximum_rows)
-                    ],
+                    render.ice_color_collection[Math.floor(this.y / render.maximum_rows)],
                     this.x * font.width,
                     (this.y % render.maximum_rows) * font.height,
                     font.width,
@@ -69,19 +67,14 @@ class Cursor {
         return doc.get_blocks(
             this.x,
             this.y,
-            Math.min(
-                doc.columns - 1,
-                this.x + this.operation_blocks.columns - 1
-            ),
+            Math.min(doc.columns - 1, this.x + this.operation_blocks.columns - 1),
             Math.min(doc.rows - 1, this.y + this.operation_blocks.rows - 1)
         );
     }
 
     scroll(x, y) {
-        document.getElementById("viewport").scrollLeft +=
-            x * this.width * this.canvas_zoom;
-        document.getElementById("viewport").scrollTop +=
-            y * this.height * this.canvas_zoom;
+        document.getElementById("viewport").scrollLeft += x * this.width * this.canvas_zoom;
+        document.getElementById("viewport").scrollTop += y * this.height * this.canvas_zoom;
     }
 
     left() {
@@ -112,8 +105,7 @@ class Cursor {
         );
 
         this.move_to(this.x, Math.max(this.y - characters_in_screen_height, 0));
-        if (this.scroll_document_with_cursor)
-            this.scroll(0, -characters_in_screen_height);
+        if (this.scroll_document_with_cursor) this.scroll(0, -characters_in_screen_height);
     }
 
     page_down() {
@@ -123,12 +115,8 @@ class Cursor {
             viewport_rect.height / this.height / this.canvas_zoom
         );
 
-        this.move_to(
-            this.x,
-            Math.min(this.y + characters_in_screen_height, doc.rows - 1)
-        );
-        if (this.scroll_document_with_cursor)
-            this.scroll(0, characters_in_screen_height);
+        this.move_to(this.x, Math.min(this.y + characters_in_screen_height, doc.rows - 1));
+        if (this.scroll_document_with_cursor) this.scroll(0, characters_in_screen_height);
     }
 
     tab() {
@@ -163,16 +151,11 @@ class Cursor {
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
 
-        const cursor_top =
-            this.height * (this.y - this.scroll_margin) * this.canvas_zoom;
-        const cursor_left =
-            this.width * (this.x - this.scroll_margin) * this.canvas_zoom;
+        const cursor_top = this.height * (this.y - this.scroll_margin) * this.canvas_zoom;
+        const cursor_left = this.width * (this.x - this.scroll_margin) * this.canvas_zoom;
         const cursor_bottom =
-            this.height * (this.y + this.scroll_margin + 1) * this.canvas_zoom +
-            1;
-        const cursor_right =
-            this.width * (this.x + this.scroll_margin + 1) * this.canvas_zoom +
-            1;
+            this.height * (this.y + this.scroll_margin + 1) * this.canvas_zoom + 1;
+        const cursor_right = this.width * (this.x + this.scroll_margin + 1) * this.canvas_zoom + 1;
 
         const viewport_bottom = viewport.scrollTop + viewport_rect.height;
         const viewport_right = viewport.scrollLeft + viewport_rect.width;
@@ -294,21 +277,15 @@ class Cursor {
         }
         send("enable_editing_shortcuts");
         this.mode = modes.EDITING;
-        if (this.canvas.classList.contains("selection"))
-            this.canvas.classList.remove("selection");
-        if (this.canvas.classList.contains("operation"))
-            this.canvas.classList.remove("operation");
+        if (this.canvas.classList.contains("selection")) this.canvas.classList.remove("selection");
+        if (this.canvas.classList.contains("operation")) this.canvas.classList.remove("operation");
         this.resize_to_font();
         statusbar.use_canvas_size_for_status_bar();
         send("show_editing_touchbar");
     }
 
     deselect() {
-        if (
-            this.mode == modes.OPERATION &&
-            this.operation_blocks.is_move_operation
-        )
-            doc.undo();
+        if (this.mode == modes.OPERATION && this.operation_blocks.is_move_operation) doc.undo();
         this.start_editing_mode();
     }
 
@@ -318,10 +295,7 @@ class Cursor {
         this.canvas.height = this.operation_blocks.rows * font.height - 4;
         this.canvas.style.width = `${this.canvas.width}px`;
         this.canvas.style.height = `${this.canvas.height}px`;
-        const canvas = libtextmode.render_blocks(
-            this.operation_blocks,
-            doc.font
-        );
+        const canvas = libtextmode.render_blocks(this.operation_blocks, doc.font);
         this.ctx.drawImage(
             canvas,
             2,
@@ -373,9 +347,7 @@ class Cursor {
         if (this.flashing != value) {
             this.flashing = value;
             if (this.flashing) {
-                this.canvas
-                    .getContext("2d")
-                    .clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.canvas.classList.add("flashing");
             } else {
                 this.canvas.classList.remove("flashing");
@@ -407,10 +379,7 @@ class Cursor {
 
     center() {
         this.move_to(
-            Math.max(
-                Math.floor((doc.columns - this.operation_blocks.columns) / 2),
-                0
-            ),
+            Math.max(Math.floor((doc.columns - this.operation_blocks.columns) / 2), 0),
             this.y
         );
     }
@@ -506,12 +475,7 @@ class Cursor {
             const block = doc.at(x + 1, this.y);
             doc.change_data(x, this.y, block.code, block.fg, block.bg);
         }
-        doc.clear_at(
-            doc.columns - 1,
-            this.y,
-            { prev_x: this.x, prev_y: this.y },
-            this
-        );
+        doc.clear_at(doc.columns - 1, this.y, { prev_x: this.x, prev_y: this.y }, this);
     }
 
     start_selection() {
@@ -629,17 +593,9 @@ class Cursor {
 
     stamp() {
         const blocks = this.operation_blocks.underneath
-            ? libtextmode.merge_blocks(
-                  this.operation_blocks,
-                  this.get_blocks_in_operation()
-              )
+            ? libtextmode.merge_blocks(this.operation_blocks, this.get_blocks_in_operation())
             : this.operation_blocks;
-        doc.place(
-            blocks,
-            this.x,
-            this.y,
-            this.operation_blocks.is_move_operation
-        );
+        doc.place(blocks, this.x, this.y, this.operation_blocks.is_move_operation);
         if (this.operation_blocks.is_move_operation)
             this.operation_blocks.is_move_operation = false;
     }
@@ -721,9 +677,7 @@ class Cursor {
             "scroll_document_with_cursor",
             (event, value) => (this.scroll_document_with_cursor = value)
         );
-        on("use_attribute_under_cursor", (event) =>
-            this.attribute_under_cursor()
-        );
+        on("use_attribute_under_cursor", (event) => this.attribute_under_cursor());
         on("rotate", (event) => this.rotate());
         on("flip_x", (event) => this.flip_x());
         on("flip_y", (event) => this.flip_y());
@@ -735,19 +689,11 @@ class Cursor {
         on("right_justify_line", (event, value) => this.right_justify_line());
         on("center_line", (event, value) => this.center_line());
         on("erase_line", (event, value) => this.erase_line());
-        on("erase_to_start_of_line", (event, value) =>
-            this.erase_to_start_of_line()
-        );
-        on("erase_to_end_of_line", (event, value) =>
-            this.erase_to_end_of_line()
-        );
+        on("erase_to_start_of_line", (event, value) => this.erase_to_start_of_line());
+        on("erase_to_end_of_line", (event, value) => this.erase_to_end_of_line());
         on("erase_column", (event, value) => this.erase_column());
-        on("erase_to_start_of_column", (event, value) =>
-            this.erase_to_start_of_column()
-        );
-        on("erase_to_end_of_column", (event, value) =>
-            this.erase_to_end_of_column()
-        );
+        on("erase_to_start_of_column", (event, value) => this.erase_to_start_of_column());
+        on("erase_to_end_of_column", (event, value) => this.erase_to_end_of_column());
         on("insert_row", (event) => this.insert_row(this.y));
         on("delete_row", (event) => this.delete_row(this.y));
         on("insert_column", (event) => this.insert_column(this.x));

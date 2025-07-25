@@ -17,12 +17,8 @@ tools.on("start", (mode) => {
 
 function draw_line_overlay_half_block(x, y, col) {
     const font = doc.font;
-    const [sx, dx] =
-        mouse.start.x < x ? [mouse.start.x, x] : [x, mouse.start.x];
-    const [sy, dy] =
-        mouse.start.half_y < y
-            ? [mouse.start.half_y, y]
-            : [y, mouse.start.half_y];
+    const [sx, dx] = mouse.start.x < x ? [mouse.start.x, x] : [x, mouse.start.x];
+    const [sy, dy] = mouse.start.half_y < y ? [mouse.start.half_y, y] : [y, mouse.start.half_y];
     overlay.update(
         sx * font.width,
         Math.floor((sy * font.height) / 2),
@@ -44,10 +40,8 @@ function draw_line_overlay_half_block(x, y, col) {
 
 function draw_line_overlay(x, y, col) {
     const font = doc.font;
-    const [sx, dx] =
-        mouse.start.x < x ? [mouse.start.x, x] : [x, mouse.start.x];
-    const [sy, dy] =
-        mouse.start.y < y ? [mouse.start.y, y] : [y, mouse.start.y];
+    const [sx, dx] = mouse.start.x < x ? [mouse.start.x, x] : [x, mouse.start.x];
+    const [sy, dy] = mouse.start.y < y ? [mouse.start.y, y] : [y, mouse.start.y];
     overlay.update(
         sx * font.width,
         sy * font.height,
@@ -80,11 +74,7 @@ mouse.on("to", (x, y, half_y, button) => {
         if (clear) {
             draw_line_overlay_half_block(x, half_y, 0);
         } else {
-            draw_line_overlay_half_block(
-                x,
-                half_y,
-                button == mouse.buttons.LEFT ? fg : bg
-            );
+            draw_line_overlay_half_block(x, half_y, button == mouse.buttons.LEFT ? fg : bg);
         }
     } else if (clear) {
         draw_line_overlay(x, y, 0);
@@ -100,13 +90,7 @@ mouse.on("up", (x, y, half_y, button) => {
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         if (clear) {
-            brushes.single_half_block_line(
-                mouse.start.x,
-                mouse.start.half_y,
-                x,
-                half_y,
-                0
-            );
+            brushes.single_half_block_line(mouse.start.x, mouse.start.half_y, x, half_y, 0);
         } else {
             brushes.single_half_block_line(
                 mouse.start.x,
@@ -121,14 +105,7 @@ mouse.on("up", (x, y, half_y, button) => {
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:
-                brushes.single_custom_block_line(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg
-                );
+                brushes.single_custom_block_line(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.SHADING_BLOCK:
                 brushes.single_shading_block_line(
@@ -142,14 +119,7 @@ mouse.on("up", (x, y, half_y, button) => {
                 );
                 break;
             case toolbar.modes.REPLACE_COLOR:
-                brushes.single_replace_color_line(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg
-                );
+                brushes.single_replace_color_line(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
                 brushes.single_blink_line(

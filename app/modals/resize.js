@@ -19,14 +19,7 @@ function send_parent(channel, opts) {
 function ok() {
     const columns = parseInt(document.getElementById("columns").value, 10);
     const rows = parseInt(document.getElementById("rows").value, 10);
-    if (
-        columns &&
-        columns > 0 &&
-        columns <= 3000 &&
-        rows &&
-        rows > 0 &&
-        rows <= 10000
-    )
+    if (columns && columns > 0 && columns <= 3000 && rows && rows > 0 && rows <= 10000)
         send_parent("set_canvas_size", { columns, rows });
 }
 
@@ -37,12 +30,8 @@ function cancel() {
 document.addEventListener(
     "DOMContentLoaded",
     (event) => {
-        document
-            .getElementById("ok")
-            .addEventListener("click", (event) => ok(), true);
-        document
-            .getElementById("cancel")
-            .addEventListener("click", (event) => cancel(), true);
+        document.getElementById("ok").addEventListener("click", (event) => ok(), true);
+        document.getElementById("cancel").addEventListener("click", (event) => cancel(), true);
     },
     true
 );

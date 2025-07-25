@@ -3,12 +3,7 @@ const { EventEmitter } = require("events");
 const doc = require("./doc");
 const keyboard = require("./input/keyboard");
 const senders = require("../senders");
-const {
-    rgb_to_hex,
-    hex_to_rbg,
-    lospec_palette,
-    palette_4bit,
-} = require("../libtextmode/palette");
+const { rgb_to_hex, hex_to_rbg, lospec_palette, palette_4bit } = require("../libtextmode/palette");
 
 class PaletteChooser extends EventEmitter {
     select_attribute() {
@@ -28,37 +23,21 @@ class PaletteChooser extends EventEmitter {
         doc.on("new_document", () => this.new_document());
         doc.on("update_swatches", () => this.update_swatches());
         doc.on("set_bg", (index) => (this.bg = index));
-        doc.on("change_palette", (lospec_palette_name) =>
-            this.change_palette(lospec_palette_name)
-        );
+        doc.on("change_palette", (lospec_palette_name) => this.change_palette(lospec_palette_name));
 
-        keyboard.on("previous_foreground_color", () =>
-            this.previous_foreground_color()
-        );
-        keyboard.on("next_foreground_color", () =>
-            this.next_foreground_color()
-        );
-        keyboard.on("previous_background_color", () =>
-            this.previous_background_color()
-        );
-        keyboard.on("next_background_color", () =>
-            this.next_background_color()
-        );
+        keyboard.on("previous_foreground_color", () => this.previous_foreground_color());
+        keyboard.on("next_foreground_color", () => this.next_foreground_color());
+        keyboard.on("previous_background_color", () => this.previous_background_color());
+        keyboard.on("next_background_color", () => this.next_background_color());
         keyboard.on("toggle_fg", (index) => this.toggle_fg(index));
         keyboard.on("toggle_bg", (index) => this.toggle_bg(index));
 
-        senders.on("previous_foreground_color", () =>
-            this.previous_foreground_color()
-        );
+        senders.on("previous_foreground_color", () => this.previous_foreground_color());
         senders.on("next_foreground_color", () => this.next_foreground_color());
-        senders.on("previous_background_color", () =>
-            this.previous_background_color()
-        );
+        senders.on("previous_background_color", () => this.previous_background_color());
         senders.on("next_background_color", () => this.next_background_color());
         senders.on("default_color", () => this.default_color());
-        senders.on("switch_foreground_background", () =>
-            this.switch_foreground_background()
-        );
+        senders.on("switch_foreground_background", () => this.switch_foreground_background());
         senders.on("set_fg", (e, new_fg) => (this.fg = new_fg));
         senders.on("set_bg", (e, new_bg) => (this.bg = new_bg));
     }
@@ -90,37 +69,27 @@ class PaletteChooser extends EventEmitter {
             clearTimeout(this.click_timer);
 
             this.color_picker_spawner = e.target;
-            this.color_picker_el.value = rgb_to_hex(
-                doc.palette[e.target.dataset.id]
-            );
+            this.color_picker_el.value = rgb_to_hex(doc.palette[e.target.dataset.id]);
 
             this.color_picker_el.click();
         });
 
         // this.color_picker_el.addEventListener("input", (e) => this.color_picked(e.target.value));
-        this.color_picker_el.addEventListener("change", (e) =>
-            this.color_picked(e.target.value)
-        );
+        this.color_picker_el.addEventListener("change", (e) => this.color_picked(e.target.value));
     }
 
     color_picked(hex) {
-        if (!hex || this.color_picker_spawner.style.backgroundColor === hex)
-            return;
+        if (!hex || this.color_picker_spawner.style.backgroundColor === hex) return;
 
         clearTimeout(this.paint_timer);
         this.paint_timer = setTimeout(() => {
             this.color_picker_spawner.style.backgroundColor = hex;
             const id = parseInt(this.color_picker_spawner.dataset.id, 10);
 
-            if (this.bg_index === id)
-                document.getElementById("bg").style.backgroundColor = hex;
-            if (this.fg_index === id)
-                document.getElementById("fg").style.backgroundColor = hex;
+            if (this.bg_index === id) document.getElementById("bg").style.backgroundColor = hex;
+            if (this.fg_index === id) document.getElementById("fg").style.backgroundColor = hex;
 
-            doc.update_palette(
-                parseInt(this.color_picker_spawner.dataset.id, 10),
-                hex_to_rbg(hex)
-            );
+            doc.update_palette(parseInt(this.color_picker_spawner.dataset.id, 10), hex_to_rbg(hex));
         }, 150);
     }
 
@@ -160,22 +129,16 @@ class PaletteChooser extends EventEmitter {
 
     update_selected(level) {
         const class_name = `selected_${level}`;
-        let selected_el = this.swatch_container_el.querySelector(
-            `.selected_${level}`
-        );
+        let selected_el = this.swatch_container_el.querySelector(`.selected_${level}`);
         if (selected_el) selected_el.classList.remove(class_name);
 
-        selected_el = this.swatch_container_el.querySelector(
-            `[data-id="${this[level]}"`
-        );
+        selected_el = this.swatch_container_el.querySelector(`[data-id="${this[level]}"`);
         if (selected_el) {
             selected_el.classList.add(class_name);
         }
         // else we don't know about this color!
 
-        document.getElementById(level).style.backgroundColor = rgb_to_hex(
-            doc.palette[this[level]]
-        );
+        document.getElementById(level).style.backgroundColor = rgb_to_hex(doc.palette[this[level]]);
     }
 
     set fg(value) {
@@ -258,15 +221,13 @@ class PaletteChooser extends EventEmitter {
 
     toggle_fg(index) {
         // TODO: ??
-        if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8))
-            index += 8;
+        if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8)) index += 8;
         this.fg = index;
     }
 
     toggle_bg(index) {
         // TODO: ??
-        if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8))
-            index += 8;
+        if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8)) index += 8;
         this.bg_internal = index;
     }
 }

@@ -63,8 +63,7 @@ class UndoHistory extends events.EventEmitter {
             block.fg = undo.fg;
             block.bg = undo.bg;
             libtextmode.render_at(render, undo.x, undo.y, block);
-            if (undo.cursor)
-                this.emit("move_to", undo.cursor.prev_x, undo.cursor.prev_y);
+            if (undo.cursor) this.emit("move_to", undo.cursor.prev_x, undo.cursor.prev_y);
         }
         this.redo_buffer.push({ type: undo_types.INDIVIDUAL, data: redos });
     }
@@ -88,8 +87,7 @@ class UndoHistory extends events.EventEmitter {
             block.fg = redo.fg;
             block.bg = redo.bg;
             libtextmode.render_at(render, redo.x, redo.y, block);
-            if (redo.cursor)
-                this.emit("move_to", redo.cursor.post_x, redo.cursor.post_y);
+            if (redo.cursor) this.emit("move_to", redo.cursor.post_x, redo.cursor.post_y);
         }
         this.undo_buffer.push({ type: undo_types.INDIVIDUAL, data: undos });
     }
@@ -98,8 +96,7 @@ class UndoHistory extends events.EventEmitter {
         doc.columns = blocks.columns;
         doc.rows = blocks.rows;
         doc.data = new Array(doc.columns * doc.rows);
-        for (let i = 0; i < doc.data.length; i++)
-            doc.data[i] = Object.assign(blocks.data[i]);
+        for (let i = 0; i < doc.data.length; i++) doc.data[i] = Object.assign(blocks.data[i]);
     }
 
     undo_resize(blocks) {
@@ -519,24 +516,18 @@ class TextModeDoc extends events.EventEmitter {
 
     set lospec_palette_name(lospec_palette_name) {
         doc.lospec_palette_name = lospec_palette_name;
-        this.start_rendering().then(() =>
-            this.emit("change_palette", doc.lospec_palette_name)
-        );
+        this.start_rendering().then(() => this.emit("change_palette", doc.lospec_palette_name));
     }
 
     set font_name(font_name) {
         doc.font_name = font_name;
         doc.font_bytes = undefined;
-        this.start_rendering().then(() =>
-            this.emit("change_font", doc.font_name)
-        );
+        this.start_rendering().then(() => this.emit("change_font", doc.font_name));
     }
 
     set use_9px_font(value) {
         doc.use_9px_font = value;
-        this.start_rendering().then(() =>
-            this.emit("use_9px_font", doc.use_9px_font)
-        );
+        this.start_rendering().then(() => this.emit("use_9px_font", doc.use_9px_font));
     }
 
     set ice_colors(value) {
@@ -569,10 +560,7 @@ class TextModeDoc extends events.EventEmitter {
         doc.data[i] = { code, fg, bg };
         libtextmode.render_at(render, x, y, doc.data[i]);
         if (this.mirror_mode && mirrored) {
-            const opposing_x =
-                Math.floor(doc.columns / 2) -
-                (x - Math.ceil(doc.columns / 2)) -
-                1;
+            const opposing_x = Math.floor(doc.columns / 2) - (x - Math.ceil(doc.columns / 2)) - 1;
             this.change_data(
                 opposing_x,
                 y,
@@ -726,21 +714,9 @@ class TextModeDoc extends events.EventEmitter {
             ) {
                 this.change_data(x, block.text_y, 219, col, 0);
             } else if (block.is_top) {
-                this.change_data(
-                    x,
-                    block.text_y,
-                    223,
-                    col,
-                    block.lower_block_color
-                );
+                this.change_data(x, block.text_y, 223, col, block.lower_block_color);
             } else {
-                this.change_data(
-                    x,
-                    block.text_y,
-                    220,
-                    col,
-                    block.upper_block_color
-                );
+                this.change_data(x, block.text_y, 220, col, block.upper_block_color);
             }
         } else {
             if (block.is_top) {
@@ -805,8 +781,7 @@ class TextModeDoc extends events.EventEmitter {
                 const block = doc.data[y * doc.columns + x - count];
                 this.change_data(x, y, block.code, block.fg, block.bg);
             }
-            for (let x = count - 1; x >= 0; x--)
-                this.change_data(x, y, 32, 7, 0);
+            for (let x = count - 1; x >= 0; x--) this.change_data(x, y, 32, 7, 0);
         }
     }
 
@@ -821,13 +796,7 @@ class TextModeDoc extends events.EventEmitter {
             const new_left = Math.floor((left + right) / 2);
             for (let x = 0; x < new_left; x++) this.change_data(x, y, 32, 7, 0);
             for (let x = 0; x < blocks.length; x++)
-                this.change_data(
-                    new_left + x,
-                    y,
-                    blocks[x].code,
-                    blocks[x].fg,
-                    blocks[x].bg
-                );
+                this.change_data(new_left + x, y, blocks[x].code, blocks[x].fg, blocks[x].bg);
             for (let x = 0; x < doc.columns - new_left - blocks.length; x++)
                 this.change_data(new_left + blocks.length + x, y, 32, 7, 0);
         }
@@ -845,8 +814,7 @@ class TextModeDoc extends events.EventEmitter {
 
     erase_to_end_of_line(x, y) {
         this.undo_history.start_chunk();
-        for (let dx = x; dx < doc.columns; dx++)
-            this.change_data(dx, y, 32, 7, 0);
+        for (let dx = x; dx < doc.columns; dx++) this.change_data(dx, y, 32, 7, 0);
     }
 
     erase_column(x) {
@@ -926,18 +894,12 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     insert_column(x) {
-        this.undo_history.push_insert_column(
-            x,
-            libtextmode.insert_column(doc, x)
-        );
+        this.undo_history.push_insert_column(x, libtextmode.insert_column(doc, x));
         libtextmode.render_insert_column(doc, x, render);
     }
 
     delete_column(x) {
-        this.undo_history.push_delete_column(
-            x,
-            libtextmode.delete_column(doc, x)
-        );
+        this.undo_history.push_delete_column(x, libtextmode.delete_column(doc, x));
         libtextmode.render_delete_column(doc, x, render);
     }
 
@@ -983,9 +945,7 @@ class TextModeDoc extends events.EventEmitter {
 
     async share_online() {
         const bytes = libtextmode.encode_as_ansi(this, false);
-        const filename = this.file
-            ? path.basename(this.file)
-            : "unknown" + "." + "ans";
+        const filename = this.file ? path.basename(this.file) : "unknown" + "." + "ans";
         const req = await fetch(
             `https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=ans&retention=${retention}&filename=${filename}`,
             {
@@ -1006,9 +966,7 @@ class TextModeDoc extends events.EventEmitter {
 
     async share_online_xbin() {
         const bytes = libtextmode.encode_as_xbin(this);
-        const filename = this.file
-            ? path.basename(this.file)
-            : "unknown" + "." + "xb";
+        const filename = this.file ? path.basename(this.file) : "unknown" + "." + "xb";
         const req = await fetch(
             `https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}&filename=${filename}`,
             {
@@ -1044,8 +1002,8 @@ class TextModeDoc extends events.EventEmitter {
     }
     async import_font() {
         const possibleHeights = new Set([
-            128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320,
-            336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512,
+            128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384,
+            400, 416, 432, 448, 464, 480, 496, 512,
         ]);
         const { bytes, filename } = await libtextmode.importFontFromImage();
         const { data, width, height } = await libtextmode.getImageData(bytes);
@@ -1060,15 +1018,10 @@ class TextModeDoc extends events.EventEmitter {
             return;
         }
         const bit_array = await libtextmode.processImageDataTo1bit(data);
-        const chunkedBitArray = await libtextmode.rearrangeBitArray(
-            bit_array,
-            height
-        );
+        const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height);
         doc.font_name = path.parse(filename).name;
         doc.font_bytes = Buffer.from(chunkedBitArray, "hex");
-        this.start_rendering().then(() =>
-            this.emit("change_font", doc.font_name)
-        );
+        this.start_rendering().then(() => this.emit("change_font", doc.font_name));
     }
 
     async load_custom_font({ file } = {}) {
@@ -1117,9 +1070,7 @@ class TextModeDoc extends events.EventEmitter {
         console.log(bytes, filename);
         doc.font_name = path.parse(filename).name;
         doc.font_bytes = bytes;
-        this.start_rendering().then(() =>
-            this.emit("change_font", doc.font_name)
-        );
+        this.start_rendering().then(() => this.emit("change_font", doc.font_name));
     }
 
     constructor() {
@@ -1135,8 +1086,7 @@ class TextModeDoc extends events.EventEmitter {
         on("change_font", (event, font_name) => (this.font_name = font_name));
         on(
             "change_palette",
-            (event, lospec_palette_name) =>
-                (this.lospec_palette_name = lospec_palette_name)
+            (event, lospec_palette_name) => (this.lospec_palette_name = lospec_palette_name)
         );
         on("get_sauce_info", (event) =>
             send_sync("get_sauce_info", {
@@ -1152,9 +1102,7 @@ class TextModeDoc extends events.EventEmitter {
                 rows: doc.rows,
             })
         );
-        on("set_canvas_size", (event, { columns, rows }) =>
-            this.resize(columns, rows)
-        );
+        on("set_canvas_size", (event, { columns, rows }) => this.resize(columns, rows));
         on("set_sauce_info", (event, { title, author, group, comments }) =>
             this.set_sauce(title, author, group, comments)
         );

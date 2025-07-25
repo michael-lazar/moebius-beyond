@@ -57,9 +57,7 @@ class MouseListener extends events.EventEmitter {
         let canvasY = (mouseY * canvas_height) / canvas_container.clientHeight;
         const x = Math.floor(canvasX / (this.font.width * this.canvas_zoom));
         const y = Math.floor(canvasY / (this.font.height * this.canvas_zoom));
-        const half_y = Math.floor(
-            canvasY / ((this.font.height / 2) * this.canvas_zoom)
-        );
+        const half_y = Math.floor(canvasY / ((this.font.height / 2) * this.canvas_zoom));
         return { x, y, half_y };
     }
 
@@ -68,11 +66,7 @@ class MouseListener extends events.EventEmitter {
     }
 
     record_start() {
-        [this.start.x, this.start.y, this.start.half_y] = [
-            this.x,
-            this.y,
-            this.half_y,
-        ];
+        [this.start.x, this.start.y, this.start.half_y] = [this.x, this.y, this.half_y];
         this.started = true;
     }
 
@@ -155,8 +149,7 @@ class MouseListener extends events.EventEmitter {
         if (
             this.last.x == x &&
             this.last.y == y &&
-            (toolbar.mode != toolbar.modes.HALF_BLOCK ||
-                this.last.half_y == half_y)
+            (toolbar.mode != toolbar.modes.HALF_BLOCK || this.last.half_y == half_y)
         )
             return true;
         this.last = { x, y, half_y };
@@ -200,20 +193,11 @@ class MouseListener extends events.EventEmitter {
         if (this.x == x && this.y == y && this.half_y == half_y) return;
         if (this.drawing) {
             if (!this.same_as_last(x, y, half_y)) {
-                this.emit(
-                    "draw",
-                    x,
-                    y,
-                    half_y,
-                    is_legal,
-                    this.button,
-                    event.shiftKey
-                );
+                this.emit("draw", x, y, half_y, is_legal, this.button, event.shiftKey);
                 this.store(x, y, half_y);
             }
         } else if (this.started) {
-            if (!this.same_as_last(x, y, half_y))
-                this.emit("to", x, y, half_y, this.button);
+            if (!this.same_as_last(x, y, half_y)) this.emit("to", x, y, half_y, this.button);
         } else {
             this.emit("move", x, y, half_y, is_legal);
         }
@@ -239,9 +223,7 @@ class MouseListener extends events.EventEmitter {
                 y,
                 half_y,
                 this.button,
-                this.start.x == x &&
-                    this.start.y == y &&
-                    this.start.half_y == half_y,
+                this.start.x == x && this.start.y == y && this.start.half_y == half_y,
                 event.shiftKey
             );
             this.end();
@@ -297,10 +279,7 @@ class MouseListener extends events.EventEmitter {
     snapZoomLevel(zoomLevel) {
         // Round to nearest 0.1 (10%) within bounds
         const snapped = Math.round(zoomLevel * 10) / 10;
-        return Math.max(
-            zoomConfig.minZoom,
-            Math.min(zoomConfig.maxZoom, snapped)
-        );
+        return Math.max(zoomConfig.minZoom, Math.min(zoomConfig.maxZoom, snapped));
     }
 
     // Schedule zoom snap after interaction stops
@@ -328,10 +307,7 @@ class MouseListener extends events.EventEmitter {
 
         const normalized = this.normalizeWheel(event);
         const currentZoom = current_zoom_factor();
-        const zoomDelta = this.calculateZoomDelta(
-            normalized.pixelY,
-            currentZoom
-        );
+        const zoomDelta = this.calculateZoomDelta(normalized.pixelY, currentZoom);
 
         // Calculate new zoom level with bounds (no immediate snapping)
         const newZoom = Math.max(
@@ -441,37 +417,17 @@ class MouseListener extends events.EventEmitter {
         this.middle_click_time = 0;
         this.zoomSnapTimer = null;
         on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
-        doc.on("render", () =>
-            this.set_dimensions(doc.columns, doc.rows, doc.font)
-        );
+        doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {
             document
                 .getElementById("viewport")
-                .addEventListener(
-                    "pointerdown",
-                    (event) => this.mouse_down(event),
-                    true
-                );
-            document.body.addEventListener(
-                "pointermove",
-                (event) => this.mouse_move(event),
-                true
-            );
-            document.body.addEventListener(
-                "pointerup",
-                (event) => this.mouse_up(event),
-                true
-            );
-            document.body.addEventListener(
-                "pointerout",
-                (event) => this.mouse_out(event),
-                true
-            );
-            document.body.addEventListener(
-                "wheel",
-                (event) => this.wheel(event),
-                { passive: false }
-            );
+                .addEventListener("pointerdown", (event) => this.mouse_down(event), true);
+            document.body.addEventListener("pointermove", (event) => this.mouse_move(event), true);
+            document.body.addEventListener("pointerup", (event) => this.mouse_up(event), true);
+            document.body.addEventListener("pointerout", (event) => this.mouse_out(event), true);
+            document.body.addEventListener("wheel", (event) => this.wheel(event), {
+                passive: false,
+            });
         });
     }
 }

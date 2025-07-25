@@ -8,9 +8,7 @@
     --scaling-type: pixelated;
     --scrollbar-width: 8px;
     --scrollbar-height: 8px;
-    --system-font:
-        BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-        sans-serif;
+    --system-font: BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 html,
 body {

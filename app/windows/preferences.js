@@ -42,8 +42,7 @@ function prefs({
     $("ignore_hdpi").checked = ignore_hdpi;
     $("use_backup").checked = use_backup;
     backup_folder_value = backup_folder;
-    $("backup_folder").innerText =
-        backup_folder == "" ? "No Backup Folder Set" : backup_folder;
+    $("backup_folder").innerText = backup_folder == "" ? "No Backup Folder Set" : backup_folder;
 }
 
 function update(key, value) {
@@ -157,8 +156,7 @@ function reset_fkeys() {
 }
 
 function override_submit(event) {
-    if (event.code == "Enter" || event.code == "NumpadEnter")
-        event.preventDefault();
+    if (event.code == "Enter" || event.code == "NumpadEnter") event.preventDefault();
 }
 
 document.addEventListener(
@@ -168,70 +166,22 @@ document.addEventListener(
         $("nick").addEventListener("input", (event) => nick(), true);
         $("group").addEventListener("keydown", override_submit, true);
         $("group").addEventListener("input", (event) => group(), true);
-        $("use_numpad").addEventListener(
-            "change",
-            (event) => use_numpad(),
-            true
-        );
+        $("use_numpad").addEventListener("change", (event) => use_numpad(), true);
         $("use_shift").addEventListener("change", (event) => use_shift(), true);
-        $("chunked_undo").addEventListener(
-            "change",
-            (event) => chunked_undo(),
-            true
-        );
-        $("use_flashing_cursor").addEventListener(
-            "change",
-            (event) => use_flashing_cursor(),
-            true
-        );
-        $("hide_scrollbars").addEventListener(
-            "change",
-            (event) => hide_scrollbars(),
-            true
-        );
-        $("unsaved_changes").addEventListener(
-            "change",
-            (event) => unsaved_changes(),
-            true
-        );
-        $("use_pixel_aliasing").addEventListener(
-            "change",
-            (event) => use_pixel_aliasing(),
-            true
-        );
-        $("scroll_margin").addEventListener(
-            "input",
-            (event) => scroll_margin(),
-            true
-        );
+        $("chunked_undo").addEventListener("change", (event) => chunked_undo(), true);
+        $("use_flashing_cursor").addEventListener("change", (event) => use_flashing_cursor(), true);
+        $("hide_scrollbars").addEventListener("change", (event) => hide_scrollbars(), true);
+        $("unsaved_changes").addEventListener("change", (event) => unsaved_changes(), true);
+        $("use_pixel_aliasing").addEventListener("change", (event) => use_pixel_aliasing(), true);
+        $("scroll_margin").addEventListener("input", (event) => scroll_margin(), true);
         $("scroll_margin").addEventListener("keydown", override_submit, true);
-        $("new_document_rows").addEventListener(
-            "input",
-            (event) => new_document_rows(),
-            true
-        );
-        $("new_document_rows").addEventListener(
-            "keydown",
-            override_submit,
-            true
-        );
+        $("new_document_rows").addEventListener("input", (event) => new_document_rows(), true);
+        $("new_document_rows").addEventListener("keydown", override_submit, true);
         $("retention").addEventListener("change", retention, true);
-        $("smallscale_guide").addEventListener(
-            "change",
-            (event) => smallscale_guide(),
-            true
-        );
+        $("smallscale_guide").addEventListener("change", (event) => smallscale_guide(), true);
         $("debug").addEventListener("change", (event) => debug(), true);
-        $("ignore_hdpi").addEventListener(
-            "change",
-            (event) => ignore_hdpi(),
-            true
-        );
-        $("use_backup").addEventListener(
-            "change",
-            (event) => use_backup(),
-            true
-        );
+        $("ignore_hdpi").addEventListener("change", (event) => ignore_hdpi(), true);
+        $("use_backup").addEventListener("change", (event) => use_backup(), true);
         $("backup_choose").addEventListener(
             "click",
             (event) => {
@@ -251,8 +201,7 @@ document.addEventListener(
         document.body.addEventListener(
             "keydown",
             (event) => {
-                if (event.code == "Escape")
-                    electron.remote.getCurrentWindow().close();
+                if (event.code == "Escape") electron.remote.getCurrentWindow().close();
             },
             true
         );

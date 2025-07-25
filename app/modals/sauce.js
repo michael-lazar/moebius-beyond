@@ -31,12 +31,7 @@ function ok() {
         comments_value,
         Math.min(Math.ceil(comments_value_length / 64) * 64, 64 * 255)
     );
-    if (
-        title != undefined &&
-        author != undefined &&
-        group != undefined &&
-        comments != undefined
-    )
+    if (title != undefined && author != undefined && group != undefined && comments != undefined)
         send_parent("set_sauce_info", { title, author, group, comments });
 }
 
@@ -47,44 +42,36 @@ function cancel() {
 function title_input(event) {
     const title = document.getElementById("title");
     if (fill_string(title.value, 35)) {
-        if (title.classList.contains("illegal"))
-            title.classList.remove("illegal");
+        if (title.classList.contains("illegal")) title.classList.remove("illegal");
     } else {
-        if (!title.classList.contains("illegal"))
-            title.classList.add("illegal");
+        if (!title.classList.contains("illegal")) title.classList.add("illegal");
     }
 }
 
 function author_input(event) {
     const author = document.getElementById("author");
     if (fill_string(author.value, 20)) {
-        if (author.classList.contains("illegal"))
-            author.classList.remove("illegal");
+        if (author.classList.contains("illegal")) author.classList.remove("illegal");
     } else {
-        if (!author.classList.contains("illegal"))
-            author.classList.add("illegal");
+        if (!author.classList.contains("illegal")) author.classList.add("illegal");
     }
 }
 
 function group_input(event) {
     const group = document.getElementById("group");
     if (fill_string(group.value, 20)) {
-        if (group.classList.contains("illegal"))
-            group.classList.remove("illegal");
+        if (group.classList.contains("illegal")) group.classList.remove("illegal");
     } else {
-        if (!group.classList.contains("illegal"))
-            group.classList.add("illegal");
+        if (!group.classList.contains("illegal")) group.classList.add("illegal");
     }
 }
 
 function comments_input(event) {
     const comments = document.getElementById("comments");
     if (fill_string(comments.value, 64 * 255)) {
-        if (comments.classList.contains("illegal"))
-            comments.classList.remove("illegal");
+        if (comments.classList.contains("illegal")) comments.classList.remove("illegal");
     } else {
-        if (!comments.classList.contains("illegal"))
-            comments.classList.add("illegal");
+        if (!comments.classList.contains("illegal")) comments.classList.add("illegal");
     }
     document.getElementById("number_of_bytes").innerText = Buffer.from(
         comments.value,
@@ -95,12 +82,8 @@ function comments_input(event) {
 document.addEventListener(
     "DOMContentLoaded",
     (event) => {
-        document
-            .getElementById("ok")
-            .addEventListener("click", (event) => ok(), true);
-        document
-            .getElementById("cancel")
-            .addEventListener("click", (event) => cancel(), true);
+        document.getElementById("ok").addEventListener("click", (event) => ok(), true);
+        document.getElementById("cancel").addEventListener("click", (event) => cancel(), true);
         document
             .getElementById("title")
             .addEventListener("input", (event) => title_input(event), true);
@@ -137,17 +120,13 @@ function strip_trailing_spaces(text) {
     return text.replace(/[ \u0000]+$/, ""); // eslint-disable-line no-control-regex
 }
 
-electron.ipcRenderer.on(
-    "set_sauce_info",
-    (event, { title, author, group, comments }) => {
-        document.getElementById("title").value = strip_trailing_spaces(title);
-        document.getElementById("author").value = strip_trailing_spaces(author);
-        document.getElementById("group").value = strip_trailing_spaces(group);
-        document.getElementById("comments").value =
-            strip_trailing_spaces(comments);
-        comments_input();
-    }
-);
+electron.ipcRenderer.on("set_sauce_info", (event, { title, author, group, comments }) => {
+    document.getElementById("title").value = strip_trailing_spaces(title);
+    document.getElementById("author").value = strip_trailing_spaces(author);
+    document.getElementById("group").value = strip_trailing_spaces(group);
+    document.getElementById("comments").value = strip_trailing_spaces(comments);
+    comments_input();
+});
 
 electron.ipcRenderer.on("ok", (event) => ok());
 electron.ipcRenderer.on("cancel", (event) => cancel());

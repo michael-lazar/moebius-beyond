@@ -229,13 +229,7 @@ mouse.on("to", (x, y, half_y, button) => {
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         if (clear) {
-            half_block_ellipse_overlay(
-                mouse.start.x,
-                mouse.start.half_y,
-                x,
-                half_y,
-                0
-            );
+            half_block_ellipse_overlay(mouse.start.x, mouse.start.half_y, x, half_y, 0);
         } else {
             half_block_ellipse_overlay(
                 mouse.start.x,
@@ -267,13 +261,7 @@ mouse.on("up", (x, y, half_y, button) => {
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         if (clear) {
-            draw_half_block_ellipse(
-                mouse.start.x,
-                mouse.start.half_y,
-                x,
-                half_y,
-                0
-            );
+            draw_half_block_ellipse(mouse.start.x, mouse.start.half_y, x, half_y, 0);
         } else {
             draw_half_block_ellipse(
                 mouse.start.x,
@@ -290,37 +278,15 @@ mouse.on("up", (x, y, half_y, button) => {
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:
-                draw_custom_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg
-                );
+                draw_custom_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
-                draw_shaded_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg,
-                    reduce
-                );
+                draw_shaded_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg, reduce);
                 break;
             }
             case toolbar.modes.REPLACE_COLOR:
-                draw_replace_color_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    fg,
-                    bg
-                );
+                draw_replace_color_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
                 draw_blink_ellipse(

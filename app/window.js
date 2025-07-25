@@ -41,12 +41,7 @@ async function new_doc() {
 }
 
 async function new_modal(file, window_opts, touchbar, touchbar_opts) {
-    const win = await new_win(
-        file,
-        { ...window_opts, ...modal_prefs },
-        touchbar,
-        touchbar_opts
-    );
+    const win = await new_win(file, { ...window_opts, ...modal_prefs }, touchbar, touchbar_opts);
     if (!darwin) win.setMenuBarVisibility(false);
     return win;
 }
