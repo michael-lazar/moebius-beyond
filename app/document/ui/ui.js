@@ -275,28 +275,29 @@ function toggle_drawinggrid(visible, columns) {
 }
 
 function rescale_drawinggrid() {
+    let rows;
     if (grid_columns > 1) {
         rows = Math.floor(grid_columns / 2);
     } else {
         rows = 1;
     }
-    width = doc.render.font.width * doc.columns;
-    height = doc.render.font.height * doc.rows;
+    const width = doc.render.font.width * doc.columns;
+    const height = doc.render.font.height * doc.rows;
     $("drawing_grid").innerHTML = "";
-    c = doc.render.font.width * grid_columns;
+    let c = doc.render.font.width * grid_columns;
     while (c < width) {
-        var div = document.createElement("div");
+        const div = document.createElement("div");
         div.style.width = c + "px";
         div.classList.add("column");
         $("drawing_grid").appendChild(div);
         c += doc.render.font.width * grid_columns;
     }
-    r = doc.render.font.height * rows;
+    let r = doc.render.font.height * rows;
     while (r < height) {
-        var div = document.createElement("div");
-        div.style.height = r + "px";
-        div.classList.add("row");
-        $("drawing_grid").appendChild(div);
+        const rowDiv = document.createElement("div");
+        rowDiv.style.height = r + "px";
+        rowDiv.classList.add("row");
+        $("drawing_grid").appendChild(rowDiv);
         r += doc.render.font.height * rows;
     }
 }
@@ -798,7 +799,6 @@ class Toolbar extends events.EventEmitter {
         selector.style.width = `${font.width * scale}px`;
         this.custom_block_index = this.char_index;
         this.draw_custom_block();
-        this.draw_fkeys();
     }
 
     redraw_charlist() {
@@ -827,18 +827,6 @@ class Toolbar extends events.EventEmitter {
             this.char_index = 0;
         }
         this.draw_charlist_cursor();
-    }
-
-    draw_fkeys() {
-        // stop the character palette from mapping the function keys
-        return;
-        for (let i = 0; i < 12; i++) {
-            let num = i;
-            const fkey_index = this.fkey_index;
-            let code = this.char_index + i;
-            this.draw_fkey(`f${i + 1}`, this.char_index + i);
-            send("set_fkey", { num, fkey_index, code });
-        }
     }
 
     draw_fkey(name, code) {

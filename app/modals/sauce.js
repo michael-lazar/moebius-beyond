@@ -134,7 +134,7 @@ document.addEventListener(
 );
 
 function strip_trailing_spaces(text) {
-    return text.replace(/[ \u0000]+$/, "");
+    return text.replace(/[ \u0000]+$/, ""); // eslint-disable-line no-control-regex
 }
 
 electron.ipcRenderer.on(

@@ -27,6 +27,7 @@ module.exports = [
                 alert: "readonly",
                 fetch: "readonly",
                 Request: "readonly",
+                Event: "readonly",
                 setTimeout: "readonly",
                 clearTimeout: "readonly",
                 setInterval: "readonly",
