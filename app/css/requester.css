@@ -35,7 +35,7 @@ p.note {
 }
 
 textarea {
-    border: 1px solid rbg(255, 255, 255, 0.4);
+    border: 1px solid rgb(255, 255, 255, 0.4);
     padding: 4px;
     height: 100px;
     margin: 0 auto 0 auto;

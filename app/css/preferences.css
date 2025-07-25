@@ -38,14 +38,13 @@ label.number_box {
 
 input {
     vertical-align: top;
-    padding: none;
     margin: 4px;
     height: 16px;
     color: white;
     display: inline-block;
     border: 1px solid #aaaaaa;
     background: none;
-    font-family: var(--system-font);
+    font-family: var(--system-font), serif;
     font-size: 14px;
     outline: none;
     padding: 3px 6px;
