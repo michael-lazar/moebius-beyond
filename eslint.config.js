@@ -24,6 +24,13 @@ module.exports = [
                 navigator: "readonly",
                 localStorage: "readonly",
                 sessionStorage: "readonly",
+                alert: "readonly",
+                fetch: "readonly",
+                setTimeout: "readonly",
+                clearTimeout: "readonly",
+                setInterval: "readonly",
+                clearInterval: "readonly",
+                getComputedStyle: "readonly",
             },
         },
         rules: {
