@@ -1,7 +1,8 @@
 # Project Context
 
 - This is a legacy electron codebase that has been forked several times and has had maintainers with various levels of javascript / electron experience.
-- There are no unit tests or automated linting.
+- There are no unit tests.
+- There is linting and formatting with eslint and prettier.
 - Manual application testing will be used to verify behavior and fixes.
 - Follow existing project conventions when adding new features.
 - Do not make large, sweeping changes that cannot be easily verified.
