@@ -17,7 +17,7 @@ button {
     background: none;
     color: white;
     outline: none;
-    border: 1px solid #AAAAAA;
+    border: 1px solid #aaaaaa;
     -webkit-app-region: none;
 }
 
@@ -26,8 +26,12 @@ button {
 }
 
 @keyframes slide {
-    0% {transform: translateY(100px);}
-    100% {transform: translateY(0px);}
+    0% {
+        transform: translateY(100px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 #new_document {
@@ -57,12 +61,18 @@ input {
 }
 
 .slide_down {
-    animation: glow 0.5s ease-in-out infinite alternate, slide_down 0.5s ease-out forwards;
+    animation:
+        glow 0.5s ease-in-out infinite alternate,
+        slide_down 0.5s ease-out forwards;
 }
 
 @keyframes slide_down {
-    0% {transform: translateY(0px);}
-    100% {transform: translateY(47px);}
+    0% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(47px);
+    }
 }
 
 button:active {
@@ -70,11 +80,25 @@ button:active {
 }
 
 @keyframes fade_in {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes glow {
-    0% {box-shadow: 0 0 5px rgba(255, 255, 255, 0.2), inset 0 0 5px rgba(255, 255, 255, 0.1), 0 2px 0 #000;}
-    100% {box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.4), 0 2px 0 #000;}
+    0% {
+        box-shadow:
+            0 0 5px rgba(255, 255, 255, 0.2),
+            inset 0 0 5px rgba(255, 255, 255, 0.1),
+            0 2px 0 #000;
+    }
+    100% {
+        box-shadow:
+            0 0 20px rgba(255, 255, 255, 0.6),
+            inset 0 0 10px rgba(255, 255, 255, 0.4),
+            0 2px 0 #000;
+    }
 }

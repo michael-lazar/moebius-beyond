@@ -7,7 +7,11 @@ const { rgb_to_hex, hex_to_rbg, lospec_palette, palette_4bit } = require("../lib
 
 class PaletteChooser extends EventEmitter {
     select_attribute() {
-        senders.send_sync("select_attribute", { fg: this.fg, bg: this.bg, palette: doc.palette });
+        senders.send_sync("select_attribute", {
+            fg: this.fg,
+            bg: this.bg,
+            palette: doc.palette,
+        });
     }
 
     constructor() {
@@ -18,7 +22,7 @@ class PaletteChooser extends EventEmitter {
 
         doc.on("new_document", () => this.new_document());
         doc.on("update_swatches", () => this.update_swatches());
-        doc.on("set_bg", (index) => this.bg = index);
+        doc.on("set_bg", (index) => (this.bg = index));
         doc.on("change_palette", (lospec_palette_name) => this.change_palette(lospec_palette_name));
 
         keyboard.on("previous_foreground_color", () => this.previous_foreground_color());
@@ -34,12 +38,12 @@ class PaletteChooser extends EventEmitter {
         senders.on("next_background_color", () => this.next_background_color());
         senders.on("default_color", () => this.default_color());
         senders.on("switch_foreground_background", () => this.switch_foreground_background());
-        senders.on("set_fg", (e, new_fg) => this.fg = new_fg);
-        senders.on("set_bg", (e, new_bg) => this.bg = new_bg);
+        senders.on("set_fg", (e, new_fg) => (this.fg = new_fg));
+        senders.on("set_bg", (e, new_bg) => (this.bg = new_bg));
     }
 
     new_document() {
-        this.color_picker_el = document.getElementById("color_picker")
+        this.color_picker_el = document.getElementById("color_picker");
         this.swatch_container_el = document.getElementById("swatches");
 
         this.bind_events();
@@ -80,10 +84,10 @@ class PaletteChooser extends EventEmitter {
         clearTimeout(this.paint_timer);
         this.paint_timer = setTimeout(() => {
             this.color_picker_spawner.style.backgroundColor = hex;
-            const id = parseInt(this.color_picker_spawner.dataset.id, 10)
+            const id = parseInt(this.color_picker_spawner.dataset.id, 10);
 
-            if (this.bg_index === id) document.getElementById('bg').style.backgroundColor = hex;
-            if (this.fg_index === id) document.getElementById('fg').style.backgroundColor = hex;
+            if (this.bg_index === id) document.getElementById("bg").style.backgroundColor = hex;
+            if (this.fg_index === id) document.getElementById("fg").style.backgroundColor = hex;
 
             doc.update_palette(parseInt(this.color_picker_spawner.dataset.id, 10), hex_to_rbg(hex));
         }, 150);
@@ -93,8 +97,8 @@ class PaletteChooser extends EventEmitter {
         this.swatch_container_el.innerHTML = "";
 
         let container = document.createElement("section");
-        container.classList.add("base")
-        this.swatch_container_el.appendChild(container)
+        container.classList.add("base");
+        this.swatch_container_el.appendChild(container);
 
         doc.palette.map((rgb, i) => {
             const div = document.createElement("div");
@@ -103,13 +107,13 @@ class PaletteChooser extends EventEmitter {
             container.appendChild(div);
         });
 
-        this.update_selected("bg")
-        this.update_selected("fg")
+        this.update_selected("bg");
+        this.update_selected("fg");
     }
 
     add_color(button, rgb) {
         doc.update_palette(null, rgb);
-        const hex = rgb_to_hex(rgb)
+        const hex = rgb_to_hex(rgb);
 
         const div = document.createElement("div");
         div.style.backgroundColor = hex;
@@ -129,16 +133,17 @@ class PaletteChooser extends EventEmitter {
         if (selected_el) selected_el.classList.remove(class_name);
 
         selected_el = this.swatch_container_el.querySelector(`[data-id="${this[level]}"`);
-        if (selected_el) selected_el.classList.add(class_name);
-        else {
-        } // we don't know about this color!
+        if (selected_el) {
+            selected_el.classList.add(class_name);
+        }
+        // else we don't know about this color!
 
         document.getElementById(level).style.backgroundColor = rgb_to_hex(doc.palette[this[level]]);
     }
 
     set fg(value) {
-        this.emit("set_fg", this.fg_index = parseInt(value, 10));
-        this.update_selected("fg")
+        this.emit("set_fg", (this.fg_index = parseInt(value, 10)));
+        this.update_selected("fg");
     }
 
     get fg() {
@@ -146,12 +151,12 @@ class PaletteChooser extends EventEmitter {
     }
 
     set bg(value) {
-        this.emit("set_bg", this.bg_index = parseInt(value, 10));
-        this.update_selected("bg")
+        this.emit("set_bg", (this.bg_index = parseInt(value, 10)));
+        this.update_selected("bg");
     }
 
     set bg_internal(value) {
-        this.bg = value
+        this.bg = value;
     }
 
     get bg() {
@@ -159,25 +164,25 @@ class PaletteChooser extends EventEmitter {
     }
 
     previous_foreground_color() {
-        this.fg = (this.fg === 0) ? 15 : this.fg - 1;
+        this.fg = this.fg === 0 ? 15 : this.fg - 1;
     }
 
     next_foreground_color() {
-        this.fg = (this.fg === 15) ? 0 : this.fg + 1;
+        this.fg = this.fg === 15 ? 0 : this.fg + 1;
     }
 
     previous_background_color() {
-        this.bg_internal = (this.bg === 0) ? 15 : this.bg - 1;
+        this.bg_internal = this.bg === 0 ? 15 : this.bg - 1;
     }
 
     next_background_color() {
-        this.bg_internal = (this.bg === 15) ? 0 : this.bg + 1;
+        this.bg_internal = this.bg === 15 ? 0 : this.bg + 1;
     }
 
     async change_palette(lospec_palette_name) {
         senders.send("update_menu_checkboxes", { lospec_palette_name });
         if (lospec_palette_name === null) {
-            await this.load_default_palette()
+            await this.load_default_palette();
         } else {
             await this.load_lospec_palette(lospec_palette_name);
         }
@@ -188,19 +193,19 @@ class PaletteChooser extends EventEmitter {
         for (let i = 0; i < 16; i++) {
             doc.update_palette(i, palette_4bit[i]);
         }
-        this.update_swatches()
-        //stupid way of forcing redraw on ui elements
-        this.fg = this.fg;
+        this.update_swatches();
+        // stupid way of forcing redraw on ui elements
+        this.fg = this.fg; // eslint-disable-line
     }
 
     async load_lospec_palette(palette_name) {
-        const loaded_palette = lospec_palette(palette_name)
+        const loaded_palette = lospec_palette(palette_name);
         for (let i = 0; i < 16; i++) {
             doc.update_palette(i, hex_to_rbg(loaded_palette[i]));
         }
-        this.update_swatches()
-        //stupid way of forcing redraw on ui elements
-        this.fg = this.fg;
+        this.update_swatches();
+        // stupid way of forcing redraw on ui elements
+        this.fg = this.fg; // eslint-disable-line
     }
 
     default_color() {
@@ -216,13 +221,13 @@ class PaletteChooser extends EventEmitter {
 
     toggle_fg(index) {
         // TODO: ??
-        if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8)) index += 8
+        if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8)) index += 8;
         this.fg = index;
     }
 
     toggle_bg(index) {
         // TODO: ??
-        if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8)) index += 8
+        if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8)) index += 8;
         this.bg_internal = index;
     }
 }

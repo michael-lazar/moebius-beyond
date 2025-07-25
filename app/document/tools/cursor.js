@@ -10,22 +10,49 @@ const clipboard = require("./clipboard");
 class Cursor {
     draw() {
         switch (this.mode) {
-            case modes.EDITING:
+            case modes.EDITING: {
                 if (this.flashing) return;
                 const { font, render } = doc;
                 this.ctx.globalCompositeOperation = "source-over";
-                this.ctx.drawImage(render.ice_color_collection[Math.floor(this.y / render.maximum_rows)], this.x * font.width, (this.y % render.maximum_rows) * font.height, font.width, font.height, 0, 0, font.width, font.height);
+                this.ctx.drawImage(
+                    render.ice_color_collection[Math.floor(this.y / render.maximum_rows)],
+                    this.x * font.width,
+                    (this.y % render.maximum_rows) * font.height,
+                    font.width,
+                    font.height,
+                    0,
+                    0,
+                    font.width,
+                    font.height
+                );
                 this.ctx.globalCompositeOperation = "difference";
                 font.draw_cursor(this.ctx, 0, font.height - 2);
                 this.ctx.clearRect(0, 0, this.canvas.width, font.height - 2);
                 break;
+            }
             case modes.SELECTION:
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 break;
             case modes.OPERATION:
                 if (this.operation_blocks.underneath) {
-                    const canvas = libtextmode.render_blocks(libtextmode.merge_blocks(this.operation_blocks, this.get_blocks_in_operation()), doc.font);
-                    this.ctx.drawImage(canvas, 2, 2, canvas.width - 4, canvas.height - 4, 0, 0, canvas.width - 4, canvas.height - 4);
+                    const canvas = libtextmode.render_blocks(
+                        libtextmode.merge_blocks(
+                            this.operation_blocks,
+                            this.get_blocks_in_operation()
+                        ),
+                        doc.font
+                    );
+                    this.ctx.drawImage(
+                        canvas,
+                        2,
+                        2,
+                        canvas.width - 4,
+                        canvas.height - 4,
+                        0,
+                        0,
+                        canvas.width - 4,
+                        canvas.height - 4
+                    );
                 }
                 break;
         }
@@ -37,7 +64,12 @@ class Cursor {
     }
 
     get_blocks_in_operation() {
-        return doc.get_blocks(this.x, this.y, Math.min(doc.columns - 1, this.x + this.operation_blocks.columns - 1), Math.min(doc.rows - 1, this.y + this.operation_blocks.rows - 1));
+        return doc.get_blocks(
+            this.x,
+            this.y,
+            Math.min(doc.columns - 1, this.x + this.operation_blocks.columns - 1),
+            Math.min(doc.rows - 1, this.y + this.operation_blocks.rows - 1)
+        );
     }
 
     scroll(x, y) {
@@ -68,7 +100,9 @@ class Cursor {
     page_up() {
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
-        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / this.canvas_zoom);
+        const characters_in_screen_height = Math.floor(
+            viewport_rect.height / this.height / this.canvas_zoom
+        );
 
         this.move_to(this.x, Math.max(this.y - characters_in_screen_height, 0));
         if (this.scroll_document_with_cursor) this.scroll(0, -characters_in_screen_height);
@@ -77,7 +111,9 @@ class Cursor {
     page_down() {
         const viewport = document.getElementById("viewport");
         const viewport_rect = viewport.getBoundingClientRect();
-        const characters_in_screen_height = Math.floor(viewport_rect.height / this.height / this.canvas_zoom);
+        const characters_in_screen_height = Math.floor(
+            viewport_rect.height / this.height / this.canvas_zoom
+        );
 
         this.move_to(this.x, Math.min(this.y + characters_in_screen_height, doc.rows - 1));
         if (this.scroll_document_with_cursor) this.scroll(0, characters_in_screen_height);
@@ -117,8 +153,9 @@ class Cursor {
 
         const cursor_top = this.height * (this.y - this.scroll_margin) * this.canvas_zoom;
         const cursor_left = this.width * (this.x - this.scroll_margin) * this.canvas_zoom;
-        const cursor_bottom = (this.height * (this.y + this.scroll_margin + 1)) * this.canvas_zoom + 1;
-        const cursor_right = (this.width * (this.x + this.scroll_margin + 1)) * this.canvas_zoom + 1;
+        const cursor_bottom =
+            this.height * (this.y + this.scroll_margin + 1) * this.canvas_zoom + 1;
+        const cursor_right = this.width * (this.x + this.scroll_margin + 1) * this.canvas_zoom + 1;
 
         const viewport_bottom = viewport.scrollTop + viewport_rect.height;
         const viewport_right = viewport.scrollLeft + viewport_rect.width;
@@ -148,8 +185,14 @@ class Cursor {
     }
 
     reorientate_selection() {
-        const [sx, dx] = (this.selection.dx < this.selection.sx) ? [this.selection.dx, this.selection.sx] : [this.selection.sx, this.selection.dx];
-        const [sy, dy] = (this.selection.dy < this.selection.sy) ? [this.selection.dy, this.selection.sy] : [this.selection.sy, this.selection.dy];
+        const [sx, dx] =
+            this.selection.dx < this.selection.sx
+                ? [this.selection.dx, this.selection.sx]
+                : [this.selection.sx, this.selection.dx];
+        const [sy, dy] =
+            this.selection.dy < this.selection.sy
+                ? [this.selection.dy, this.selection.sy]
+                : [this.selection.sy, this.selection.dy];
         return { sx, sy, dx, dy };
     }
 
@@ -163,7 +206,7 @@ class Cursor {
                 this.canvas.style.width = `${this.width}px`;
                 this.canvas.style.height = `${this.height}px`;
                 break;
-            case modes.SELECTION:
+            case modes.SELECTION: {
                 this.selection.dx = x;
                 this.selection.dy = y;
                 const { sx, sy, dx, dy } = this.reorientate_selection();
@@ -173,6 +216,7 @@ class Cursor {
                 this.canvas.style.height = `${(dy - sy + 1) * this.height - 4}px`;
                 statusbar.status_bar_info(dx - sx + 1, dy - sy + 1);
                 break;
+            }
             case modes.OPERATION:
                 this.canvas.style.left = `${x * this.width}px`;
                 this.canvas.style.top = `${y * this.height}px`;
@@ -208,7 +252,11 @@ class Cursor {
     }
 
     new_render(should_scroll = true) {
-        this.move_to(Math.min(this.x, doc.columns - 1), Math.min(this.y, doc.rows - 1), should_scroll);
+        this.move_to(
+            Math.min(this.x, doc.columns - 1),
+            Math.min(this.y, doc.rows - 1),
+            should_scroll
+        );
         this.resize_to_font();
         if (this.mode == modes.OPERATION) this.redraw_operation_blocks();
     }
@@ -243,10 +291,22 @@ class Cursor {
 
     redraw_operation_blocks() {
         const font = doc.font;
-        this.canvas.width = this.operation_blocks.columns * font.width - 4; this.canvas.height = this.operation_blocks.rows * font.height - 4;
-        this.canvas.style.width = `${this.canvas.width}px`; this.canvas.style.height = `${this.canvas.height}px`;
+        this.canvas.width = this.operation_blocks.columns * font.width - 4;
+        this.canvas.height = this.operation_blocks.rows * font.height - 4;
+        this.canvas.style.width = `${this.canvas.width}px`;
+        this.canvas.style.height = `${this.canvas.height}px`;
         const canvas = libtextmode.render_blocks(this.operation_blocks, doc.font);
-        this.ctx.drawImage(canvas, 2, 2, canvas.width - 4, canvas.height - 4, 0, 0, canvas.width - 4, canvas.height - 4);
+        this.ctx.drawImage(
+            canvas,
+            2,
+            2,
+            canvas.width - 4,
+            canvas.height - 4,
+            0,
+            0,
+            canvas.width - 4,
+            canvas.height - 4
+        );
     }
 
     set_operation_mode(blocks) {
@@ -263,7 +323,10 @@ class Cursor {
 
     start_operation_mode(is_move_operation) {
         const { sx, sy, dx, dy } = this.reorientate_selection();
-        this.set_operation_mode({ ...doc.get_blocks(sx, sy, dx, dy), is_move_operation });
+        this.set_operation_mode({
+            ...doc.get_blocks(sx, sy, dx, dy),
+            is_move_operation,
+        });
         if (is_move_operation) doc.erase(sx, sy, dx, dy);
         this.move_to(sx, sy);
     }
@@ -315,7 +378,10 @@ class Cursor {
     }
 
     center() {
-        this.move_to(Math.max(Math.floor((doc.columns - this.operation_blocks.columns) / 2), 0), this.y);
+        this.move_to(
+            Math.max(Math.floor((doc.columns - this.operation_blocks.columns) / 2), 0),
+            this.y
+        );
     }
 
     transparent(value) {
@@ -372,7 +438,15 @@ class Cursor {
         }
         const x = this.x;
         if (!keyboard.overwrite_mode) this.right();
-        doc.change_data(x, this.y, code, palette.fg, palette.bg, { prev_x: x, prev_y: this.y }, this);
+        doc.change_data(
+            x,
+            this.y,
+            code,
+            palette.fg,
+            palette.bg,
+            { prev_x: x, prev_y: this.y },
+            this
+        );
         this.draw();
     }
 
@@ -518,9 +592,12 @@ class Cursor {
     }
 
     stamp() {
-        const blocks = this.operation_blocks.underneath ? libtextmode.merge_blocks(this.operation_blocks, this.get_blocks_in_operation()) : this.operation_blocks;
+        const blocks = this.operation_blocks.underneath
+            ? libtextmode.merge_blocks(this.operation_blocks, this.get_blocks_in_operation())
+            : this.operation_blocks;
         doc.place(blocks, this.x, this.y, this.operation_blocks.is_move_operation);
-        if (this.operation_blocks.is_move_operation) this.operation_blocks.is_move_operation = false;
+        if (this.operation_blocks.is_move_operation)
+            this.operation_blocks.is_move_operation = false;
     }
 
     place() {
@@ -530,7 +607,18 @@ class Cursor {
 
     crop() {
         if (this.mode == modes.SELECTION) this.start_operation_mode(false);
-        send("new_document", { title: doc.title, author: doc.author, group: doc.group, date: doc.date, palette: doc.palette, font_bytes: doc.font_bytes, font_name: doc.font_name, use_9px_font: doc.use_9px_font, ice_colors: doc.ice_colors, ...this.operation_blocks });
+        send("new_document", {
+            title: doc.title,
+            author: doc.author,
+            group: doc.group,
+            date: doc.date,
+            palette: doc.palette,
+            font_bytes: doc.font_bytes,
+            font_name: doc.font_name,
+            use_9px_font: doc.use_9px_font,
+            ice_colors: doc.ice_colors,
+            ...this.operation_blocks,
+        });
         this.deselect();
     }
 
@@ -585,7 +673,10 @@ class Cursor {
         on("fill", (event) => this.fill());
         on("copy_block", (event) => this.start_operation_mode(false));
         on("move_block", (event) => this.start_operation_mode(true));
-        on("scroll_document_with_cursor", (event, value) => this.scroll_document_with_cursor = value);
+        on(
+            "scroll_document_with_cursor",
+            (event, value) => (this.scroll_document_with_cursor = value)
+        );
         on("use_attribute_under_cursor", (event) => this.attribute_under_cursor());
         on("rotate", (event) => this.rotate());
         on("flip_x", (event) => this.flip_x());
@@ -615,7 +706,18 @@ class Cursor {
         on("scroll_canvas_down", (event) => this.scroll_canvas_down());
         on("scroll_canvas_left", (event) => this.scroll_canvas_left());
         on("scroll_canvas_right", (event) => this.scroll_canvas_right());
-        ["left", "right", "up", "down", "page_up", "page_down", "start_of_row", "end_of_row", "tab", "reverse_tab"].map((event) => {
+        [
+            "left",
+            "right",
+            "up",
+            "down",
+            "page_up",
+            "page_down",
+            "start_of_row",
+            "end_of_row",
+            "tab",
+            "reverse_tab",
+        ].map((event) => {
             keyboard.on(event, () => {
                 if (!this.hidden) this[event]();
             });

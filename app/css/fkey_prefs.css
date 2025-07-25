@@ -11,5 +11,10 @@
 }
 
 @keyframes blink {
-    0% {border-color: white;} 50% {opacity: 0;}
+    0% {
+        border-color: white;
+    }
+    50% {
+        opacity: 0;
+    }
 }

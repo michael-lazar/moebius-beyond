@@ -24,13 +24,15 @@ function set_var_px(name, value) {
 
 function open_reference_image({ file } = {}) {
     if (!file) {
-        const files = open_box({ filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }] });
+        const files = open_box({
+            filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }],
+        });
         if (files === undefined || files.length === 0) return;
-        file = files[0]
+        file = files[0];
     }
 
     $("reference_image").src = electron.nativeImage.createFromPath(file).toDataURL();
-    $("reference_image").classList.remove("closed")
+    $("reference_image").classList.remove("closed");
     set_var("reference-control-opacity", 1.0);
 
     reset_reference_image();
@@ -41,7 +43,7 @@ function open_reference_image({ file } = {}) {
 
 function clear_reference_image() {
     $("reference_image").src = "";
-    $("reference_image").classList.add("closed")
+    $("reference_image").classList.add("closed");
     set_var("reference-control-opacity", 0.4);
 
     $("reference_hide").classList.remove("brush_mode_selected");
@@ -55,13 +57,13 @@ function reset_reference_image() {
     $("reference_image").style.left = "0";
 
     $("reference_opacity_value").value = 40;
-    $("reference_opacity_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 
-    $('reference_size_value').value = doc.columns;
-    $("reference_size_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_size_value").value = doc.columns;
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 
-    $('reference_angle_value').value = 0;
-    $("reference_angle_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_angle_value").value = 0;
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function toggle_reference_image(visible) {
@@ -92,12 +94,12 @@ function hide_reference_image() {
 
 function increase_reference_image_opacity() {
     $("reference_opacity_value").stepUp(1);
-    $("reference_opacity_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_opacity() {
     $("reference_opacity_value").stepDown(1);
-    $("reference_opacity_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_opacity_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_opacity_value(event) {
@@ -107,12 +109,12 @@ function on_update_reference_opacity_value(event) {
 
 function increase_reference_image_size() {
     $("reference_size_value").stepUp(1);
-    $("reference_size_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_size() {
     $("reference_size_value").stepDown(1);
-    $("reference_size_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_size_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_size_value(event) {
@@ -123,12 +125,12 @@ function on_update_reference_size_value(event) {
 
 function increase_reference_image_angle() {
     $("reference_angle_value").stepUp(1);
-    $("reference_angle_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function decrease_reference_image_angle() {
     $("reference_angle_value").stepDown(1);
-    $("reference_angle_value").dispatchEvent(new Event('input', { bubbles: true }))
+    $("reference_angle_value").dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function on_update_reference_angle_value(event) {
@@ -143,7 +145,6 @@ on("clear_reference_image", (event) => clear_reference_image());
 function set_text(name, text) {
     $(name).textContent = text;
 }
-
 
 function toggle_smallscale_guide(visible) {
     send("uncheck_all_guides");
@@ -240,7 +241,7 @@ function toggle_drawinggrid(visible, columns) {
         if (columns == 1) {
             send("check_drawinggrid_1x1");
         } else {
-            send("check_drawinggrid_" + columns + "x" + (columns / 2));
+            send("check_drawinggrid_" + columns + "x" + columns / 2);
         }
     } else {
         $("drawing_grid").classList.add("hidden");
@@ -248,28 +249,29 @@ function toggle_drawinggrid(visible, columns) {
 }
 
 function rescale_drawinggrid() {
+    let rows;
     if (grid_columns > 1) {
         rows = Math.floor(grid_columns / 2);
     } else {
         rows = 1;
     }
-    width = doc.render.font.width * doc.columns;
-    height = doc.render.font.height * doc.rows;
-    $("drawing_grid").innerHTML = '';
-    c = doc.render.font.width * grid_columns;
+    const width = doc.render.font.width * doc.columns;
+    const height = doc.render.font.height * doc.rows;
+    $("drawing_grid").innerHTML = "";
+    let c = doc.render.font.width * grid_columns;
     while (c < width) {
-        var div = document.createElement('div');
-        div.style.width = c + 'px';
+        const div = document.createElement("div");
+        div.style.width = c + "px";
         div.classList.add("column");
         $("drawing_grid").appendChild(div);
         c += doc.render.font.width * grid_columns;
     }
-    r = doc.render.font.height * rows;
+    let r = doc.render.font.height * rows;
     while (r < height) {
-        var div = document.createElement('div');
-        div.style.height = r + 'px';
-        div.classList.add("row");
-        $("drawing_grid").appendChild(div);
+        const rowDiv = document.createElement("div");
+        rowDiv.style.height = r + "px";
+        rowDiv.classList.add("row");
+        $("drawing_grid").appendChild(rowDiv);
         r += doc.render.font.height * rows;
     }
 }
@@ -285,11 +287,11 @@ doc.on("render", () => rescale_guide());
 doc.on("render", () => rescale_drawinggrid());
 
 class StatusBar {
-    status_bar_info(columns, rows, code='') {
+    status_bar_info(columns, rows, code = "") {
         set_text("columns", `${columns}`);
         set_text("rows", `${rows}`);
-        set_text("columns_s", (columns > 1) ? "s" : "");
-        set_text("rows_s", (rows > 1) ? "s" : "");
+        set_text("columns_s", columns > 1 ? "s" : "");
+        set_text("rows_s", rows > 1 ? "s" : "");
         set_text("ascii_value", code.code);
     }
 
@@ -315,7 +317,6 @@ class StatusBar {
         doc.on("render", () => this.use_canvas_size_for_status_bar());
     }
 }
-
 
 function show_statusbar(visible) {
     set_var("statusbar-height", visible ? "22px" : "0px");
@@ -354,8 +355,8 @@ function set_canvas_zoom_without_frame_update(factor) {
 
     // Set continuous zoom using CSS transform
     container.style.transform = `scale(${canvas_zoom})`;
-    container.style.transformOrigin = 'top left';
-    container.style.margin = '0';
+    container.style.transformOrigin = "top left";
+    container.style.margin = "0";
 
     cursor.set_canvas_zoom(canvas_zoom);
     mouse.set_canvas_zoom(canvas_zoom);
@@ -369,13 +370,13 @@ function set_canvas_zoom_without_frame_update(factor) {
         document.body.appendChild(zoom_element);
         zoom_element.classList.add("fade");
     }
-    
-    send("update_menu_checkboxes", { actual_size: (canvas_zoom === 1.0) });
+
+    send("update_menu_checkboxes", { actual_size: canvas_zoom === 1.0 });
 }
 
 function set_canvas_zoom(factor) {
     set_canvas_zoom_without_frame_update(factor);
-    
+
     // Call require() inside the function to avoid circular dependency
     const { update_frame } = require("./canvas");
     update_frame();
@@ -394,22 +395,22 @@ function zoom_with_anchor(newZoom, mouseX, mouseY) {
         // Get viewport element and current scroll position
         const viewport = document.getElementById("viewport");
         const oldZoom = current_zoom_factor();
-        
+
         // Calculate the content position under the mouse before zoom
         const contentX = (viewport.scrollLeft + mouseX) / oldZoom;
         const contentY = (viewport.scrollTop + mouseY) / oldZoom;
-        
+
         // Apply the zoom without updating preview frame yet
         set_canvas_zoom_without_frame_update(newZoom);
-        
+
         // Calculate new scroll position to keep content under mouse
         const newScrollLeft = contentX * newZoom - mouseX;
         const newScrollTop = contentY * newZoom - mouseY;
-        
+
         // Apply the new scroll position with bounds checking
         viewport.scrollLeft = Math.max(0, newScrollLeft);
         viewport.scrollTop = Math.max(0, newScrollTop);
-        
+
         // Update preview frame immediately
         const { update_frame } = require("./canvas");
         update_frame();
@@ -423,7 +424,6 @@ function actual_size() {
     set_canvas_zoom(1.0);
 }
 
-
 function charlist_zoom_toggle() {
     charlist_zoom_toggled = !charlist_zoom_toggled;
     if (charlist_zoom_toggled) {
@@ -434,7 +434,9 @@ function charlist_zoom_toggle() {
 
     toolbar.redraw_charlist();
 
-    send("update_menu_checkboxes", { charlist_zoom_toggle: charlist_zoom_toggled });
+    send("update_menu_checkboxes", {
+        charlist_zoom_toggle: charlist_zoom_toggled,
+    });
 }
 
 function ice_colors(value) {
@@ -477,13 +479,19 @@ function change_font(font_name) {
 function insert_mode(value) {
     set_text("insert_mode", value ? "Ins" : "");
     keyboard.overwrite_mode = false;
-    send("update_menu_checkboxes", { insert_mode: value, overwrite_mode: false });
+    send("update_menu_checkboxes", {
+        insert_mode: value,
+        overwrite_mode: false,
+    });
 }
 
 function overwrite_mode(value) {
     set_text("insert_mode", value ? "Over" : "");
     keyboard.insert_mode = false;
-    send("update_menu_checkboxes", { overwrite_mode: value, insert_mode: false });
+    send("update_menu_checkboxes", {
+        overwrite_mode: value,
+        insert_mode: false,
+    });
 }
 
 doc.on("new_document", () => {
@@ -509,25 +517,48 @@ on("zoom_out", (event) => zoom_out());
 on("actual_size", (event) => actual_size());
 on("charlist_zoom_toggle", (event) => charlist_zoom_toggle());
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    $("use_9px_font_toggle").addEventListener("mousedown", (event) => doc.use_9px_font = !doc.use_9px_font, true);
-    $("ice_colors_toggle").addEventListener("mousedown", (event) => doc.ice_colors = !doc.ice_colors, true);
-}, true);
+document.addEventListener(
+    "DOMContentLoaded",
+    (event) => {
+        $("use_9px_font_toggle").addEventListener(
+            "mousedown",
+            (event) => (doc.use_9px_font = !doc.use_9px_font),
+            true
+        );
+        $("ice_colors_toggle").addEventListener(
+            "mousedown",
+            (event) => (doc.ice_colors = !doc.ice_colors),
+            true
+        );
+    },
+    true
+);
 
 class Tools extends events.EventEmitter {
     get_tool_div(mode) {
         switch (mode) {
-            case this.modes.SELECT: return $("select_mode");
-            case this.modes.BRUSH: return $("brush_mode");
-            case this.modes.SHIFTER: return $("shifter_mode");
-            case this.modes.LINE: return $("line_mode");
-            case this.modes.RECTANGLE_OUTLINE: return $("rectangle_mode");
-            case this.modes.RECTANGLE_FILLED: return $("rectangle_mode");
-            case this.modes.ELLIPSE_OUTLINE: return $("ellipse_mode");
-            case this.modes.ELLIPSE_FILLED: return $("ellipse_mode");
-            case this.modes.FILL: return $("fill_mode");
-            case this.modes.SAMPLE: return $("sample_mode");
-            case this.modes.REFERENCE: return $("reference_mode");
+            case this.modes.SELECT:
+                return $("select_mode");
+            case this.modes.BRUSH:
+                return $("brush_mode");
+            case this.modes.SHIFTER:
+                return $("shifter_mode");
+            case this.modes.LINE:
+                return $("line_mode");
+            case this.modes.RECTANGLE_OUTLINE:
+                return $("rectangle_mode");
+            case this.modes.RECTANGLE_FILLED:
+                return $("rectangle_mode");
+            case this.modes.ELLIPSE_OUTLINE:
+                return $("ellipse_mode");
+            case this.modes.ELLIPSE_FILLED:
+                return $("ellipse_mode");
+            case this.modes.FILL:
+                return $("fill_mode");
+            case this.modes.SAMPLE:
+                return $("sample_mode");
+            case this.modes.REFERENCE:
+                return $("reference_mode");
         }
     }
 
@@ -574,7 +605,6 @@ class Tools extends events.EventEmitter {
         if (this.previous_mode != undefined) this.start(this.previous_mode);
     }
 
-
     constructor() {
         super();
         this.modes = {
@@ -588,36 +618,72 @@ class Tools extends events.EventEmitter {
             ELLIPSE_FILLED: 7,
             FILL: 8,
             SAMPLE: 9,
-            REFERENCE: 10
+            REFERENCE: 10,
         };
         on("change_to_select_mode", (event) => this.start(this.modes.SELECT));
         on("change_to_brush_mode", (event) => this.start(this.modes.BRUSH));
         on("change_to_shifter_mode", (event) => this.start(this.modes.SHIFTER));
         on("change_to_fill_mode", (event) => this.start(this.modes.FILL));
         document.addEventListener("DOMContentLoaded", (event) => {
-            $("select_mode").addEventListener("mousedown", (event) => this.start(this.modes.SELECT), true);
-            $("brush_mode").addEventListener("mousedown", (event) => this.start(this.modes.BRUSH), true);
-            $("shifter_mode").addEventListener("mousedown", (event) => this.start(this.modes.SHIFTER), true);
-            $("line_mode").addEventListener("mousedown", (event) => this.start(this.modes.LINE), true);
-            $("rectangle_mode").addEventListener("mousedown", (event) => {
-                const rect = $("rectangle_mode").getBoundingClientRect();
-                if (Math.floor(event.clientX - rect.left) < 24) {
-                    this.start(this.modes.RECTANGLE_OUTLINE);
-                } else {
-                    this.start(this.modes.RECTANGLE_FILLED);
-                }
-            }, true);
-            $("ellipse_mode").addEventListener("mousedown", (event) => {
-                const rect = $("ellipse_mode").getBoundingClientRect();
-                if (Math.floor(event.clientX - rect.left) < 24) {
-                    this.start(this.modes.ELLIPSE_OUTLINE);
-                } else {
-                    this.start(this.modes.ELLIPSE_FILLED);
-                }
-            }, true);
-            $("fill_mode").addEventListener("mousedown", (event) => this.start(this.modes.FILL), true);
-            $("sample_mode").addEventListener("mousedown", (event) => this.start(this.modes.SAMPLE), true);
-            $("reference_mode").addEventListener("mousedown", (event) => this.start(this.modes.REFERENCE), true);
+            $("select_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.SELECT),
+                true
+            );
+            $("brush_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.BRUSH),
+                true
+            );
+            $("shifter_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.SHIFTER),
+                true
+            );
+            $("line_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.LINE),
+                true
+            );
+            $("rectangle_mode").addEventListener(
+                "mousedown",
+                (event) => {
+                    const rect = $("rectangle_mode").getBoundingClientRect();
+                    if (Math.floor(event.clientX - rect.left) < 24) {
+                        this.start(this.modes.RECTANGLE_OUTLINE);
+                    } else {
+                        this.start(this.modes.RECTANGLE_FILLED);
+                    }
+                },
+                true
+            );
+            $("ellipse_mode").addEventListener(
+                "mousedown",
+                (event) => {
+                    const rect = $("ellipse_mode").getBoundingClientRect();
+                    if (Math.floor(event.clientX - rect.left) < 24) {
+                        this.start(this.modes.ELLIPSE_OUTLINE);
+                    } else {
+                        this.start(this.modes.ELLIPSE_FILLED);
+                    }
+                },
+                true
+            );
+            $("fill_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.FILL),
+                true
+            );
+            $("sample_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.SAMPLE),
+                true
+            );
+            $("reference_mode").addEventListener(
+                "mousedown",
+                (event) => this.start(this.modes.REFERENCE),
+                true
+            );
         });
     }
 }
@@ -634,7 +700,7 @@ class Toolbar extends events.EventEmitter {
     draw_charlist() {
         const font = doc.font;
         const { fg, bg } = palette;
-        const scale = charlist_zoom_toggled ? 2 : 1
+        const scale = charlist_zoom_toggled ? 2 : 1;
         const canvas = document.createElement("canvas");
         const charlist = document.getElementById("charlist");
         const cell_width = font.width + 1;
@@ -644,17 +710,23 @@ class Toolbar extends events.EventEmitter {
         canvas.height = cell_height * 16;
         canvas.style.width = `${canvas.width * scale}px`;
         canvas.style.height = `${canvas.height * scale}px`;
-        if (charlist.contains(charlist.getElementsByTagName('canvas')[0])) {
-            charlist.removeChild(charlist.getElementsByTagName('canvas')[0]);
+        if (charlist.contains(charlist.getElementsByTagName("canvas")[0])) {
+            charlist.removeChild(charlist.getElementsByTagName("canvas")[0]);
         }
         charlist.appendChild(canvas);
-        canvas.addEventListener("mousedown", (event) => {
-            const rect = event.target.getBoundingClientRect();
-            this.charlist_x = event.clientX - rect.left;
-            this.charlist_y = event.clientY - rect.top;
-            this.char_index = Math.floor(this.charlist_y / cell_height / scale) * 16 + Math.floor(this.charlist_x / cell_width / scale);
-            this.draw_charlist_cursor();
-        }, true);
+        canvas.addEventListener(
+            "mousedown",
+            (event) => {
+                const rect = event.target.getBoundingClientRect();
+                this.charlist_x = event.clientX - rect.left;
+                this.charlist_y = event.clientY - rect.top;
+                this.char_index =
+                    Math.floor(this.charlist_y / cell_height / scale) * 16 +
+                    Math.floor(this.charlist_x / cell_width / scale);
+                this.draw_charlist_cursor();
+            },
+            true
+        );
         const ctx = canvas.getContext("2d");
         for (let y = 0, code = 0; y < 16; y++) {
             for (let x = 0; x < 16; x++, code++) {
@@ -671,7 +743,7 @@ class Toolbar extends events.EventEmitter {
 
     draw_charlist_cursor() {
         const font = doc.font;
-        const scale = charlist_zoom_toggled ? 2 : 1
+        const scale = charlist_zoom_toggled ? 2 : 1;
         const cell_width = font.width + 1;
         const cell_height = font.height + 1;
 
@@ -682,7 +754,6 @@ class Toolbar extends events.EventEmitter {
         selector.style.width = `${font.width * scale}px`;
         this.custom_block_index = this.char_index;
         this.draw_custom_block();
-        this.draw_fkeys();
     }
 
     redraw_charlist() {
@@ -692,33 +763,25 @@ class Toolbar extends events.EventEmitter {
 
     move_charlist(direction) {
         if (direction == "up") {
-            if (this.char_index > 15) { this.char_index -= 16; }
-        }
-        else if (direction == "right") {
-            if ((this.char_index + 1) % 16 != 0 && this.char_index < 256) { this.char_index += 1; }
-        }
-        else if (direction == "down") {
-            if (this.char_index < 240) { this.char_index += 16; }
-        }
-        else if (direction == "left") {
-            if (this.char_index % 16 != 0 && this.char_index > 0) { this.char_index -= 1; }
-        }
-        else {
+            if (this.char_index > 15) {
+                this.char_index -= 16;
+            }
+        } else if (direction == "right") {
+            if ((this.char_index + 1) % 16 != 0 && this.char_index < 256) {
+                this.char_index += 1;
+            }
+        } else if (direction == "down") {
+            if (this.char_index < 240) {
+                this.char_index += 16;
+            }
+        } else if (direction == "left") {
+            if (this.char_index % 16 != 0 && this.char_index > 0) {
+                this.char_index -= 1;
+            }
+        } else {
             this.char_index = 0;
         }
-        this.draw_charlist_cursor()
-    }
-
-    draw_fkeys() {
-        // stop the character palette from mapping the function keys
-        return
-        for (let i = 0; i < 12; i++) {
-            let num = i;
-            const fkey_index = this.fkey_index;
-            let code = this.char_index + i;
-            this.draw_fkey(`f${i + 1}`, this.char_index + i);
-            send("set_fkey", { num, fkey_index, code });
-        }
+        this.draw_charlist_cursor();
     }
 
     draw_fkey(name, code) {
@@ -756,11 +819,11 @@ class Toolbar extends events.EventEmitter {
     }
 
     previous_character_set() {
-        this.change_fkeys((this.fkey_index == 0) ? this.fkeys.length - 1 : this.fkey_index - 1);
+        this.change_fkeys(this.fkey_index == 0 ? this.fkeys.length - 1 : this.fkey_index - 1);
     }
 
     next_character_set() {
-        this.change_fkeys((this.fkey_index + 1 == this.fkeys.length) ? 0 : this.fkey_index + 1);
+        this.change_fkeys(this.fkey_index + 1 == this.fkeys.length ? 0 : this.fkey_index + 1);
     }
 
     increase_brush_size() {
@@ -827,12 +890,27 @@ class Toolbar extends events.EventEmitter {
     }
 
     fkey_pref_clicker(num) {
-        return (event) => send_sync("fkey_prefs", { num, fkey_index: this.fkey_index, current: this.fkeys[this.fkey_index][num], bitmask: doc.font.bitmask, use_9px_font: doc.font.use_9px_font, font_height: doc.font.height });
+        return (event) =>
+            send_sync("fkey_prefs", {
+                num,
+                fkey_index: this.fkey_index,
+                current: this.fkeys[this.fkey_index][num],
+                bitmask: doc.font.bitmask,
+                use_9px_font: doc.font.use_9px_font,
+                font_height: doc.font.height,
+            });
     }
 
     change_mode(new_mode) {
         if (this.mode == new_mode && this.mode == this.modes.CUSTOM_BLOCK) {
-            send_sync("fkey_prefs", { num: -1, fkey_index: 0, current: this.custom_block_index, bitmask: doc.font.bitmask, use_9px_font: doc.font.use_9px_font, font_height: doc.font.height });
+            send_sync("fkey_prefs", {
+                num: -1,
+                fkey_index: 0,
+                current: this.custom_block_index,
+                bitmask: doc.font.bitmask,
+                use_9px_font: doc.font.use_9px_font,
+                font_height: doc.font.height,
+            });
             return;
         }
         this.mode = new_mode;
@@ -847,11 +925,21 @@ class Toolbar extends events.EventEmitter {
         $("colorize_bg").classList.add("brush_mode_ghosted");
         $("colorize_bg").classList.remove("brush_mode_selected");
         switch (this.mode) {
-            case this.modes.HALF_BLOCK: $("half_block").classList.add("brush_mode_selected"); break;
-            case this.modes.CUSTOM_BLOCK: $("custom_block").classList.add("brush_mode_selected"); break;
-            case this.modes.SHADING_BLOCK: $("shading_block").classList.add("brush_mode_selected"); break;
-            case this.modes.REPLACE_COLOR: $("replace_color").classList.add("brush_mode_selected"); break;
-            case this.modes.BLINK: $("blink").classList.add("brush_mode_selected"); break;
+            case this.modes.HALF_BLOCK:
+                $("half_block").classList.add("brush_mode_selected");
+                break;
+            case this.modes.CUSTOM_BLOCK:
+                $("custom_block").classList.add("brush_mode_selected");
+                break;
+            case this.modes.SHADING_BLOCK:
+                $("shading_block").classList.add("brush_mode_selected");
+                break;
+            case this.modes.REPLACE_COLOR:
+                $("replace_color").classList.add("brush_mode_selected");
+                break;
+            case this.modes.BLINK:
+                $("blink").classList.add("brush_mode_selected");
+                break;
             case this.modes.COLORIZE:
                 $("colorize").classList.add("brush_mode_selected");
                 $("colorize_fg").classList.remove("brush_mode_ghosted");
@@ -907,7 +995,14 @@ class Toolbar extends events.EventEmitter {
         on("decrease_brush_size", () => this.decrease_brush_size());
         on("reset_brush_size", () => this.reset_brush_size());
         keyboard.on("change_fkeys", (num) => this.change_fkeys(num));
-        this.modes = { HALF_BLOCK: 0, CUSTOM_BLOCK: 1, SHADING_BLOCK: 2, REPLACE_COLOR: 3, BLINK: 4, COLORIZE: 5 };
+        this.modes = {
+            HALF_BLOCK: 0,
+            CUSTOM_BLOCK: 1,
+            SHADING_BLOCK: 2,
+            REPLACE_COLOR: 3,
+            BLINK: 4,
+            COLORIZE: 5,
+        };
         this.colorize_fg = true;
         this.colorize_bg = false;
         this.brush_size = 1;
@@ -936,49 +1031,102 @@ class Toolbar extends events.EventEmitter {
             sample_block.style.height = `${font.height * 2}px`;
             sample_block.style.margin = `${(48 - font.height * 2 - 2) / 2}px`;
         });
-        document.addEventListener("DOMContentLoaded", (event) => {
-            for (let i = 0; i < 12; i++) $(`f${i + 1}`).addEventListener("mousedown", this.fkey_clicker(i), true);
-            for (let i = 0; i < 12; i++) $(`f${i + 1}_pref`).addEventListener("mousedown", this.fkey_pref_clicker(i), true);
-            $("fkey_chooser_left").addEventListener("mousedown", (event) => this.previous_character_set(), true);
-            $("fkey_chooser_right").addEventListener("mousedown", (event) => this.next_character_set(), true);
-            $("brush_size_left").addEventListener("mousedown", (event) => this.decrease_brush_size(), true);
-            $("brush_size_right").addEventListener("mousedown", (event) => this.increase_brush_size(), true);
-            $("brush_size_num").innerText = this.brush_size;
-            $("half_block").addEventListener("mousedown", (event) => this.change_mode(this.modes.HALF_BLOCK));
-            $("custom_block").addEventListener("mousedown", (event) => this.change_mode(this.modes.CUSTOM_BLOCK));
-            $("shading_block").addEventListener("mousedown", (event) => this.change_mode(this.modes.SHADING_BLOCK));
-            $("replace_color").addEventListener("mousedown", (event) => this.change_mode(this.modes.REPLACE_COLOR));
-            $("blink").addEventListener("mousedown", (event) => this.change_mode(this.modes.BLINK));
-            $("colorize").addEventListener("mousedown", (event) => this.change_mode(this.modes.COLORIZE));
-            $("colorize_fg").addEventListener("mousedown", (event) => {
-                this.colorize_fg = !this.colorize_fg;
-                this.change_mode(this.modes.COLORIZE);
-            });
-            $("colorize_bg").addEventListener("mousedown", (event) => {
-                this.colorize_bg = !this.colorize_bg;
-                this.change_mode(this.modes.COLORIZE);
-            });
-            this.change_mode(this.modes.HALF_BLOCK);
-            $("reference_open").addEventListener("click", open_reference_image);
-            $("reference_show").addEventListener("click", show_reference_image);
-            $("reference_hide").addEventListener("click", hide_reference_image);
-            $("reference_reset").addEventListener("click", reset_reference_image);
-            $('reference_opacity_minus').addEventListener('click', decrease_reference_image_opacity);
-            $('reference_opacity_plus').addEventListener('click', increase_reference_image_opacity);
-            $('reference_opacity_value').addEventListener('input', on_update_reference_opacity_value);
-            $('reference_size_minus').addEventListener('click', decrease_reference_image_size);
-            $('reference_size_plus').addEventListener('click', increase_reference_image_size);
-            $('reference_size_value').addEventListener('input', on_update_reference_size_value);
-            $('reference_angle_minus').addEventListener('click', decrease_reference_image_angle);
-            $('reference_angle_plus').addEventListener('click', increase_reference_image_angle);
-            $('reference_angle_value').addEventListener('input', on_update_reference_angle_value);
-            }, true);
+        document.addEventListener(
+            "DOMContentLoaded",
+            (event) => {
+                for (let i = 0; i < 12; i++)
+                    $(`f${i + 1}`).addEventListener("mousedown", this.fkey_clicker(i), true);
+                for (let i = 0; i < 12; i++)
+                    $(`f${i + 1}_pref`).addEventListener(
+                        "mousedown",
+                        this.fkey_pref_clicker(i),
+                        true
+                    );
+                $("fkey_chooser_left").addEventListener(
+                    "mousedown",
+                    (event) => this.previous_character_set(),
+                    true
+                );
+                $("fkey_chooser_right").addEventListener(
+                    "mousedown",
+                    (event) => this.next_character_set(),
+                    true
+                );
+                $("brush_size_left").addEventListener(
+                    "mousedown",
+                    (event) => this.decrease_brush_size(),
+                    true
+                );
+                $("brush_size_right").addEventListener(
+                    "mousedown",
+                    (event) => this.increase_brush_size(),
+                    true
+                );
+                $("brush_size_num").innerText = this.brush_size;
+                $("half_block").addEventListener("mousedown", (event) =>
+                    this.change_mode(this.modes.HALF_BLOCK)
+                );
+                $("custom_block").addEventListener("mousedown", (event) =>
+                    this.change_mode(this.modes.CUSTOM_BLOCK)
+                );
+                $("shading_block").addEventListener("mousedown", (event) =>
+                    this.change_mode(this.modes.SHADING_BLOCK)
+                );
+                $("replace_color").addEventListener("mousedown", (event) =>
+                    this.change_mode(this.modes.REPLACE_COLOR)
+                );
+                $("blink").addEventListener("mousedown", (event) =>
+                    this.change_mode(this.modes.BLINK)
+                );
+                $("colorize").addEventListener("mousedown", (event) =>
+                    this.change_mode(this.modes.COLORIZE)
+                );
+                $("colorize_fg").addEventListener("mousedown", (event) => {
+                    this.colorize_fg = !this.colorize_fg;
+                    this.change_mode(this.modes.COLORIZE);
+                });
+                $("colorize_bg").addEventListener("mousedown", (event) => {
+                    this.colorize_bg = !this.colorize_bg;
+                    this.change_mode(this.modes.COLORIZE);
+                });
+                this.change_mode(this.modes.HALF_BLOCK);
+                $("reference_open").addEventListener("click", open_reference_image);
+                $("reference_show").addEventListener("click", show_reference_image);
+                $("reference_hide").addEventListener("click", hide_reference_image);
+                $("reference_reset").addEventListener("click", reset_reference_image);
+                $("reference_opacity_minus").addEventListener(
+                    "click",
+                    decrease_reference_image_opacity
+                );
+                $("reference_opacity_plus").addEventListener(
+                    "click",
+                    increase_reference_image_opacity
+                );
+                $("reference_opacity_value").addEventListener(
+                    "input",
+                    on_update_reference_opacity_value
+                );
+                $("reference_size_minus").addEventListener("click", decrease_reference_image_size);
+                $("reference_size_plus").addEventListener("click", increase_reference_image_size);
+                $("reference_size_value").addEventListener("input", on_update_reference_size_value);
+                $("reference_angle_minus").addEventListener(
+                    "click",
+                    decrease_reference_image_angle
+                );
+                $("reference_angle_plus").addEventListener("click", increase_reference_image_angle);
+                $("reference_angle_value").addEventListener(
+                    "input",
+                    on_update_reference_angle_value
+                );
+            },
+            true
+        );
 
         keyboard.on("move_charlist", (direction) => this.move_charlist(direction));
     }
 }
 
-const toolbar = new Toolbar()
+const toolbar = new Toolbar();
 
 module.exports = {
     statusbar: new StatusBar(),
@@ -992,5 +1140,5 @@ module.exports = {
     charlist_zoom_toggle,
     increase_reference_image_opacity,
     decrease_reference_image_opacity,
-    open_reference_image
+    open_reference_image,
 };

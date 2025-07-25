@@ -10,7 +10,8 @@
     --scrollbar-height: 8px;
     --system-font: BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
 }

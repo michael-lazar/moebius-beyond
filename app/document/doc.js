@@ -1,5 +1,5 @@
 const libtextmode = require("../libtextmode/libtextmode");
-const { on, send, send_sync, open_box} = require("../senders");
+const { on, send, send_sync, open_box } = require("../senders");
 const events = require("events");
 const path = require("path");
 let doc, render;
@@ -16,13 +16,12 @@ const undo_types = {
     SCROLL_CANVAS_UP: 6,
     SCROLL_CANVAS_DOWN: 7,
     SCROLL_CANVAS_LEFT: 8,
-    SCROLL_CANVAS_RIGHT: 9
+    SCROLL_CANVAS_RIGHT: 9,
 };
 
-on("retention", (event, value) => retention = value);
+on("retention", (event, value) => (retention = value));
 
 class UndoHistory extends events.EventEmitter {
-
     reset_redos() {
         this.redo_buffer = [];
         send("disable_redo");
@@ -51,7 +50,12 @@ class UndoHistory extends events.EventEmitter {
             const undo = undos[undo_i];
             const block = doc.data[doc.columns * undo.y + undo.x];
             if (undo.cursor) {
-                redos.push({ ...Object.assign(block), x: undo.x, y: undo.y, cursor: Object.assign(undo.cursor) });
+                redos.push({
+                    ...Object.assign(block),
+                    x: undo.x,
+                    y: undo.y,
+                    cursor: Object.assign(undo.cursor),
+                });
             } else {
                 redos.push({ ...Object.assign(block), x: undo.x, y: undo.y });
             }
@@ -70,7 +74,12 @@ class UndoHistory extends events.EventEmitter {
             const redo = redos[redo_i];
             const block = doc.data[doc.columns * redo.y + redo.x];
             if (redo.cursor) {
-                undos.push({ ...Object.assign(block), x: redo.x, y: redo.y, cursor: Object.assign(redo.cursor) });
+                undos.push({
+                    ...Object.assign(block),
+                    x: redo.x,
+                    y: redo.y,
+                    cursor: Object.assign(redo.cursor),
+                });
             } else {
                 undos.push({ ...Object.assign(block), x: redo.x, y: redo.y });
             }
@@ -91,13 +100,19 @@ class UndoHistory extends events.EventEmitter {
     }
 
     undo_resize(blocks) {
-        this.redo_buffer.push({ type: undo_types.RESIZE, data: libtextmode.get_all_blocks(doc) });
+        this.redo_buffer.push({
+            type: undo_types.RESIZE,
+            data: libtextmode.get_all_blocks(doc),
+        });
         this.copy_blocks(blocks);
         this.emit("resize");
     }
 
     redo_resize(blocks) {
-        this.undo_buffer.push({ type: undo_types.RESIZE, data: libtextmode.get_all_blocks(doc) });
+        this.undo_buffer.push({
+            type: undo_types.RESIZE,
+            data: libtextmode.get_all_blocks(doc),
+        });
         this.copy_blocks(blocks);
         this.emit("resize");
     }
@@ -135,28 +150,55 @@ class UndoHistory extends events.EventEmitter {
     }
 
     undo_insert_row(data) {
-        this.redo_buffer.push({ type: undo_types.DELETE_ROW, data: { y: data.y, blocks: libtextmode.delete_row(doc, data.y, data.blocks) } });
+        this.redo_buffer.push({
+            type: undo_types.DELETE_ROW,
+            data: {
+                y: data.y,
+                blocks: libtextmode.delete_row(doc, data.y, data.blocks),
+            },
+        });
         libtextmode.render_delete_row(doc, data.y, render);
     }
 
     undo_delete_row(data) {
-        this.redo_buffer.push({ type: undo_types.INSERT_ROW, data: { y: data.y, blocks: libtextmode.insert_row(doc, data.y, data.blocks) } });
+        this.redo_buffer.push({
+            type: undo_types.INSERT_ROW,
+            data: {
+                y: data.y,
+                blocks: libtextmode.insert_row(doc, data.y, data.blocks),
+            },
+        });
         libtextmode.render_insert_row(doc, data.y, render);
     }
 
     undo_insert_column(data) {
-        this.redo_buffer.push({ type: undo_types.DELETE_COLUMN, data: { x: data.x, blocks: libtextmode.delete_column(doc, data.x, data.blocks) } });
+        this.redo_buffer.push({
+            type: undo_types.DELETE_COLUMN,
+            data: {
+                x: data.x,
+                blocks: libtextmode.delete_column(doc, data.x, data.blocks),
+            },
+        });
         libtextmode.render_delete_column(doc, data.x, render);
     }
 
     undo_delete_column(data) {
-        this.redo_buffer.push({ type: undo_types.INSERT_COLUMN, data: { x: data.x, blocks: libtextmode.insert_column(doc, data.x, data.blocks) } });
+        this.redo_buffer.push({
+            type: undo_types.INSERT_COLUMN,
+            data: {
+                x: data.x,
+                blocks: libtextmode.insert_column(doc, data.x, data.blocks),
+            },
+        });
         libtextmode.render_insert_column(doc, data.x, render);
     }
 
     undo_scroll_canvas_up() {
         libtextmode.scroll_canvas_down(doc);
-        this.redo_buffer.push({ type: undo_types.SCROLL_CANVAS_DOWN, data: [] });
+        this.redo_buffer.push({
+            type: undo_types.SCROLL_CANVAS_DOWN,
+            data: [],
+        });
         libtextmode.render_scroll_canvas_down(doc, render);
     }
 
@@ -168,19 +210,28 @@ class UndoHistory extends events.EventEmitter {
 
     undo_scroll_canvas_left() {
         libtextmode.scroll_canvas_right(doc);
-        this.redo_buffer.push({ type: undo_types.SCROLL_CANVAS_RIGHT, data: [] });
+        this.redo_buffer.push({
+            type: undo_types.SCROLL_CANVAS_RIGHT,
+            data: [],
+        });
         libtextmode.render_scroll_canvas_right(doc, render);
     }
 
     undo_scroll_canvas_right() {
         libtextmode.scroll_canvas_left(doc);
-        this.redo_buffer.push({ type: undo_types.SCROLL_CANVAS_LEFT, data: [] });
+        this.redo_buffer.push({
+            type: undo_types.SCROLL_CANVAS_LEFT,
+            data: [],
+        });
         libtextmode.render_scroll_canvas_left(doc, render);
     }
 
     redo_scroll_canvas_up() {
         libtextmode.scroll_canvas_down(doc);
-        this.undo_buffer.push({ type: undo_types.SCROLL_CANVAS_DOWN, data: [] });
+        this.undo_buffer.push({
+            type: undo_types.SCROLL_CANVAS_DOWN,
+            data: [],
+        });
         libtextmode.render_scroll_canvas_down(doc, render);
     }
 
@@ -192,33 +243,63 @@ class UndoHistory extends events.EventEmitter {
 
     redo_scroll_canvas_left() {
         libtextmode.scroll_canvas_right(doc);
-        this.undo_buffer.push({ type: undo_types.SCROLL_CANVAS_RIGHT, data: [] });
+        this.undo_buffer.push({
+            type: undo_types.SCROLL_CANVAS_RIGHT,
+            data: [],
+        });
         libtextmode.render_scroll_canvas_right(doc, render);
     }
 
     redo_scroll_canvas_right() {
         libtextmode.scroll_canvas_left(doc);
-        this.undo_buffer.push({ type: undo_types.SCROLL_CANVAS_LEFT, data: [] });
+        this.undo_buffer.push({
+            type: undo_types.SCROLL_CANVAS_LEFT,
+            data: [],
+        });
         libtextmode.render_scroll_canvas_left(doc, render);
     }
 
     redo_insert_row(data) {
-        this.undo_buffer.push({ type: undo_types.DELETE_ROW, data: { y: data.y, blocks: libtextmode.delete_row(doc, data.y, data.blocks) } });
+        this.undo_buffer.push({
+            type: undo_types.DELETE_ROW,
+            data: {
+                y: data.y,
+                blocks: libtextmode.delete_row(doc, data.y, data.blocks),
+            },
+        });
         libtextmode.render_delete_row(doc, data.y, render);
     }
 
     redo_delete_row(data) {
-        this.undo_buffer.push({ type: undo_types.INSERT_ROW, data: { y: data.y, blocks: libtextmode.insert_row(doc, data.y, data.blocks) } });
+        this.undo_buffer.push({
+            type: undo_types.INSERT_ROW,
+            data: {
+                y: data.y,
+                blocks: libtextmode.insert_row(doc, data.y, data.blocks),
+            },
+        });
         libtextmode.render_insert_row(doc, data.y, render);
     }
 
     redo_insert_column(data) {
-        this.undo_buffer.push({ type: undo_types.DELETE_COLUMN, data: { x: data.x, blocks: libtextmode.delete_column(doc, data.x, data.blocks) } });
+        this.undo_buffer.push({
+            type: undo_types.DELETE_COLUMN,
+            data: {
+                x: data.x,
+                blocks: libtextmode.delete_column(doc, data.x, data.blocks),
+            },
+        });
         libtextmode.render_delete_column(doc, data.x, render);
     }
 
     redo_delete_column(data) {
-        this.undo_buffer.push({ type: undo_types.INSERT_COLUMN, data: { x: data.x, blocks: libtextmode.insert_column(doc, data.x, data.blocks) } });
+        this.undo_buffer.push({
+            type: undo_types.INSERT_COLUMN,
+            data: {
+                x: data.x,
+                blocks: libtextmode.insert_column(doc, data.x, data.blocks),
+            },
+        });
         libtextmode.render_insert_column(doc, data.x, render);
     }
 
@@ -226,16 +307,36 @@ class UndoHistory extends events.EventEmitter {
         if (this.undo_buffer.length) {
             const undo = this.undo_buffer.pop();
             switch (undo.type) {
-                case undo_types.INDIVIDUAL: this.undo_individual(undo.data); break;
-                case undo_types.RESIZE: this.undo_resize(undo.data); break;
-                case undo_types.INSERT_ROW: this.undo_insert_row(undo.data); break;
-                case undo_types.DELETE_ROW: this.undo_delete_row(undo.data); break;
-                case undo_types.INSERT_COLUMN: this.undo_insert_column(undo.data); break;
-                case undo_types.DELETE_COLUMN: this.undo_delete_column(undo.data); break;
-                case undo_types.SCROLL_CANVAS_UP: this.undo_scroll_canvas_up(); break;
-                case undo_types.SCROLL_CANVAS_DOWN: this.undo_scroll_canvas_down(); break;
-                case undo_types.SCROLL_CANVAS_LEFT: this.undo_scroll_canvas_left(); break;
-                case undo_types.SCROLL_CANVAS_RIGHT: this.undo_scroll_canvas_right(); break;
+                case undo_types.INDIVIDUAL:
+                    this.undo_individual(undo.data);
+                    break;
+                case undo_types.RESIZE:
+                    this.undo_resize(undo.data);
+                    break;
+                case undo_types.INSERT_ROW:
+                    this.undo_insert_row(undo.data);
+                    break;
+                case undo_types.DELETE_ROW:
+                    this.undo_delete_row(undo.data);
+                    break;
+                case undo_types.INSERT_COLUMN:
+                    this.undo_insert_column(undo.data);
+                    break;
+                case undo_types.DELETE_COLUMN:
+                    this.undo_delete_column(undo.data);
+                    break;
+                case undo_types.SCROLL_CANVAS_UP:
+                    this.undo_scroll_canvas_up();
+                    break;
+                case undo_types.SCROLL_CANVAS_DOWN:
+                    this.undo_scroll_canvas_down();
+                    break;
+                case undo_types.SCROLL_CANVAS_LEFT:
+                    this.undo_scroll_canvas_left();
+                    break;
+                case undo_types.SCROLL_CANVAS_RIGHT:
+                    this.undo_scroll_canvas_right();
+                    break;
             }
             send("enable_redo");
             if (this.undo_buffer.length == 0) send("disable_undo");
@@ -246,16 +347,36 @@ class UndoHistory extends events.EventEmitter {
         if (this.redo_buffer.length) {
             const redo = this.redo_buffer.pop();
             switch (redo.type) {
-                case undo_types.INDIVIDUAL: this.redo_individual(redo.data); break;
-                case undo_types.RESIZE: this.redo_resize(redo.data); break;
-                case undo_types.INSERT_ROW: this.redo_insert_row(redo.data); break;
-                case undo_types.DELETE_ROW: this.redo_delete_row(redo.data); break;
-                case undo_types.INSERT_COLUMN: this.redo_insert_column(redo.data); break;
-                case undo_types.DELETE_COLUMN: this.redo_delete_column(redo.data); break;
-                case undo_types.SCROLL_CANVAS_UP: this.redo_scroll_canvas_up(); break;
-                case undo_types.SCROLL_CANVAS_DOWN: this.redo_scroll_canvas_down(); break;
-                case undo_types.SCROLL_CANVAS_LEFT: this.redo_scroll_canvas_left(); break;
-                case undo_types.SCROLL_CANVAS_RIGHT: this.redo_scroll_canvas_right(); break;
+                case undo_types.INDIVIDUAL:
+                    this.redo_individual(redo.data);
+                    break;
+                case undo_types.RESIZE:
+                    this.redo_resize(redo.data);
+                    break;
+                case undo_types.INSERT_ROW:
+                    this.redo_insert_row(redo.data);
+                    break;
+                case undo_types.DELETE_ROW:
+                    this.redo_delete_row(redo.data);
+                    break;
+                case undo_types.INSERT_COLUMN:
+                    this.redo_insert_column(redo.data);
+                    break;
+                case undo_types.DELETE_COLUMN:
+                    this.redo_delete_column(redo.data);
+                    break;
+                case undo_types.SCROLL_CANVAS_UP:
+                    this.redo_scroll_canvas_up();
+                    break;
+                case undo_types.SCROLL_CANVAS_DOWN:
+                    this.redo_scroll_canvas_down();
+                    break;
+                case undo_types.SCROLL_CANVAS_LEFT:
+                    this.redo_scroll_canvas_left();
+                    break;
+                case undo_types.SCROLL_CANVAS_RIGHT:
+                    this.redo_scroll_canvas_right();
+                    break;
             }
             send("enable_undo");
             if (this.redo_buffer.length == 0) send("disable_redo");
@@ -264,9 +385,18 @@ class UndoHistory extends events.EventEmitter {
 
     push(x, y, block, cursor) {
         if (cursor) {
-            this.undo_buffer[this.undo_buffer.length - 1].data.push({ x, y, ...Object.assign(block), cursor: Object.assign(cursor) });
+            this.undo_buffer[this.undo_buffer.length - 1].data.push({
+                x,
+                y,
+                ...Object.assign(block),
+                cursor: Object.assign(cursor),
+            });
         } else {
-            this.undo_buffer[this.undo_buffer.length - 1].data.push({ x, y, ...Object.assign(block) });
+            this.undo_buffer[this.undo_buffer.length - 1].data.push({
+                x,
+                y,
+                ...Object.assign(block),
+            });
         }
     }
 
@@ -282,7 +412,7 @@ class UndoHistory extends events.EventEmitter {
 
 class TextModeDoc extends events.EventEmitter {
     async start_rendering() {
-        const big_data = (doc.data.length > 80 * 1000);
+        const big_data = doc.data.length > 80 * 1000;
         if (big_data) this.emit("start_rendering");
         render = await libtextmode.render_split(doc);
         if (big_data) this.emit("end_rendering");
@@ -295,28 +425,86 @@ class TextModeDoc extends events.EventEmitter {
             this.init = true;
         }
     }
-    async new_document({ columns, rows, title, author, group, date, palette, font_name, use_9px_font, ice_colors, comments, data, font_bytes }) {
-        doc = libtextmode.new_document({ columns, rows, title, author, group, date, palette, font_name, use_9px_font, ice_colors, comments, data, font_bytes });
+    async new_document({
+        columns,
+        rows,
+        title,
+        author,
+        group,
+        date,
+        palette,
+        font_name,
+        use_9px_font,
+        ice_colors,
+        comments,
+        data,
+        font_bytes,
+    }) {
+        doc = libtextmode.new_document({
+            columns,
+            rows,
+            title,
+            author,
+            group,
+            date,
+            palette,
+            font_name,
+            use_9px_font,
+            ice_colors,
+            comments,
+            data,
+            font_bytes,
+        });
         await this.start_rendering();
         this.emit("new_document");
         this.ready();
     }
 
-    get render() { return render; }
-    get font() { return render.font; }
-    get font_height() { return render.font.height; }
-    get columns() { return doc.columns; }
-    get rows() { return doc.rows; }
-    get title() { return doc.title; }
-    get author() { return doc.author; }
-    get group() { return doc.group; }
-    get comments() { return doc.comments; }
-    get palette() { return doc.palette; }
-    get font_name() { return doc.font_name; }
-    get font_bytes() { return doc.font_bytes; }
-    get ice_colors() { return doc.ice_colors; }
-    get use_9px_font() { return doc.use_9px_font; }
-    get data() { return doc.data; }
+    get render() {
+        return render;
+    }
+    get font() {
+        return render.font;
+    }
+    get font_height() {
+        return render.font.height;
+    }
+    get columns() {
+        return doc.columns;
+    }
+    get rows() {
+        return doc.rows;
+    }
+    get title() {
+        return doc.title;
+    }
+    get author() {
+        return doc.author;
+    }
+    get group() {
+        return doc.group;
+    }
+    get comments() {
+        return doc.comments;
+    }
+    get palette() {
+        return doc.palette;
+    }
+    get font_name() {
+        return doc.font_name;
+    }
+    get font_bytes() {
+        return doc.font_bytes;
+    }
+    get ice_colors() {
+        return doc.ice_colors;
+    }
+    get use_9px_font() {
+        return doc.use_9px_font;
+    }
+    get data() {
+        return doc.data;
+    }
 
     set_sauce(title, author, group, comments) {
         doc.title = title;
@@ -360,7 +548,12 @@ class TextModeDoc extends events.EventEmitter {
         if (x < 0 || x >= doc.columns || y < 0 || y >= doc.rows) return;
         const i = doc.columns * y + x;
         if (prev_cursor) {
-            this.undo_history.push(x, y, doc.data[i], { prev_x: prev_cursor.prev_x, prev_y: prev_cursor.prev_y, post_x: cursor.x, post_y: cursor.y });
+            this.undo_history.push(x, y, doc.data[i], {
+                prev_x: prev_cursor.prev_x,
+                prev_y: prev_cursor.prev_y,
+                post_x: cursor.x,
+                post_y: cursor.y,
+            });
         } else {
             this.undo_history.push(x, y, doc.data[i]);
         }
@@ -368,13 +561,22 @@ class TextModeDoc extends events.EventEmitter {
         libtextmode.render_at(render, x, y, doc.data[i]);
         if (this.mirror_mode && mirrored) {
             const opposing_x = Math.floor(doc.columns / 2) - (x - Math.ceil(doc.columns / 2)) - 1;
-            this.change_data(opposing_x, y, libtextmode.flip_code_x(code), fg, bg, undefined, undefined, false);
+            this.change_data(
+                opposing_x,
+                y,
+                libtextmode.flip_code_x(code),
+                fg,
+                bg,
+                undefined,
+                undefined,
+                false
+            );
         }
     }
 
     update_palette(index, rgb) {
         if (index === null) index = doc.add_to_palette(rgb);
-        render.font.replace_cache_at(index, this.palette[index] = rgb)
+        render.font.replace_cache_at(index, (this.palette[index] = rgb));
 
         // TODO: should this be undoable? it doesn't fit in nicely, but I think it should be.
         for (let y = 0; y <= doc.rows - 1; y++) {
@@ -397,7 +599,7 @@ class TextModeDoc extends events.EventEmitter {
 
     get_half_block(x, y) {
         const text_y = Math.floor(y / 2);
-        const is_top = (y % 2 == 0);
+        const is_top = y % 2 == 0;
         const block = doc.data[doc.columns * text_y + x];
         let upper_block_color = 0;
         let lower_block_color = 0;
@@ -406,12 +608,38 @@ class TextModeDoc extends events.EventEmitter {
         let is_blocky = false;
         let is_vertically_blocky = false;
         switch (block.code) {
-            case 0: case 32: case 255: upper_block_color = block.bg; lower_block_color = block.bg; is_blocky = true; break;
-            case 220: upper_block_color = block.bg; lower_block_color = block.fg; is_blocky = true; break;
-            case 223: upper_block_color = block.fg; lower_block_color = block.bg; is_blocky = true; break;
-            case 219: upper_block_color = block.fg; lower_block_color = block.fg; is_blocky = true; break;
-            case 221: left_block_color = block.fg; right_block_color = block.bg; is_vertically_blocky = true; break;
-            case 222: left_block_color = block.bg; right_block_color = block.fg; is_vertically_blocky = true; break;
+            case 0:
+            case 32:
+            case 255:
+                upper_block_color = block.bg;
+                lower_block_color = block.bg;
+                is_blocky = true;
+                break;
+            case 220:
+                upper_block_color = block.bg;
+                lower_block_color = block.fg;
+                is_blocky = true;
+                break;
+            case 223:
+                upper_block_color = block.fg;
+                lower_block_color = block.bg;
+                is_blocky = true;
+                break;
+            case 219:
+                upper_block_color = block.fg;
+                lower_block_color = block.fg;
+                is_blocky = true;
+                break;
+            case 221:
+                left_block_color = block.fg;
+                right_block_color = block.bg;
+                is_vertically_blocky = true;
+                break;
+            case 222:
+                left_block_color = block.bg;
+                right_block_color = block.fg;
+                is_vertically_blocky = true;
+                break;
             default:
                 if (block.fg == block.bg) {
                     is_blocky = true;
@@ -421,7 +649,20 @@ class TextModeDoc extends events.EventEmitter {
                     is_blocky = false;
                 }
         }
-        return { x, y, text_y, is_blocky, is_vertically_blocky, upper_block_color, lower_block_color, left_block_color, right_block_color, is_top, fg: block.fg, bg: block.bg };
+        return {
+            x,
+            y,
+            text_y,
+            is_blocky,
+            is_vertically_blocky,
+            upper_block_color,
+            lower_block_color,
+            left_block_color,
+            right_block_color,
+            is_top,
+            fg: block.fg,
+            bg: block.bg,
+        };
     }
 
     optimize_block(x, y) {
@@ -431,21 +672,33 @@ class TextModeDoc extends events.EventEmitter {
                 this.change_data(x, y, 32, 7, 0);
             } else {
                 switch (block.code) {
-                    case 220: this.change_data(x, y, 223, block.bg, block.fg); break;
-                    case 223: this.change_data(x, y, 220, block.bg, block.fg); break;
+                    case 220:
+                        this.change_data(x, y, 223, block.bg, block.fg);
+                        break;
+                    case 223:
+                        this.change_data(x, y, 220, block.bg, block.fg);
+                        break;
                 }
             }
         } else if (block.fg < 8 && block.bg >= 8) {
             const half_block = this.get_half_block(x, y);
             if (half_block.is_blocky) {
                 switch (block.code) {
-                    case 220: this.change_data(x, y, 223, block.bg, block.fg); break;
-                    case 223: this.change_data(x, y, 220, block.bg, block.fg); break;
+                    case 220:
+                        this.change_data(x, y, 223, block.bg, block.fg);
+                        break;
+                    case 223:
+                        this.change_data(x, y, 220, block.bg, block.fg);
+                        break;
                 }
             } else if (half_block.is_vertically_blocky) {
                 switch (block.code) {
-                    case 221: this.change_data(x, y, 222, block.bg, block.fg); break;
-                    case 222: this.change_data(x, y, 221, block.bg, block.fg); break;
+                    case 221:
+                        this.change_data(x, y, 222, block.bg, block.fg);
+                        break;
+                    case 222:
+                        this.change_data(x, y, 221, block.bg, block.fg);
+                        break;
                 }
             }
         }
@@ -455,7 +708,10 @@ class TextModeDoc extends events.EventEmitter {
         if (x < 0 || x >= doc.columns || y < 0 || y >= doc.rows * 2) return;
         const block = this.get_half_block(x, y);
         if (block.is_blocky) {
-            if ((block.is_top && block.lower_block_color == col) || (!block.is_top && block.upper_block_color == col)) {
+            if (
+                (block.is_top && block.lower_block_color == col) ||
+                (!block.is_top && block.upper_block_color == col)
+            ) {
                 this.change_data(x, block.text_y, 219, col, 0);
             } else if (block.is_top) {
                 this.change_data(x, block.text_y, 223, col, block.lower_block_color);
@@ -481,7 +737,12 @@ class TextModeDoc extends events.EventEmitter {
     count_left(y) {
         for (let x = 0; x < doc.columns; x++) {
             const half_block = this.get_half_block(x, y * 2);
-            if (!half_block.is_blocky || half_block.lower_block_color != 0 || half_block.lower_block_color != 0) return x;
+            if (
+                !half_block.is_blocky ||
+                half_block.lower_block_color != 0 ||
+                half_block.lower_block_color != 0
+            )
+                return x;
         }
         return 0;
     }
@@ -489,7 +750,12 @@ class TextModeDoc extends events.EventEmitter {
     count_right(y) {
         for (let x = 0; x < doc.columns; x++) {
             const half_block = this.get_half_block(doc.columns - 1 - x, y * 2);
-            if (!half_block.is_blocky || half_block.lower_block_color != 0 || half_block.lower_block_color != 0) return x;
+            if (
+                !half_block.is_blocky ||
+                half_block.lower_block_color != 0 ||
+                half_block.lower_block_color != 0
+            )
+                return x;
         }
         return 0;
     }
@@ -502,7 +768,8 @@ class TextModeDoc extends events.EventEmitter {
                 const block = doc.data[y * doc.columns + x + count];
                 this.change_data(x, y, block.code, block.fg, block.bg);
             }
-            for (let x = doc.columns - count; x < doc.columns; x++) this.change_data(x, y, 32, 7, 0);
+            for (let x = doc.columns - count; x < doc.columns; x++)
+                this.change_data(x, y, 32, 7, 0);
         }
     }
 
@@ -524,11 +791,14 @@ class TextModeDoc extends events.EventEmitter {
         if (left || right) {
             this.undo_history.start_chunk();
             const blocks = new Array(doc.columns - right - left);
-            for (let i = 0; i < blocks.length; i++) blocks[i] = Object.assign(doc.data[y * doc.columns + left + i]);
+            for (let i = 0; i < blocks.length; i++)
+                blocks[i] = Object.assign(doc.data[y * doc.columns + left + i]);
             const new_left = Math.floor((left + right) / 2);
             for (let x = 0; x < new_left; x++) this.change_data(x, y, 32, 7, 0);
-            for (let x = 0; x < blocks.length; x++) this.change_data(new_left + x, y, blocks[x].code, blocks[x].fg, blocks[x].bg);
-            for (let x = 0; x < doc.columns - new_left - blocks.length; x++) this.change_data(new_left + blocks.length + x, y, 32, 7, 0);
+            for (let x = 0; x < blocks.length; x++)
+                this.change_data(new_left + x, y, blocks[x].code, blocks[x].fg, blocks[x].bg);
+            for (let x = 0; x < doc.columns - new_left - blocks.length; x++)
+                this.change_data(new_left + blocks.length + x, y, 32, 7, 0);
         }
     }
 
@@ -569,7 +839,17 @@ class TextModeDoc extends events.EventEmitter {
         for (let y = 0; y + dy < doc.rows && y < blocks.rows; y++) {
             for (let x = 0; x + dx < doc.columns && x < blocks.columns; x++) {
                 const block = blocks.data[y * blocks.columns + x];
-                if (!blocks.transparent || block.code != 32 || block.bg != 0) this.change_data(dx + x, dy + y, block.code, block.fg, block.bg, undefined, undefined, !dont_mirror);
+                if (!blocks.transparent || block.code != 32 || block.bg != 0)
+                    this.change_data(
+                        dx + x,
+                        dy + y,
+                        block.code,
+                        block.fg,
+                        block.bg,
+                        undefined,
+                        undefined,
+                        !dont_mirror
+                    );
             }
         }
     }
@@ -665,14 +945,17 @@ class TextModeDoc extends events.EventEmitter {
 
     async share_online() {
         const bytes = libtextmode.encode_as_ansi(this, false);
-        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + "ans";
-        const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=ans&retention=${retention}&filename=${filename}`, {
-            body: `file=${Buffer.from(bytes).toString("base64")}`,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            method: "POST"
-        });
+        const filename = this.file ? path.basename(this.file) : "unknown" + "." + "ans";
+        const req = await fetch(
+            `https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=ans&retention=${retention}&filename=${filename}`,
+            {
+                body: `file=${Buffer.from(bytes).toString("base64")}`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                method: "POST",
+            }
+        );
         const resp = await req.json();
         if (resp.results) return resp.results.gallery;
     }
@@ -682,15 +965,18 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async share_online_xbin() {
-        const bytes = libtextmode.encode_as_xbin(this)
-        const filename = (this.file) ? path.basename(this.file) : "unknown" + '.' + "xb";
-        const req = await fetch(`https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}&filename=${filename}`, {
-            body: `file=${Buffer.from(bytes).toString("base64")}`,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            method: "POST"
-        });
+        const bytes = libtextmode.encode_as_xbin(this);
+        const filename = this.file ? path.basename(this.file) : "unknown" + "." + "xb";
+        const req = await fetch(
+            `https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}&filename=${filename}`,
+            {
+                body: `file=${Buffer.from(bytes).toString("base64")}`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                method: "POST",
+            }
+        );
         const resp = await req.json();
         if (resp.results) return resp.results.gallery;
     }
@@ -715,43 +1001,73 @@ class TextModeDoc extends events.EventEmitter {
         libtextmode.export_as_apng(render, file);
     }
     async import_font() {
-        const possibleHeights = new Set([128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512]);
+        const possibleHeights = new Set([
+            128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384,
+            400, 416, 432, 448, 464, 480, 496, 512,
+        ]);
         const { bytes, filename } = await libtextmode.importFontFromImage();
         const { data, width, height } = await libtextmode.getImageData(bytes);
         if (width !== 128) {
-            alert('Wrong image size! Image width should be 128 px');
+            alert("Wrong image size! Image width should be 128 px");
             return;
         }
         if (!possibleHeights.has(height)) {
-            alert('Wrong image size! Image height should be one these: 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512 px');
+            alert(
+                "Wrong image size! Image height should be one these: 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512 px"
+            );
             return;
         }
-        const bit_array = await libtextmode.processImageDataTo1bit(data)
-        const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height)
+        const bit_array = await libtextmode.processImageDataTo1bit(data);
+        const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height);
         doc.font_name = path.parse(filename).name;
-        doc.font_bytes = Buffer.from(chunkedBitArray, 'hex');
+        doc.font_bytes = Buffer.from(chunkedBitArray, "hex");
         this.start_rendering().then(() => this.emit("change_font", doc.font_name));
     }
 
     async load_custom_font({ file } = {}) {
         if (!file) {
             const files = open_box({
-                filters: [{
-                    name: "Custom Font",
-                    extensions: [
-                        "f06", "f07", "f08", "f09", "f10", "f11", "f12", "f13",
-                        "f14", "f15","f16", "f17", "f18", "f19", "f20", "f21",
-                        "f22", "f23", "f24", "f25", "f26", "f27", "f28", "f29",
-                        "f30", "f31", "f32"
-                    ]
-                }]
+                filters: [
+                    {
+                        name: "Custom Font",
+                        extensions: [
+                            "f06",
+                            "f07",
+                            "f08",
+                            "f09",
+                            "f10",
+                            "f11",
+                            "f12",
+                            "f13",
+                            "f14",
+                            "f15",
+                            "f16",
+                            "f17",
+                            "f18",
+                            "f19",
+                            "f20",
+                            "f21",
+                            "f22",
+                            "f23",
+                            "f24",
+                            "f25",
+                            "f26",
+                            "f27",
+                            "f28",
+                            "f29",
+                            "f30",
+                            "f31",
+                            "f32",
+                        ],
+                    },
+                ],
             });
             if (files === undefined || files.length === 0) return;
-            file = files[0]
+            file = files[0];
         }
 
         const { bytes, filename } = await libtextmode.load_custom_font(file);
-        console.log(bytes, filename)
+        console.log(bytes, filename);
         doc.font_name = path.parse(filename).name;
         doc.font_bytes = bytes;
         this.start_rendering().then(() => this.emit("change_font", doc.font_name));
@@ -763,17 +1079,34 @@ class TextModeDoc extends events.EventEmitter {
         this.mirror_mode = false;
         this.undo_history = new UndoHistory();
         this.undo_history.on("resize", () => this.start_rendering());
-        on("ice_colors", (event, value) => this.ice_colors = value);
-        on("use_9px_font", (event, value) => this.use_9px_font = value);
+        on("ice_colors", (event, value) => (this.ice_colors = value));
+        on("use_9px_font", (event, value) => (this.use_9px_font = value));
         on("load_custom_font", (event) => this.load_custom_font());
         on("import_font", (event) => this.import_font());
-        on("change_font", (event, font_name) => this.font_name = font_name);
-        on("change_palette", (event, lospec_palette_name) => this.lospec_palette_name = lospec_palette_name);
-        on("get_sauce_info", (event) => send_sync("get_sauce_info", { title: doc.title, author: doc.author, group: doc.group, comments: doc.comments }));
-        on("get_canvas_size", (event) => send_sync("get_canvas_size", { columns: doc.columns, rows: doc.rows }));
+        on("change_font", (event, font_name) => (this.font_name = font_name));
+        on(
+            "change_palette",
+            (event, lospec_palette_name) => (this.lospec_palette_name = lospec_palette_name)
+        );
+        on("get_sauce_info", (event) =>
+            send_sync("get_sauce_info", {
+                title: doc.title,
+                author: doc.author,
+                group: doc.group,
+                comments: doc.comments,
+            })
+        );
+        on("get_canvas_size", (event) =>
+            send_sync("get_canvas_size", {
+                columns: doc.columns,
+                rows: doc.rows,
+            })
+        );
         on("set_canvas_size", (event, { columns, rows }) => this.resize(columns, rows));
-        on("set_sauce_info", (event, { title, author, group, comments }) => this.set_sauce(title, author, group, comments));
-        on("mirror_mode", (event, value) => this.mirror_mode = value);
+        on("set_sauce_info", (event, { title, author, group, comments }) =>
+            this.set_sauce(title, author, group, comments)
+        );
+        on("mirror_mode", (event, value) => (this.mirror_mode = value));
     }
 }
 

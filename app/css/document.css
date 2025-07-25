@@ -81,10 +81,12 @@ body.dark .tool.selected {
 #reference_mode {
     background-image: url("../img/reference.png");
 }
-#sidebar, #toolbar {
+#sidebar,
+#toolbar {
     background-color: var(--mid-color);
 }
-body.dark #sidebar, body.dark #toolbar {
+body.dark #sidebar,
+body.dark #toolbar {
     background-color: var(--dark-mid-color);
 }
 #current_colors {
@@ -151,18 +153,20 @@ body.dark #current_colors > canvas {
     background-image: url("../img/selected_bg.png");
 }
 #swatches div.selected_fg.selected_bg {
-    background-image: url("../img/selected_fg.png"), url("../img/selected_bg.png");;
+    background-image: url("../img/selected_fg.png"), url("../img/selected_bg.png");
 }
 #viewport {
     float: left;
-    width: calc(100% - var(--sidebar-width) -  var(--preview-width) - var(--charlist-width) - 1px);
+    width: calc(100% - var(--sidebar-width) - var(--preview-width) - var(--charlist-width) - 1px);
     height: calc(100% - var(--toolbar-height) - var(--statusbar-height) - 1px);
     border-top: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
     background-color: var(--view-color);
     overflow: auto;
     touch-action: none;
-    cursor: -webkit-image-set(url("../img/crosshair.png") 1x, url("../img/crosshair_2x.png") 2x) 15 15, crosshair;
+    cursor:
+        -webkit-image-set(url("../img/crosshair.png") 1x, url("../img/crosshair_2x.png") 2x) 15 15,
+        crosshair;
 }
 #viewport.reference-tool {
     cursor: grab;
@@ -196,7 +200,12 @@ body.dark #viewport {
 }
 
 @keyframes whiteblink {
-    0% {border-color: white;} 50% {opacity: 0;}
+    0% {
+        border-color: white;
+    }
+    50% {
+        opacity: 0;
+    }
 }
 body.dark #charlist {
     background-color: var(--dark-mid-color);
@@ -319,7 +328,12 @@ body.dark #statusbar > div > div {
     animation: blink 0.3s steps(1, end) infinite;
 }
 @keyframes blink {
-    0% {border-color: rgb(170, 170, 170);} 50% {border-color: black;}
+    0% {
+        border-color: rgb(170, 170, 170);
+    }
+    50% {
+        border-color: black;
+    }
 }
 #editing_layer > canvas.selection {
     border: 2px solid;
@@ -390,10 +404,15 @@ body.dark #statusbar > div > div {
     opacity: 0;
 }
 .fade {
-	animation: fade 0.5s ease-out 0.3s both;
+    animation: fade 0.5s ease-out 0.3s both;
 }
 @keyframes fade {
-    0% {opacity: 0.7;} 100% {opacity: 0;}
+    0% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 .ghosted {
     opacity: 0.3;

@@ -1,12 +1,15 @@
 const electron = require("electron");
-const {rgb_to_hex} = require("../libtextmode/palette");
-const {on} = require("../senders");
+const { rgb_to_hex } = require("../libtextmode/palette");
+const { on } = require("../senders");
 let fg = 0;
 let bg = 0;
 let palette = [];
 
 function send(channel, opts) {
-    electron.ipcRenderer.send(channel, {id: electron.remote.getCurrentWindow().getParentWindow().id, ...opts});
+    electron.ipcRenderer.send(channel, {
+        id: electron.remote.getCurrentWindow().getParentWindow().id,
+        ...opts,
+    });
 }
 
 function send_parent(channel, opts) {
@@ -42,35 +45,43 @@ function update_canvas() {
 }
 
 function previous_foreground_color() {
-    fg = (fg == 0) ? 15 : fg - 1;
+    fg = fg == 0 ? 15 : fg - 1;
     send_parent("set_fg", fg);
     update_canvas();
 }
 
 function next_foreground_color() {
-    fg = (fg == 15) ? 0 : fg + 1;
+    fg = fg == 15 ? 0 : fg + 1;
     send_parent("set_fg", fg);
     update_canvas();
 }
 
 function previous_background_color() {
-    bg = (bg == 0) ? 15 : bg - 1;
+    bg = bg == 0 ? 15 : bg - 1;
     send_parent("set_bg", bg);
     update_canvas();
 }
 
 function next_background_color() {
-    bg = (bg == 15) ? 0 : bg + 1;
+    bg = bg == 15 ? 0 : bg + 1;
     send_parent("set_bg", bg);
     update_canvas();
 }
 
 function key_down(event) {
     switch (event.code) {
-        case "ArrowUp": previous_foreground_color(); break;
-        case "ArrowDown": next_foreground_color(); break;
-        case "ArrowLeft": previous_background_color(); break;
-        case "ArrowRight": next_background_color(); break;
+        case "ArrowUp":
+            previous_foreground_color();
+            break;
+        case "ArrowDown":
+            next_foreground_color();
+            break;
+        case "ArrowLeft":
+            previous_background_color();
+            break;
+        case "ArrowRight":
+            next_background_color();
+            break;
         case "Escape":
         case "Enter":
         case "NumpadEnter":
@@ -102,13 +113,17 @@ function mouse_down(event) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    document.addEventListener("keydown", key_down, true);
-    document.addEventListener("mousedown", mouse_down, true);
-}, true);
+document.addEventListener(
+    "DOMContentLoaded",
+    (event) => {
+        document.addEventListener("keydown", key_down, true);
+        document.addEventListener("mousedown", mouse_down, true);
+    },
+    true
+);
 
 electron.ipcRenderer.on("select_attribute", (event, opts) => {
-    ({fg, bg, palette} = opts);
+    ({ fg, bg, palette } = opts);
     update_canvas();
 });
 

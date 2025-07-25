@@ -1,29 +1,61 @@
-<!DOCTYPE html>
-<html lang = "en">
-<head>
-    <meta charset = "UTF-8">
-    <title>Edit SAUCE Info</title>
-    <link rel = "stylesheet" href = "../css/global.css">
-    <link rel = "stylesheet" href = "../css/requester.css">
-    <script src = "../modals/sauce.js"></script>
-</head>
-<body class = "dark">
-    <div id = "sauce_requester">
-        <form>
-            <label for = "title">Title:</label>
-            <input id = "title" type = "text" name = "title" value = "" autocomplete = "off" maxlength = "35" autofocus spellcheck = "false">
-            <label for = "author">Author:</label>
-            <input id = "author" type = "text" name = "author" value = "" autocomplete = "off" maxlength = "20" spellcheck = "false">
-            <label for = "group">Group:</label>
-            <input id = "group" type = "text" name = "group" value = "" autocomplete = "off" maxlength = "20" spellcheck = "false">
-            <p>Comments:</p>
-            <textarea id = "comments" rows = "256" cols = "64" autocomplete = "off" spellcheck = "false" wrap="hard"></textarea>
-            <p class = "note"><span id = "number_of_bytes">0</span>/16320 bytes</p>
-        </form>
-        <div id = "button_container">
-            <button id = "cancel" type = "button">Cancel</button>
-            <button id = "ok" class = "default" type = "button">Update</button>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Edit SAUCE Info</title>
+        <link rel="stylesheet" href="../css/global.css" />
+        <link rel="stylesheet" href="../css/requester.css" />
+        <script src="../modals/sauce.js"></script>
+    </head>
+    <body class="dark">
+        <div id="sauce_requester">
+            <form>
+                <label for="title">Title:</label>
+                <input
+                    id="title"
+                    type="text"
+                    name="title"
+                    value=""
+                    autocomplete="off"
+                    maxlength="35"
+                    autofocus
+                    spellcheck="false"
+                />
+                <label for="author">Author:</label>
+                <input
+                    id="author"
+                    type="text"
+                    name="author"
+                    value=""
+                    autocomplete="off"
+                    maxlength="20"
+                    spellcheck="false"
+                />
+                <label for="group">Group:</label>
+                <input
+                    id="group"
+                    type="text"
+                    name="group"
+                    value=""
+                    autocomplete="off"
+                    maxlength="20"
+                    spellcheck="false"
+                />
+                <p>Comments:</p>
+                <textarea
+                    id="comments"
+                    rows="256"
+                    cols="64"
+                    autocomplete="off"
+                    spellcheck="false"
+                    wrap="hard"
+                ></textarea>
+                <p class="note"><span id="number_of_bytes">0</span>/16320 bytes</p>
+            </form>
+            <div id="button_container">
+                <button id="cancel" type="button">Cancel</button>
+                <button id="ok" class="default" type="button">Update</button>
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>

@@ -1,12 +1,11 @@
 const events = require("events");
-const {on} = require("../../senders");
-const darwin = (process.platform == "darwin");
+const { on } = require("../../senders");
+const darwin = process.platform == "darwin";
 const doc = require("../doc");
 const libtextmode = require("../../libtextmode/libtextmode");
 let use_shift = true;
 
 class KeyboardEvent extends events.EventEmitter {
-
     ctrl_key(event) {
         switch (event.code) {
             case "Digit0":
@@ -35,28 +34,34 @@ class KeyboardEvent extends events.EventEmitter {
                 return;
         }
         switch (event.key) {
-            case "c": case "C":
+            case "c":
+            case "C":
                 this.emit("copy");
                 return;
-            case "v": case "V":
+            case "v":
+            case "V":
                 this.emit("paste");
                 return;
-            case "x": case "X":
+            case "x":
+            case "X":
                 this.emit("cut");
                 return;
-            case "z": case "Z":
+            case "z":
+            case "Z":
                 if (!darwin) {
                     doc.undo();
                     event.preventDefault();
                 }
                 return;
-            case "y": case "Y":
+            case "y":
+            case "Y":
                 if (!darwin) {
                     doc.redo();
                     event.preventDefault();
                 }
                 return;
-            case "a": case "A":
+            case "a":
+            case "A":
                 if (!darwin) {
                     this.emit("select_all");
                     event.preventDefault();
@@ -145,8 +150,7 @@ class KeyboardEvent extends events.EventEmitter {
                     event.preventDefault();
                 }
                 return;
-            }
-            
+        }
     }
 
     meta_key(event) {
@@ -344,16 +348,20 @@ class KeyboardEvent extends events.EventEmitter {
         this.use_numpad = false;
         this.insert_mode = false;
         this.overwrite_mode = false;
-        on("use_numpad", (event, value) => this.use_numpad = value);
-        on("insert_mode", (event, value) => this.insert_mode = value);
-        on("overwrite_mode", (event, value) => this.overwrite_mode = value);
+        on("use_numpad", (event, value) => (this.use_numpad = value));
+        on("insert_mode", (event, value) => (this.insert_mode = value));
+        on("overwrite_mode", (event, value) => (this.overwrite_mode = value));
         on("f_key", (event, value) => this.emit("f_key", value));
-        document.addEventListener("DOMContentLoaded", () => {
-            document.body.addEventListener("keydown", (event) => this.keydown(event), true);
-        }, true);
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+                document.body.addEventListener("keydown", (event) => this.keydown(event), true);
+            },
+            true
+        );
     }
 }
 
-on("use_shift", (event, value) => use_shift = value);
+on("use_shift", (event, value) => (use_shift = value));
 
 module.exports = new KeyboardEvent();

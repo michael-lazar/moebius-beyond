@@ -1,4 +1,4 @@
-const {rgb_to_css} = require("../../libtextmode/palette");
+const { rgb_to_css } = require("../../libtextmode/palette");
 
 class Overlay {
     constructor(border = false) {
@@ -46,4 +46,4 @@ class Overlay {
     }
 }
 
-module.exports = {Overlay};
+module.exports = { Overlay };

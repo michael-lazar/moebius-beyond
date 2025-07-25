@@ -1,7 +1,10 @@
 const electron = require("electron");
 
 function send(channel, opts) {
-    electron.ipcRenderer.send(channel, {id: electron.remote.getCurrentWindow().getParentWindow().id, ...opts});
+    electron.ipcRenderer.send(channel, {
+        id: electron.remote.getCurrentWindow().getParentWindow().id,
+        ...opts,
+    });
 }
 
 function send_parent(channel, opts) {
@@ -24,8 +27,12 @@ function ok() {
     const group = fill_string(document.getElementById("group").value, 20);
     const comments_value = document.getElementById("comments").value;
     const comments_value_length = Buffer.from(comments_value, "utf-8").length;
-    const comments = fill_string(comments_value, Math.min(Math.ceil(comments_value_length / 64) * 64, 64 * 255));
-    if (title != undefined && author != undefined && group != undefined && comments != undefined) send_parent("set_sauce_info", {title, author, group, comments});
+    const comments = fill_string(
+        comments_value,
+        Math.min(Math.ceil(comments_value_length / 64) * 64, 64 * 255)
+    );
+    if (title != undefined && author != undefined && group != undefined && comments != undefined)
+        send_parent("set_sauce_info", { title, author, group, comments });
 }
 
 function cancel() {
@@ -66,32 +73,54 @@ function comments_input(event) {
     } else {
         if (!comments.classList.contains("illegal")) comments.classList.add("illegal");
     }
-    document.getElementById("number_of_bytes").innerText = Buffer.from(comments.value, "utf-8").length;
+    document.getElementById("number_of_bytes").innerText = Buffer.from(
+        comments.value,
+        "utf-8"
+    ).length;
 }
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    document.getElementById("ok").addEventListener("click", event => ok(), true);
-    document.getElementById("cancel").addEventListener("click", event => cancel(), true);
-    document.getElementById("title").addEventListener("input", event => title_input(event), true);
-    document.getElementById("author").addEventListener("input", event => author_input(event), true);
-    document.getElementById("group").addEventListener("input", event => group_input(event), true);
-    document.getElementById("comments").addEventListener("input", event => comments_input(event), true);
-}, true);
+document.addEventListener(
+    "DOMContentLoaded",
+    (event) => {
+        document.getElementById("ok").addEventListener("click", (event) => ok(), true);
+        document.getElementById("cancel").addEventListener("click", (event) => cancel(), true);
+        document
+            .getElementById("title")
+            .addEventListener("input", (event) => title_input(event), true);
+        document
+            .getElementById("author")
+            .addEventListener("input", (event) => author_input(event), true);
+        document
+            .getElementById("group")
+            .addEventListener("input", (event) => group_input(event), true);
+        document
+            .getElementById("comments")
+            .addEventListener("input", (event) => comments_input(event), true);
+    },
+    true
+);
 
-document.addEventListener("keydown", (event) => {
-    const comments = document.getElementById("comments");
-    if ((event.code == "Enter" && event.metaKey) || (event.code == "Enter" && document.activeElement != comments)) {
-        ok();
-    } else if (event.code == "Escape") {
-        cancel();
-    }
-}, true);
+document.addEventListener(
+    "keydown",
+    (event) => {
+        const comments = document.getElementById("comments");
+        if (
+            (event.code == "Enter" && event.metaKey) ||
+            (event.code == "Enter" && document.activeElement != comments)
+        ) {
+            ok();
+        } else if (event.code == "Escape") {
+            cancel();
+        }
+    },
+    true
+);
 
 function strip_trailing_spaces(text) {
-    return text.replace(/[ \u0000]+$/, "");
+    return text.replace(/[ \u0000]+$/, ""); // eslint-disable-line no-control-regex
 }
 
-electron.ipcRenderer.on("set_sauce_info", (event, {title, author, group, comments}) => {
+electron.ipcRenderer.on("set_sauce_info", (event, { title, author, group, comments }) => {
     document.getElementById("title").value = strip_trailing_spaces(title);
     document.getElementById("author").value = strip_trailing_spaces(author);
     document.getElementById("group").value = strip_trailing_spaces(group);
