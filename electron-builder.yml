@@ -6,6 +6,12 @@ appId: org.michaellazar.moebiusxbinultimate
 productName: MoebiusXBINUltimate
 copyright: Copyright © 2020 Andy Herbert, Copyright Michael Lazar
 
+files:
+    - "**/*"
+    - "!release/**/*"
+    - "!notes/**/*"
+    - "!tools/**/*"
+
 extraResources:
     - from: build/ans
       to: ans
