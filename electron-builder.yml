@@ -50,8 +50,8 @@ mac:
     artifactName: MoebiusXBINUltimate.dmg
     category: public.app-category.graphics-design
     target:
-      - target: dmg
-        arch: universal
+        - target: dmg
+          arch: universal
     darkModeSupport: true
 
 win:
@@ -73,4 +73,4 @@ linux:
     description: MoebiusXBINUltimate is an ANSI and ASCII Editor for Linux, MacOS, and Windows.
     category: Graphics
 
-electronVersion: 12.0.2
+electronVersion: 13.6.9
