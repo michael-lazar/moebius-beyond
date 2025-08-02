@@ -1,5 +1,6 @@
 const libtextmode = require("../libtextmode/libtextmode");
-const dev = require("electron-is-dev");
+const electron = require("electron");
+const dev = !electron.app || !electron.app.isPackaged;
 const ans_path = dev ? "./build/ans/" : `${process.resourcesPath}/ans/`;
 
 document.addEventListener("DOMContentLoaded", () => {
