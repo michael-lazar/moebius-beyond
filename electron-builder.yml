@@ -1,9 +1,11 @@
 directories:
     output: dist
     buildResources: build
+
 appId: org.michaellazar.moebiusxbinultimate
 productName: MoebiusXBINUltimate
 copyright: Copyright © 2020 Andy Herbert, Copyright Michael Lazar
+
 extraResources:
     - from: build/ans
       to: ans
@@ -11,6 +13,7 @@ extraResources:
     - from: build/png
       to: png
       filter: "*.png"
+
 fileAssociations:
     - ext: .ans
       name: ANSI Art
@@ -36,11 +39,15 @@ fileAssociations:
       name: ASCII Art
       role: Editor
       icon: document_icon.icns
+
 mac:
     artifactName: MoebiusXBINUltimate.dmg
     category: public.app-category.graphics-design
-    target: dmg
+    target:
+      - target: dmg
+        arch: universal
     darkModeSupport: true
+
 win:
     artifactName: MoebiusXBINUltimate.Setup.exe
     target:
@@ -48,8 +55,10 @@ win:
           arch: [x64]
         - target: portable
           arch: [x64]
+
 portable:
     artifactName: MoebiusXBINUltimate.exe
+
 linux:
     artifactName: MoebiusXBINUltimate.${ext}
     target:
