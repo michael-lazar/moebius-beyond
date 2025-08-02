@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("click", (event) => electron.ipcRenderer.send("open"));
     preferences.addEventListener("click", (event) => electron.ipcRenderer.send("preferences"));
     libtextmode.animate({
-        file: `${ans_path}gj-moebiusX.xb`,
+        file: `${ans_path}mozz-moebiusX.xb`,
         ctx: document.getElementById("splash_terminal").getContext("2d"),
     });
 });

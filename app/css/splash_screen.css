@@ -6,7 +6,7 @@ body {
 body div:first-child {
     margin: 0px auto;
     width: 640px;
-    height: 496px;
+    height: 396px;
     -webkit-app-region: drag;
 }
 
