@@ -6,7 +6,7 @@
 
 - The project is now packaged and installed as "MoebiusXBINUltimate",
   to distinguish it from the original MoebiusXBIN and to allow
-  installing both forks side-by-side. 
+  installing both forks side-by-side.
 
 # v3.2.1 (2025-07-23)
 
