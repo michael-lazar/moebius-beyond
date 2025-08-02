@@ -1,10 +1,11 @@
 const electron = require("electron");
+const remote = require("@electron/remote");
 var save_method = "";
 var save_destroy_when_done = false;
 
 function send(channel, opts) {
     electron.ipcRenderer.send(channel, {
-        id: electron.remote.getCurrentWindow().id,
+        id: remote.getCurrentWindow().id,
         ...opts,
     });
 }
@@ -13,16 +14,16 @@ function ok() {
     let method = save_method;
     let destroy_when_done = save_destroy_when_done;
     let ignore_controlcharacters = true;
-    electron.remote.getCurrentWindow().getParentWindow().send("process_save", {
+    remote.getCurrentWindow().getParentWindow().send("process_save", {
         method,
         destroy_when_done,
         ignore_controlcharacters,
     });
-    electron.remote.getCurrentWindow().close();
+    remote.getCurrentWindow().close();
 }
 
 function cancel() {
-    electron.remote.getCurrentWindow().close();
+    remote.getCurrentWindow().close();
 }
 
 document.addEventListener(

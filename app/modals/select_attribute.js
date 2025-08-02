@@ -1,4 +1,5 @@
 const electron = require("electron");
+const remote = require("@electron/remote");
 const { rgb_to_hex } = require("../libtextmode/palette");
 const { on } = require("../senders");
 let fg = 0;
@@ -7,13 +8,13 @@ let palette = [];
 
 function send(channel, opts) {
     electron.ipcRenderer.send(channel, {
-        id: electron.remote.getCurrentWindow().getParentWindow().id,
+        id: remote.getCurrentWindow().getParentWindow().id,
         ...opts,
     });
 }
 
 function send_parent(channel, opts) {
-    electron.remote.getCurrentWindow().getParentWindow().send(channel, opts);
+    remote.getCurrentWindow().getParentWindow().send(channel, opts);
 }
 
 function update_canvas() {
