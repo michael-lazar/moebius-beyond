@@ -1,9 +1,9 @@
 directories:
     output: dist
     buildResources: build
-appId: org.michaellazar.moebius
+appId: org.michaellazar.moebiusxbinultimate
 productName: MoebiusXBINUltimate
-copyright: Copyright © 2020 Andy Herbert, Copyright © Michael Lazar
+copyright: Copyright © 2020 Andy Herbert, Copyright Michael Lazar
 extraResources:
     - from: build/ans
       to: ans
@@ -45,9 +45,9 @@ win:
     artifactName: MoebiusXBINUltimate.Setup.exe
     target:
         - target: nsis
-          arch: [x64, ia32]
+          arch: [x64]
         - target: portable
-          arch: [x64, ia32]
+          arch: [x64]
 portable:
     artifactName: MoebiusXBINUltimate.exe
 linux:
