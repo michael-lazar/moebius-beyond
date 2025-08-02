@@ -224,7 +224,7 @@ menu.on("open_reference_window", open_reference_window);
 async function show_splash_screen() {
     splash_screen = await window.static(
         "app/html/splash_screen.html",
-        { width: 720, height: 600, ...frameless },
+        { width: 720, height: 500, ...frameless },
         touchbar.splash_screen,
         { preferences, new_document, open }
     );
