@@ -246,21 +246,20 @@ function get_sauce(bytes) {
 }
 
 class Textmode {
-    constructor(bytes, options = null) {
-        const sauce = options || get_sauce(bytes);
-        this.columns = sauce.columns;
-        this.rows = sauce.rows;
-        this.title = sauce.title;
-        this.author = sauce.author;
-        this.group = sauce.group;
-        this.date = sauce.date;
-        this.filesize = sauce.filesize;
-        this.ice_colors = sauce.ice_colors;
-        this.use_9px_font = sauce.use_9px_font;
-        this.font_name = sauce.font_name;
-        this.comments = sauce.comments;
-        this.bytes = bytes ? bytes.subarray(0, this.filesize) : [];
-        this.palette = sauce.palette || [];
+    constructor(options = {}) {
+        this.columns = options.columns;
+        this.rows = options.rows;
+        this.title = options.title || "";
+        this.author = options.author || "";
+        this.group = options.group || "";
+        this.date = options.date;
+        this.filesize = options.filesize || 0;
+        this.ice_colors = options.ice_colors || false;
+        this.use_9px_font = options.use_9px_font || false;
+        this.font_name = options.font_name || "Default";
+        this.comments = options.comments || "";
+        this.data = options.data || [];
+        this.palette = options.palette || [];
     }
 
     get palette() {
@@ -328,6 +327,7 @@ module.exports = {
     bytes_to_blocks,
     bytes_to_utf8,
     current_date,
+    get_sauce,
     Textmode,
     add_sauce_for_ans,
     add_sauce_for_bin,

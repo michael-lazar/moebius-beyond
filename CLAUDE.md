@@ -10,3 +10,5 @@
 - When changes involve ICP messages, carefully consider the interaction between the main process and the renderer process.
 - Add comments when it makes sense to do so, but do not comment trivial behavior.
 - PRs should always be made against origin/main and never the upstream repo.
+- Do not run test builds (npm run build-mac) unless explicitly instructed to do so.
+- When committing changes, the commit message should be a single sentance.

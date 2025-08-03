@@ -2,20 +2,38 @@ const { palette_4bit } = require("./palette");
 const { bytes_to_blocks, Textmode, add_sauce_for_bin } = require("./textmode");
 const { send } = require("../senders");
 
-class BinaryText extends Textmode {
-    constructor(bytes) {
-        super(bytes);
-        if (this.columns == undefined) {
-            this.columns = 80;
-        }
-        this.rows = Math.ceil(this.filesize / this.columns / 2);
-        this.palette = [...palette_4bit];
-        this.data = bytes_to_blocks({
-            columns: this.columns,
-            rows: this.rows,
-            bytes: this.bytes.subarray(0, this.filesize),
-        });
+function fromBinaryText(bytes) {
+    const { get_sauce } = require("./textmode");
+    const sauce = get_sauce(bytes);
+    const fileBytes = bytes.subarray(0, sauce.filesize);
+    
+    let columns = sauce.columns;
+    if (columns == undefined) {
+        columns = 80;
     }
+    const rows = Math.ceil(sauce.filesize / columns / 2);
+    const palette = [...palette_4bit];
+    const data = bytes_to_blocks({
+        columns: columns,
+        rows: rows,
+        bytes: fileBytes,
+    });
+    
+    return new Textmode({
+        columns,
+        rows,
+        title: sauce.title,
+        author: sauce.author,
+        group: sauce.group,
+        date: sauce.date,
+        filesize: sauce.filesize,
+        ice_colors: sauce.ice_colors,
+        use_9px_font: sauce.use_9px_font,
+        font_name: sauce.font_name,
+        comments: sauce.comments,
+        data,
+        palette
+    });
 }
 
 function encode_as_bin(doc, save_without_sauce, allow_odd_columns = false) {
@@ -39,4 +57,4 @@ function encode_as_bin(doc, save_without_sauce, allow_odd_columns = false) {
     return bytes;
 }
 
-module.exports = { BinaryText, encode_as_bin };
+module.exports = { fromBinaryText, encode_as_bin };

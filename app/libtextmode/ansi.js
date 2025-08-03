@@ -362,143 +362,159 @@ const sgr_types = {
 };
 const true_color_type = { BACKGROUND: 0, FOREGROUND: 1 };
 
-class Ansi extends Textmode {
-    constructor(bytes) {
-        super(bytes);
-        this.palette = [...palette_4bit];
-        const tokens = tokenize_file({
-            bytes: this.bytes,
-            filesize: this.filesize,
-        });
-        if (!this.columns) this.columns = 80;
-        let screen = new Screen(this.columns);
-        for (const token of tokens) {
-            if (token.type == token_type.LITERAL) {
-                const code = token.code;
-                switch (code) {
-                    case ascii.NEW_LINE:
-                        screen.new_line();
-                        break;
-                    case ascii.CARRIAGE_RETURN:
-                        break;
-                    default:
-                        screen.literal(code);
-                        break;
-                }
-            } else if (token.type == token_type.ESCAPE_SEQUENCE) {
-                const sequence = token.sequence;
-                switch (sequence.type) {
-                    case sequence_type.UP:
-                        screen.up(sequence.values[0]);
-                        break;
-                    case sequence_type.DOWN:
-                        screen.down(sequence.values[0]);
-                        break;
-                    case sequence_type.RIGHT:
-                        screen.right(sequence.values[0]);
-                        break;
-                    case sequence_type.LEFT:
-                        screen.left(sequence.values[0]);
-                        break;
-                    case sequence_type.MOVE:
-                        screen.move(sequence.values[1], sequence.values[0]);
-                        break;
-                    case sequence.ERASE_DISPLAY:
-                        // TODO: Implement erase display functionality
-                        // switch (sequence.values[0]) {
-                        //     case erase_display_types.UNTIL_END_OF_SCREEN: screen.clear_until_end_of_screen(); break;
-                        //     case erase_display_types.FROM_START_OF_SCREEN: screen.clear_from_start_of_screen(); break;
-                        //     case erase_display_types.CLEAR_SCREEN: screen.clear(); break;
-                        // }
-                        break;
-                    case sequence_type.ERASE_LINE:
-                        // TODO: Implement erase line functionality
-                        // switch (sequence.values[0]) {
-                        //     case erase_line_types.UNTIL_END_OF_LINE: screen.clear_until_end_of_line(); break;
-                        //     case erase_line_types.FROM_START_OF_LINE: screen.clear_from_start_of_line(); break;
-                        //     case erase_line_types.CLEAR_LINE: screen.clear_line(); break;
-                        // }
-                        break;
-                    case sequence_type.SGR:
-                        for (const value of sequence.values) {
-                            if (
-                                value >= sgr_types.CHANGE_FG_START &&
-                                value <= sgr_types.CHANGE_FG_END
-                            ) {
-                                screen.fg = value - sgr_types.CHANGE_FG_START;
-                            } else if (
-                                value >= sgr_types.CHANGE_BG_START &&
-                                value <= sgr_types.CHANGE_BG_END
-                            ) {
-                                screen.bg = value - sgr_types.CHANGE_BG_START;
-                            } else {
-                                switch (value) {
-                                    case sgr_types.RESET_ATTRIBUTES:
-                                        screen.reset_attributes();
-                                        break;
-                                    case sgr_types.BOLD_ON:
-                                        screen.bold = true;
-                                        break;
-                                    case sgr_types.BLINK_ON:
-                                        screen.blink = true;
-                                        break;
-                                    case sgr_types.INVERSE_ON:
-                                        screen.inverse = true;
-                                        break;
-                                    case sgr_types.BOLD_OFF:
-                                    case sgr_types.BLINK_OFF_ALT:
-                                        screen.bold = false;
-                                        break;
-                                    case sgr_types.BLINK_OFF:
-                                        screen.blink = false;
-                                        break;
-                                    case sgr_types.INVERSE_OFF:
-                                        screen.inverse = false;
-                                        break;
-                                }
-                            }
-                        }
-                        break;
-                    case sequence_type.SAVE_POS:
-                        screen.save_pos();
-                        break;
-                    case sequence_type.TRUE_COLOR:
-                        if (sequence.values.length >= 4) {
-                            const index = this.resolve_palette({
-                                r: sequence.values[1],
-                                g: sequence.values[2],
-                                b: sequence.values[3],
-                            });
-                            switch (sequence.values[0]) {
-                                case true_color_type.BACKGROUND:
-                                    screen.bg = index;
+function fromAnsi(bytes) {
+    const { get_sauce } = require("./textmode");
+    const sauce = get_sauce(bytes);
+    const fileBytes = bytes.subarray(0, sauce.filesize);
+    
+    const instance = new Textmode({
+        columns: sauce.columns,
+        rows: sauce.rows,
+        title: sauce.title,
+        author: sauce.author,
+        group: sauce.group,
+        date: sauce.date,
+        filesize: sauce.filesize,
+        ice_colors: sauce.ice_colors,
+        use_9px_font: sauce.use_9px_font,
+        font_name: sauce.font_name,
+        comments: sauce.comments,
+        palette: [...palette_4bit]
+    });
+    
+    const tokens = tokenize_file({
+        bytes: fileBytes,
+        filesize: sauce.filesize,
+    });
+    if (!instance.columns) instance.columns = 80;
+    let screen = new Screen(instance.columns);
+    for (const token of tokens) {
+        if (token.type == token_type.LITERAL) {
+            const code = token.code;
+            switch (code) {
+                case ascii.NEW_LINE:
+                    screen.new_line();
+                    break;
+                case ascii.CARRIAGE_RETURN:
+                    break;
+                default:
+                    screen.literal(code);
+                    break;
+            }
+        } else if (token.type == token_type.ESCAPE_SEQUENCE) {
+            const sequence = token.sequence;
+            switch (sequence.type) {
+                case sequence_type.UP:
+                    screen.up(sequence.values[0]);
+                    break;
+                case sequence_type.DOWN:
+                    screen.down(sequence.values[0]);
+                    break;
+                case sequence_type.RIGHT:
+                    screen.right(sequence.values[0]);
+                    break;
+                case sequence_type.LEFT:
+                    screen.left(sequence.values[0]);
+                    break;
+                case sequence_type.MOVE:
+                    screen.move(sequence.values[1], sequence.values[0]);
+                    break;
+                case sequence.ERASE_DISPLAY:
+                    // TODO: Implement erase display functionality
+                    // switch (sequence.values[0]) {
+                    //     case erase_display_types.UNTIL_END_OF_SCREEN: screen.clear_until_end_of_screen(); break;
+                    //     case erase_display_types.FROM_START_OF_SCREEN: screen.clear_from_start_of_screen(); break;
+                    //     case erase_display_types.CLEAR_SCREEN: screen.clear(); break;
+                    // }
+                    break;
+                case sequence_type.ERASE_LINE:
+                    // TODO: Implement erase line functionality
+                    // switch (sequence.values[0]) {
+                    //     case erase_line_types.UNTIL_END_OF_LINE: screen.clear_until_end_of_line(); break;
+                    //     case erase_line_types.FROM_START_OF_LINE: screen.clear_from_start_of_line(); break;
+                    //     case erase_line_types.CLEAR_LINE: screen.clear_line(); break;
+                    // }
+                    break;
+                case sequence_type.SGR:
+                    for (const value of sequence.values) {
+                        if (
+                            value >= sgr_types.CHANGE_FG_START &&
+                            value <= sgr_types.CHANGE_FG_END
+                        ) {
+                            screen.fg = value - sgr_types.CHANGE_FG_START;
+                        } else if (
+                            value >= sgr_types.CHANGE_BG_START &&
+                            value <= sgr_types.CHANGE_BG_END
+                        ) {
+                            screen.bg = value - sgr_types.CHANGE_BG_START;
+                        } else {
+                            switch (value) {
+                                case sgr_types.RESET_ATTRIBUTES:
+                                    screen.reset_attributes();
                                     break;
-                                case true_color_type.FOREGROUND:
-                                    screen.fg = index;
+                                case sgr_types.BOLD_ON:
+                                    screen.bold = true;
+                                    break;
+                                case sgr_types.BLINK_ON:
+                                    screen.blink = true;
+                                    break;
+                                case sgr_types.INVERSE_ON:
+                                    screen.inverse = true;
+                                    break;
+                                case sgr_types.BOLD_OFF:
+                                case sgr_types.BLINK_OFF_ALT:
+                                    screen.bold = false;
+                                    break;
+                                case sgr_types.BLINK_OFF:
+                                    screen.blink = false;
+                                    break;
+                                case sgr_types.INVERSE_OFF:
+                                    screen.inverse = false;
                                     break;
                             }
                         }
-                        break;
-                    case sequence_type.RESTORE_POS:
-                        screen.restore_pos();
-                        break;
-                    case sequence_type.UNKNOWN:
-                        break;
-                }
+                    }
+                    break;
+                case sequence_type.SAVE_POS:
+                    screen.save_pos();
+                    break;
+                case sequence_type.TRUE_COLOR:
+                    if (sequence.values.length >= 4) {
+                        const index = instance.resolve_palette({
+                            r: sequence.values[1],
+                            g: sequence.values[2],
+                            b: sequence.values[3],
+                        });
+                        switch (sequence.values[0]) {
+                            case true_color_type.BACKGROUND:
+                                screen.bg = index;
+                                break;
+                            case true_color_type.FOREGROUND:
+                                screen.fg = index;
+                                break;
+                        }
+                    }
+                    break;
+                case sequence_type.RESTORE_POS:
+                    screen.restore_pos();
+                    break;
+                case sequence_type.UNKNOWN:
+                    break;
             }
         }
-
-        if (!this.rows) {
-            this.rows = screen.rows;
-        } else if (this.rows > screen.rows) {
-            screen.fill(this.rows - screen.rows);
-            screen.rows = this.rows;
-        } else if (this.rows < screen.rows) {
-            screen.rows = this.rows;
-        }
-
-        this.data = screen.trim_data();
     }
+
+    if (!instance.rows) {
+        instance.rows = screen.rows;
+    } else if (instance.rows > screen.rows) {
+        screen.fill(instance.rows - screen.rows);
+        screen.rows = instance.rows;
+    } else if (instance.rows < screen.rows) {
+        screen.rows = instance.rows;
+    }
+
+    instance.data = screen.trim_data();
+    return instance;
 }
 
 function bin_to_ansi_colour(bin_colour) {
@@ -692,4 +708,4 @@ function encode_as_utf8ansi(doc, bit_depth) {
     return new Uint8Array(output);
 }
 
-module.exports = { Ansi, encode_as_ansi };
+module.exports = { fromAnsi, encode_as_ansi, tokenize_file, Screen };
