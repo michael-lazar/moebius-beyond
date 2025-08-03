@@ -73,4 +73,4 @@ linux:
     description: MoebiusXBINUltimate is an ANSI and ASCII Editor for Linux, MacOS, and Windows.
     category: Graphics
 
-electronVersion: 14.2.9
+electronVersion: 28.3.3
