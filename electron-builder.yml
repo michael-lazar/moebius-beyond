@@ -11,6 +11,8 @@ files:
     - "!release/**/*"
     - "!notes/**/*"
     - "!tools/**/*"
+    - "!playwright-report/**/*"
+    - "!test-results/**/*"
 
 extraResources:
     - from: build/ans

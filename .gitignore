@@ -8,3 +8,5 @@ Thumbs.db
 moebius.code-workspace
 .idea
 notes/
+playwright-report/
+test-results/
