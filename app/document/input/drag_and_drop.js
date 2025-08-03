@@ -1,4 +1,5 @@
 const path = require("path");
+const { webUtils } = require("electron");
 const { send, msg_box } = require("../../senders");
 const doc = require("../doc");
 const { open_reference_image } = require("../ui/ui");
@@ -54,9 +55,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 buttons: ["Open in New Window", "Replace Current File", "Cancel"],
             });
             if (choice === 0) {
-                send("open_file", { file: file.path });
+                send("open_file", { file: webUtils.getPathForFile(file) });
             } else if (choice === 1) {
-                doc.open(file.path);
+                doc.open(webUtils.getPathForFile(file));
             }
         } else if (reference_extensions.includes(ext)) {
             const choice = msg_box(
@@ -67,14 +68,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 }
             );
             if (choice === 0) {
-                open_reference_image({ file: file.path });
+                open_reference_image({ file: webUtils.getPathForFile(file) });
             }
         } else if (font_extensions.includes(ext)) {
             const choice = msg_box("Load Font", `Load file ${file.name} as the current font.`, {
                 buttons: ["Load Font", "Cancel"],
             });
             if (choice === 0) {
-                doc.load_custom_font({ file: file.path });
+                doc.load_custom_font({ file: webUtils.getPathForFile(file) });
             }
         }
     });
