@@ -296,7 +296,8 @@ function resize_canvas(doc, columns, rows) {
     try {
         const electron = require("electron");
         if (typeof electron == "object") {
-            const win = electron.remote.getCurrentWindow();
+            const remote = require("@electron/remote");
+            const win = remote.getCurrentWindow();
             client = true;
         }
     } catch (err) {

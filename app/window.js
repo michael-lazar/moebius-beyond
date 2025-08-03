@@ -21,6 +21,8 @@ async function new_win(file, options, touchbar, touchbar_opts) {
                 contextIsolation: false,
             },
         });
+        // Enable @electron/remote for this WebContents (required for Electron 14+)
+        require("@electron/remote/main").enable(win.webContents);
         if (touchbar) touchbar(win, touchbar_opts);
         win.on("ready-to-show", (event) => {
             win.show();

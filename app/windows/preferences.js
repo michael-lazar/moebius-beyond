@@ -1,4 +1,5 @@
 const electron = require("electron");
+const remote = require("@electron/remote");
 const { send, open_box } = require("../senders");
 let backup_folder_value;
 
@@ -117,7 +118,7 @@ function choose_folder() {
     const defaultPath =
         backup_folder_value && backup_folder_value != ""
             ? backup_folder_value
-            : electron.remote.app.getPath("documents");
+            : remote.app.getPath("documents");
     const files = open_box({
         defaultPath,
         properties: ["openDirectory", "createDirectory"],
@@ -201,7 +202,7 @@ document.addEventListener(
         document.body.addEventListener(
             "keydown",
             (event) => {
-                if (event.code == "Escape") electron.remote.getCurrentWindow().close();
+                if (event.code == "Escape") remote.getCurrentWindow().close();
             },
             true
         );

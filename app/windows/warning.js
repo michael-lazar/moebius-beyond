@@ -1,7 +1,8 @@
 const electron = require("electron");
+const remote = require("@electron/remote");
 
 function cancel() {
-    electron.remote.getCurrentWindow().close();
+    remote.getCurrentWindow().close();
 }
 
 document.addEventListener(
