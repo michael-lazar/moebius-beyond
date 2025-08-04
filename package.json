@@ -14,8 +14,8 @@
         "build-win": "npx electron-builder -w",
         "build-linux": "npx electron-builder -l",
         "test": "npx playwright test --reporter=list",
-        "lint": "eslint app/ test/",
-        "lint:fix": "eslint app/ test/ --fix",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "format:check": "prettier --check ."
     },

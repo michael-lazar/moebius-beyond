@@ -1,0 +1,15 @@
+repos:
+    - repo: local
+      hooks:
+          - id: eslint
+            name: ESLint
+            entry: npx eslint
+            language: system
+            files: \.(js)$
+            pass_filenames: true
+          - id: prettier
+            name: Prettier
+            entry: npx prettier --check
+            language: system
+            files: \.(js|json|md|yaml|yml)$
+            pass_filenames: true
