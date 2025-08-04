@@ -9,7 +9,7 @@ repos:
             pass_filenames: true
           - id: prettier
             name: Prettier
-            entry: npx prettier --check
+            entry: npx prettier --write
             language: system
             files: \.(js|json|md|yaml|yml)$
             pass_filenames: true
