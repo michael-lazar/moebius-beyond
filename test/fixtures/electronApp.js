@@ -6,7 +6,8 @@ const test = playwright.test.extend({
     // eslint-disable-next-line no-empty-pattern
     electronApp: async ({}, use) => {
         const electronApp = await _electron.launch({
-            args: ["app/moebius.js"],
+            args: ["."],
+            cwd: process.cwd(),
             env: {
                 ...process.env,
                 ELECTRON_DISABLE_SECURITY_WARNINGS: "true",
