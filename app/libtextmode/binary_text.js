@@ -6,7 +6,7 @@ function fromBinaryText(bytes) {
     const { get_sauce } = require("./textmode");
     const sauce = get_sauce(bytes);
     const fileBytes = bytes.subarray(0, sauce.filesize);
-    
+
     let columns = sauce.columns;
     if (columns == undefined) {
         columns = 80;
@@ -18,7 +18,7 @@ function fromBinaryText(bytes) {
         rows: rows,
         bytes: fileBytes,
     });
-    
+
     return new Textmode({
         columns,
         rows,
@@ -32,7 +32,7 @@ function fromBinaryText(bytes) {
         font_name: sauce.font_name,
         comments: sauce.comments,
         data,
-        palette
+        palette,
     });
 }
 

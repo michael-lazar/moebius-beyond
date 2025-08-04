@@ -55,7 +55,7 @@ function fromXBin(bytes) {
     const { get_sauce } = require("./textmode");
     const sauce = get_sauce(bytes);
     const fileBytes = bytes.subarray(0, sauce.filesize);
-    
+
     if ((bytes_to_utf8(fileBytes, 0, 4) != "XBIN") | (fileBytes[4] != 0x1a)) {
         throw "Error whilst attempting to load XBin file: Unexpected header.";
     }
@@ -79,11 +79,7 @@ function fromXBin(bytes) {
         const palette_bytes = fileBytes.subarray(11, 11 + 48);
         palette = new Array(16);
         for (let i = 0, j = 0; i < 16; i++, j += 3) {
-            palette[i] = xbin_to_rgb(
-                palette_bytes[j],
-                palette_bytes[j + 1],
-                palette_bytes[j + 2]
-            );
+            palette[i] = xbin_to_rgb(palette_bytes[j], palette_bytes[j + 1], palette_bytes[j + 2]);
         }
         i += 48;
     } else {
@@ -108,7 +104,7 @@ function fromXBin(bytes) {
             bytes: fileBytes.subarray(i, i + sauce.filesize),
         });
     }
-    
+
     const instance = new Textmode({
         columns,
         rows,
@@ -122,7 +118,7 @@ function fromXBin(bytes) {
         font_name,
         comments: sauce.comments,
         data,
-        palette
+        palette,
     });
     instance.font_height = font_height;
     if (font_bytes) {

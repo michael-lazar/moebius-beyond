@@ -12,6 +12,7 @@ files:
     - "!notes/**/*"
     - "!tools/**/*"
     - "!playwright-report/**/*"
+    - "!test/**/*"
     - "!test-results/**/*"
 
 extraResources:

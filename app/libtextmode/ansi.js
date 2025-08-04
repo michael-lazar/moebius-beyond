@@ -366,7 +366,7 @@ function fromAnsi(bytes) {
     const { get_sauce } = require("./textmode");
     const sauce = get_sauce(bytes);
     const fileBytes = bytes.subarray(0, sauce.filesize);
-    
+
     const instance = new Textmode({
         columns: sauce.columns,
         rows: sauce.rows,
@@ -379,9 +379,9 @@ function fromAnsi(bytes) {
         use_9px_font: sauce.use_9px_font,
         font_name: sauce.font_name,
         comments: sauce.comments,
-        palette: [...palette_4bit]
+        palette: [...palette_4bit],
     });
-    
+
     const tokens = tokenize_file({
         bytes: fileBytes,
         filesize: sauce.filesize,
