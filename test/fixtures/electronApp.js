@@ -7,6 +7,10 @@ const test = playwright.test.extend({
     electronApp: async ({}, use) => {
         const electronApp = await _electron.launch({
             args: ["app/moebius.js"],
+            env: {
+                ...process.env,
+                ELECTRON_DISABLE_SECURITY_WARNINGS: "true",
+            },
         });
         await use(electronApp);
         await electronApp.close();
@@ -14,6 +18,8 @@ const test = playwright.test.extend({
 
     page: async ({ electronApp }, use) => {
         const page = await electronApp.firstWindow();
+        // Direct Electron console to Node terminal.
+        page.on("console", console.log);
         await use(page);
     },
 });
