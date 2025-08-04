@@ -1,8 +1,10 @@
 # Project Context
 
 - This is a legacy electron codebase that has been forked several times and has had maintainers with various levels of javascript / electron experience.
-- There is unit testing with playright.
-- You can add smoke tests when fixing bugs or refactoring, but DO NOT go overboard. Less is more!
+- There is unit testing with playright in the test/ directory.
+- The test/app/ directory file structure should mirror the app/ directory.
+- You can add smoke tests when fixing bugs or refactoring, but DO NOT go overboard.
+- Test at the highest level possible and avoid mocking.
 - There is linting and formatting with eslint and prettier.
 - Manual application testing will be used to verify behavior and fixes.
 - Follow existing project conventions when adding new features.

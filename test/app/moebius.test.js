@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { _electron } = require("playwright");
 
-test("hello world - electron app launches", async () => {
+test("electron app launches", async () => {
     // Launch the Electron app
     const electronApp = await _electron.launch({
         args: ["app/moebius.js"],
