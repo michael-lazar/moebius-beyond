@@ -13,14 +13,20 @@ const test = playwright.test.extend({
                 ELECTRON_DISABLE_SECURITY_WARNINGS: "true",
             },
         });
+
+        // Direct main process console to Node terminal.
+        electronApp.on("console", console.log);
+
         await use(electronApp);
         await electronApp.close();
     },
 
     page: async ({ electronApp }, use) => {
         const page = await electronApp.firstWindow();
-        // Direct Electron console to Node terminal.
+
+        // Direct renderer process console to Node terminal.
         page.on("console", console.log);
+
         await use(page);
     },
 });
