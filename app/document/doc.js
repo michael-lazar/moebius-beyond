@@ -1110,4 +1110,6 @@ class TextModeDoc extends events.EventEmitter {
     }
 }
 
-module.exports = new TextModeDoc();
+const instance = new TextModeDoc();
+module.exports = instance;
+module.exports.TextModeDoc = TextModeDoc;
