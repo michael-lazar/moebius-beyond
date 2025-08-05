@@ -14,10 +14,7 @@ test.describe("Document Loading", () => {
             async ({ filename, testDataDir }) => {
                 try {
                     const path = require("path");
-                    const { TextModeDoc } = require("../document/doc.js");
-
-                    // Create a new TextModeDoc instance for test isolation
-                    const doc = new TextModeDoc();
+                    const doc = require("../document/doc");
 
                     const filePath = path.join(testDataDir, filename);
                     await doc.open(filePath);

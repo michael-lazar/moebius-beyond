@@ -17,7 +17,7 @@ test.describe("UI Reference Image", () => {
             async ({ testFile }) => {
                 try {
                     // Import the ui module and call open_reference_image with our test file
-                    const { open_reference_image } = require("../document/ui/ui.js");
+                    const { open_reference_image } = require("../document/ui/ui");
 
                     // Call the function with our test PNG file
                     open_reference_image({ file: testFile });
