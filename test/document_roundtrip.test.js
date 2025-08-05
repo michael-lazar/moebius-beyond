@@ -18,9 +18,11 @@ test.describe("Document Round Trip Tests", () => {
             async ({ testFile, tempFile }) => {
                 try {
                     console.log("Starting round trip test for:", testFile);
-                    const doc = require("../document/doc.js");
+                    const { TextModeDoc } = require("../document/doc.js");
 
-                    console.log("TextModeDoc singleton loaded:", typeof doc);
+                    // Create a new TextModeDoc instance for test isolation
+                    const doc = new TextModeDoc();
+                    console.log("TextModeDoc instance created:", typeof doc);
 
                     // Open the original file
                     console.log("Opening file:", testFile);
