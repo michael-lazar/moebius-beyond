@@ -419,6 +419,24 @@ class UndoHistory extends events.EventEmitter {
     }
 }
 
+/**
+ * High-level document manager for text-mode art files (ANSI, XBin, etc.)
+ *
+ * Structure:
+ * - this.doc: Textmode instance containing raw document data (columns, rows, character grid, metadata)
+ * - this._render: Rendering context with HTML5 canvases and font rendering engine
+ * - this.undo_history: UndoHistory instance for tracking document changes
+ * - this.mirror_mode: Boolean for symmetric editing mode
+ *
+ * The TextModeDoc acts as a facade around the core Textmode data structure, providing:
+ * - Document editing operations (change_data, fill, erase, etc.)
+ * - Canvas rendering management via libtextmode.render_split()
+ * - Undo/redo functionality
+ * - File I/O operations (open, save, export)
+ * - Event emission for UI updates
+ *
+ * A singleton instance is exported and used throughout the application.
+ */
 class TextModeDoc extends events.EventEmitter {
     async start_rendering() {
         const big_data = this.doc.data.length > 80 * 1000;

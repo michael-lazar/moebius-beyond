@@ -8,7 +8,7 @@ versions of MoebiusXBIN side-by-side.
 
 ### Added
 
-- Added preference to skip the slash screen at startup.
+- Added a preference to skip the slash screen at startup.
 
 ### Changed
 
