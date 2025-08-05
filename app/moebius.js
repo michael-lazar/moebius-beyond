@@ -13,7 +13,7 @@ const darwin = process.platform == "darwin";
 const win32 = process.platform == "win32";
 const linux = process.platform == "linux";
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
-let prevent_splash_screen_at_startup = false;
+let prevent_splash_screen_at_startup = process.argv.includes("--no-splash");
 let splash_screen;
 const { new_win } = require("./window");
 
@@ -480,7 +480,12 @@ electron.app.on("ready", (event) => {
     ) {
         for (let i = 1; i < process.argv.length; i++) open_file(process.argv[i]);
     } else {
-        if (!prevent_splash_screen_at_startup) show_splash_screen();
+        if (!prevent_splash_screen_at_startup) {
+            show_splash_screen();
+        } else {
+            // If skipping splash screen, create a new document
+            new_document();
+        }
     }
     if (darwin) electron.app.dock.setMenu(menu.dock_menu);
 });

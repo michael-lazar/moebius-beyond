@@ -6,7 +6,7 @@ const test = playwright.test.extend({
     // eslint-disable-next-line no-empty-pattern
     electronApp: async ({}, use) => {
         const electronApp = await _electron.launch({
-            args: ["."],
+            args: [".", "--no-splash"],
             cwd: process.cwd(),
             env: {
                 ...process.env,

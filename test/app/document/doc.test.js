@@ -133,12 +133,8 @@ test.describe("Document Class", () => {
         const testFile = path.join(testDataDir, "icon.png");
         expect(fs.existsSync(testFile)).toBe(true);
 
-        // Handle splash screen - click "New" to create a new document
-        await page.waitForSelector("#new_document", { timeout: 10000 });
-        await page.click("#new_document");
-
         // Wait for the document page to be fully loaded
-        await page.waitForSelector("#reference_image", { timeout: 10000 });
+        await page.waitForSelector("#reference_image", { state: "attached", timeout: 10000 });
 
         const result = await page.evaluate(
             async ({ testFile }) => {
