@@ -22,6 +22,11 @@ const test = playwright.test.extend({
     },
 
     page: async ({ electronApp }, use) => {
+        // Wait for the document window to be initialized
+        await electronApp.evaluate(async () => {
+            return global.waitForDocumentWindowInitialization();
+        });
+
         const page = await electronApp.firstWindow();
 
         // Direct renderer process console to Node terminal.

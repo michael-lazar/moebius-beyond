@@ -1,21 +1,38 @@
 const prefs = require("./prefs");
 const electron = require("electron");
 const window = require("./window"); // eslint-disable-line no-redeclare
+const { EventEmitter } = require("events");
+const menu = require("./menu");
+const path = require("path");
+const { new_win } = require("./window");
 
 // Initialize @electron/remote for renderer processes
 require("@electron/remote/main").initialize();
-const menu = require("./menu");
-const path = require("path");
-const docs = {};
-let last_win_pos;
+
 const darwin = process.platform == "darwin";
 const win32 = process.platform == "win32";
 const linux = process.platform == "linux";
+
+const docs = {};
+let last_win_pos;
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
 let prevent_splash_screen_at_startup =
     process.argv.includes("--no-splash") || prefs.get("no_splash");
 let splash_screen;
-const { new_win } = require("./window");
+
+const appEvents = new EventEmitter();
+let documentWindowInitialized = false;
+
+// Global function for tests to check initialization status
+global.waitForDocumentWindowInitialization = () => {
+    return new Promise((resolve) => {
+        if (documentWindowInitialized) {
+            resolve();
+        } else {
+            appEvents.once("document-window-initialized", resolve);
+        }
+    });
+};
 
 // This switch is required for <input type="color"> to utilize the OS color
 // picker, which is nicer than the one that's provided by chromium. At some
@@ -73,6 +90,9 @@ async function new_document_window() {
             cleanup(win.id);
         }
     });
+
+    documentWindowInitialized = true;
+    appEvents.emit("document-window-initialized", { windowId: win.id, window: win });
     return win;
 }
 
