@@ -2,12 +2,19 @@
 
 ## Unreleased
 
+The project/installer has been renamed to "MoebiusXBINUltimate" to
+distinguish from the upstream project and allow installing both
+versions of MoebiusXBIN side-by-side.
+
+### Added
+
+- Added preference to skip the slash screen at startup.
+
 ### Changed
 
-- The project is now packaged and installed as "MoebiusXBINUltimate",
-  to distinguish it from the original MoebiusXBIN and to allow
-  installing both forks side-by-side.
-- Updated electron several major versions, it's now at v37.
+- Updated Electron to 37.2.5 (latest stable).
+- Lots of internal project maintenance including setting up a unit
+  testing framework with playrwight and linting/code formatting.
 
 # v3.2.1 (2025-07-23)
 
