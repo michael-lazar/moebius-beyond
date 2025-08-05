@@ -14,16 +14,26 @@ test.describe("Document Loading", () => {
             async ({ filename, testDataDir }) => {
                 try {
                     const path = require("path");
-                    const libtextmode = require("../libtextmode/libtextmode.js");
+                    const { TextModeDoc } = require("../document/doc.js");
+
+                    // Create a new TextModeDoc instance for test isolation
+                    const doc = new TextModeDoc();
 
                     const filePath = path.join(testDataDir, filename);
-                    const doc = await libtextmode.read_file(filePath);
+                    await doc.open(filePath);
 
                     return {
                         success: true,
-                        ...doc, // Spread the whole doc object
+                        columns: doc.columns,
+                        rows: doc.rows,
+                        title: doc.title,
+                        author: doc.author,
+                        group: doc.group,
+                        font_name: doc.font_name,
+                        use_9px_font: doc.use_9px_font,
+                        ice_colors: doc.ice_colors,
                         dataLength: doc.data.length,
-                        paletteLength: doc.palette_array.length,
+                        paletteLength: doc.palette.length,
                     };
                 } catch (error) {
                     return {
