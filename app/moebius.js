@@ -13,7 +13,8 @@ const darwin = process.platform == "darwin";
 const win32 = process.platform == "win32";
 const linux = process.platform == "linux";
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
-let prevent_splash_screen_at_startup = process.argv.includes("--no-splash");
+let prevent_splash_screen_at_startup =
+    process.argv.includes("--no-splash") || prefs.get("no_splash");
 let splash_screen;
 const { new_win } = require("./window");
 

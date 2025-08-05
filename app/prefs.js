@@ -17,6 +17,7 @@ const default_values = {
     smallscale_guide: false,
     debug: false,
     ignore_hdpi: false,
+    no_splash: false,
     discord: false,
     use_backup: false,
     backup_folder: "",
