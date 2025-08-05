@@ -16,6 +16,12 @@ versions of MoebiusXBIN side-by-side.
 - Lots of internal project maintenance including setting up a unit
   testing framework with playrwight and linting/code formatting.
 
+### Removed
+
+- Removed support for the touchbar on macOS. I don't have any
+  way to test this feature, and Apple has discontinued it on
+  new models.
+
 # v3.2.1 (2025-07-23)
 
 ### Fixed

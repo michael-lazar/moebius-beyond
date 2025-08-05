@@ -9,7 +9,7 @@ const modal_prefs = {
     backgroundColor: "#292c33",
 };
 
-async function new_win(file, options, touchbar, touchbar_opts) {
+async function new_win(file, options) {
     return new Promise((resolve) => {
         const win = new electron.BrowserWindow({
             ...options,
@@ -23,7 +23,6 @@ async function new_win(file, options, touchbar, touchbar_opts) {
         });
         // Enable @electron/remote for this WebContents (required for Electron 14+)
         require("@electron/remote/main").enable(win.webContents);
-        if (touchbar) touchbar(win, touchbar_opts);
         win.on("ready-to-show", (event) => {
             win.show();
             resolve(win);
@@ -42,27 +41,22 @@ async function new_doc() {
     });
 }
 
-async function new_modal(file, window_opts, touchbar, touchbar_opts) {
-    const win = await new_win(file, { ...window_opts, ...modal_prefs }, touchbar, touchbar_opts);
+async function new_modal(file, window_opts) {
+    const win = await new_win(file, { ...window_opts, ...modal_prefs });
     if (!darwin) win.setMenuBarVisibility(false);
     return win;
 }
 
-async function static(file, window_opts, touchbar, touchbar_opts) {
+async function static(file, window_opts) {
     if (static_wins[file] && !static_wins[file].isDestroyed()) {
         static_wins[file].focus();
     } else {
-        static_wins[file] = await new_win(
-            file,
-            {
-                ...window_opts,
-                maximizable: false,
-                resizable: false,
-                fullscreenable: false,
-            },
-            touchbar,
-            touchbar_opts
-        );
+        static_wins[file] = await new_win(file, {
+            ...window_opts,
+            maximizable: false,
+            resizable: false,
+            fullscreenable: false,
+        });
         if (!darwin) static_wins[file].setMenuBarVisibility(false);
         static_wins[file].on("focus", (event) => menu.set_application_menu());
         static_wins[file].on("close", () => delete static_wins[file]);
