@@ -64,8 +64,9 @@ function save(destroy_when_done = false, save_without_sauce = false) {
 }
 
 async function save_as(destroy_when_done = false) {
-    const file = save_box(doc.file, "xb", {
+    const file = save_box(doc.file, "mbxd", {
         filters: [
+            { name: "Moebius XBIN Ultimate Document", extensions: ["mbxd"] },
             { name: "XBin", extensions: ["xb"] },
             {
                 name: "ANSI Art",
