@@ -1,8 +1,8 @@
 const { Font } = require("./font");
 const { create_canvas, join_canvases } = require("./canvas");
-const { Ansi, encode_as_ansi } = require("./ansi");
-const { BinaryText, encode_as_bin } = require("./binary_text");
-const { XBin, encode_as_xbin } = require("./xbin");
+const { fromAnsi, encode_as_ansi } = require("./ansi");
+const { fromBinaryText, encode_as_bin } = require("./binary_text");
+const { fromXBin, encode_as_xbin } = require("./xbin");
 const { palette_4bit } = require("./palette");
 const path = require("path");
 const { open_box } = require("../senders");
@@ -15,12 +15,12 @@ const { getSync } = require("@andreekeberg/imagedata");
 function read_bytes(bytes, file) {
     switch (path.extname(file).toLowerCase()) {
         case ".bin":
-            return new BinaryText(bytes);
+            return fromBinaryText(bytes);
         case ".xb":
-            return new XBin(bytes);
+            return fromXBin(bytes);
         case ".ans":
         default:
-            return new Ansi(bytes);
+            return fromAnsi(bytes);
     }
 }
 
@@ -1410,7 +1410,7 @@ function new_document({
     data,
     font_bytes,
 } = {}) {
-    const doc = new Textmode(null, {
+    const doc = new Textmode({
         columns,
         rows,
         title,
@@ -1615,7 +1615,7 @@ function remove_ice_color_for_block(block) {
 }
 
 function remove_ice_colors(doc) {
-    const new_doc = new Textmode(null, {
+    const new_doc = new Textmode({
         columns: doc.columns,
         rows: doc.rows,
         data: new Array(doc.data.length),

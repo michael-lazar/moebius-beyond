@@ -267,7 +267,6 @@ class Cursor {
         this.mode = modes.SELECTION;
         this.draw();
         send("enable_selection_menu_items");
-        send("show_selection_touchbar");
     }
 
     start_editing_mode() {
@@ -281,7 +280,6 @@ class Cursor {
         if (this.canvas.classList.contains("operation")) this.canvas.classList.remove("operation");
         this.resize_to_font();
         statusbar.use_canvas_size_for_status_bar();
-        send("show_editing_touchbar");
     }
 
     deselect() {
@@ -316,7 +314,6 @@ class Cursor {
         this.redraw_operation_blocks();
         send("disable_selection_menu_items_except_deselect_and_crop");
         send("enable_operation_menu_items");
-        send("show_operation_touchbar");
         statusbar.use_canvas_size_for_status_bar();
         this.canvas.classList.add("operation");
     }

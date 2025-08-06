@@ -22,6 +22,7 @@ function prefs({
     retention,
     smallscale_guide,
     debug,
+    no_splash,
     ignore_hdpi,
     use_backup,
     backup_folder,
@@ -40,6 +41,7 @@ function prefs({
     $("retention").value = retention;
     $("smallscale_guide").checked = smallscale_guide;
     $("debug").checked = debug;
+    $("no_splash").checked = no_splash;
     $("ignore_hdpi").checked = ignore_hdpi;
     $("use_backup").checked = use_backup;
     backup_folder_value = backup_folder;
@@ -108,6 +110,10 @@ function ignore_hdpi() {
 
 function debug() {
     update("debug", $("debug").checked);
+}
+
+function no_splash() {
+    update("no_splash", $("no_splash").checked);
 }
 
 function use_backup() {
@@ -181,6 +187,7 @@ document.addEventListener(
         $("retention").addEventListener("change", retention, true);
         $("smallscale_guide").addEventListener("change", (event) => smallscale_guide(), true);
         $("debug").addEventListener("change", (event) => debug(), true);
+        $("no_splash").addEventListener("change", (event) => no_splash(), true);
         $("ignore_hdpi").addEventListener("change", (event) => ignore_hdpi(), true);
         $("use_backup").addEventListener("change", (event) => use_backup(), true);
         $("backup_choose").addEventListener(

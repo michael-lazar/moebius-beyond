@@ -51,58 +51,80 @@ function uncompress({ bytes, columns, rows }) {
     return data;
 }
 
-class XBin extends Textmode {
-    constructor(bytes) {
-        super(bytes);
-        if ((bytes_to_utf8(this.bytes, 0, 4) != "XBIN") | (this.bytes[4] != 0x1a)) {
-            throw "Error whilst attempting to load XBin file: Unexpected header.";
-        }
-        this.columns = (this.bytes[6] << 8) + this.bytes[5];
-        this.rows = (this.bytes[8] << 8) + this.bytes[7];
-        this.font_height = this.bytes[9] || 16;
-        const flags = this.bytes[10];
-        const palette_flag = (flags & 1) == 1;
-        const font_flag = ((flags >> 1) & 1) == 1;
-        const compress_flag = ((flags >> 2) & 1) == 1;
-        this.ice_colors = ((flags >> 3) & 1) == 1;
-        const font_512_flag = ((flags >> 4) & 1) == 1;
-        if (font_512_flag) {
-            throw "Error whilst attempting to load XBin file: Unsupported font size.";
-        }
-        let i = 11;
-        if (palette_flag) {
-            const palette_bytes = this.bytes.subarray(11, 11 + 48);
-            this.palette = new Array(16);
-            for (let i = 0, j = 0; i < 16; i++, j += 3) {
-                this.palette[i] = xbin_to_rgb(
-                    palette_bytes[j],
-                    palette_bytes[j + 1],
-                    palette_bytes[j + 2]
-                );
-            }
-            i += 48;
-        } else {
-            this.palette = palette_4bit;
-        }
-        if (font_flag) {
-            this.font_name = "Custom";
-            this.font_bytes = this.bytes.subarray(i, i + 256 * this.font_height);
-            i += 256 * this.font_height;
-        }
-        if (compress_flag) {
-            this.data = uncompress({
-                columns: this.columns,
-                rows: this.rows,
-                bytes: this.bytes.subarray(i, i + this.filesize),
-            });
-        } else {
-            this.data = bytes_to_blocks({
-                columns: this.columns,
-                rows: this.rows,
-                bytes: this.bytes.subarray(i, i + this.filesize),
-            });
-        }
+function fromXBin(bytes) {
+    const { get_sauce } = require("./textmode");
+    const sauce = get_sauce(bytes);
+    const fileBytes = bytes.subarray(0, sauce.filesize);
+
+    if ((bytes_to_utf8(fileBytes, 0, 4) != "XBIN") | (fileBytes[4] != 0x1a)) {
+        throw "Error whilst attempting to load XBin file: Unexpected header.";
     }
+    const columns = (fileBytes[6] << 8) + fileBytes[5];
+    const rows = (fileBytes[8] << 8) + fileBytes[7];
+    const font_height = fileBytes[9] || 16;
+    const flags = fileBytes[10];
+    const palette_flag = (flags & 1) == 1;
+    const font_flag = ((flags >> 1) & 1) == 1;
+    const compress_flag = ((flags >> 2) & 1) == 1;
+    const ice_colors = ((flags >> 3) & 1) == 1;
+    const font_512_flag = ((flags >> 4) & 1) == 1;
+    if (font_512_flag) {
+        throw "Error whilst attempting to load XBin file: Unsupported font size.";
+    }
+    let i = 11;
+    let palette;
+    let font_name = sauce.font_name;
+    let font_bytes;
+    if (palette_flag) {
+        const palette_bytes = fileBytes.subarray(11, 11 + 48);
+        palette = new Array(16);
+        for (let i = 0, j = 0; i < 16; i++, j += 3) {
+            palette[i] = xbin_to_rgb(palette_bytes[j], palette_bytes[j + 1], palette_bytes[j + 2]);
+        }
+        i += 48;
+    } else {
+        palette = palette_4bit;
+    }
+    if (font_flag) {
+        font_name = "Custom";
+        font_bytes = fileBytes.subarray(i, i + 256 * font_height);
+        i += 256 * font_height;
+    }
+    let data;
+    if (compress_flag) {
+        data = uncompress({
+            columns: columns,
+            rows: rows,
+            bytes: fileBytes.subarray(i, i + sauce.filesize),
+        });
+    } else {
+        data = bytes_to_blocks({
+            columns: columns,
+            rows: rows,
+            bytes: fileBytes.subarray(i, i + sauce.filesize),
+        });
+    }
+
+    const instance = new Textmode({
+        columns,
+        rows,
+        title: sauce.title,
+        author: sauce.author,
+        group: sauce.group,
+        date: sauce.date,
+        filesize: sauce.filesize,
+        ice_colors,
+        use_9px_font: sauce.use_9px_font,
+        font_name,
+        comments: sauce.comments,
+        data,
+        palette,
+    });
+    instance.font_height = font_height;
+    if (font_bytes) {
+        instance.font_bytes = font_bytes;
+    }
+    return instance;
 }
 
 function encode_as_xbin(doc, save_without_sauce) {
@@ -158,4 +180,4 @@ function encode_as_xbin(doc, save_without_sauce) {
     return bytes;
 }
 
-module.exports = { XBin, encode_as_xbin };
+module.exports = { fromXBin, encode_as_xbin, uncompress };

@@ -13,8 +13,9 @@
         "build-mac": "npx electron-builder -m",
         "build-win": "npx electron-builder -w",
         "build-linux": "npx electron-builder -l",
-        "lint": "eslint app/",
-        "lint:fix": "eslint app/ --fix",
+        "test": "npx playwright test --reporter=list",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "format:check": "prettier --check ."
     },
@@ -25,6 +26,7 @@
     "license": "Apache-2.0",
     "devDependencies": {
         "@eslint/js": "^9.31.0",
+        "@playwright/test": "^1.54.2",
         "electron": "^37.2.5",
         "electron-builder": "^26.0.12",
         "eslint": "^9.31.0",

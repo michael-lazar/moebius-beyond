@@ -850,7 +850,6 @@ class Toolbar extends events.EventEmitter {
     }
 
     show_select() {
-        send("show_editing_touchbar");
         send("disable_brush_size_shortcuts");
         $("select_panel").classList.remove("hidden");
         $("brush_panel").classList.add("hidden");
@@ -859,7 +858,6 @@ class Toolbar extends events.EventEmitter {
     }
 
     show_brush() {
-        send("show_brush_touchbar");
         send("enable_brush_size_shortcuts");
         $("select_panel").classList.add("hidden");
         $("brush_panel").classList.remove("hidden");
@@ -868,7 +866,6 @@ class Toolbar extends events.EventEmitter {
     }
 
     show_sample() {
-        send("show_brush_touchbar");
         send("disable_brush_size_shortcuts");
         $("select_panel").classList.add("hidden");
         $("brush_panel").classList.add("hidden");
@@ -877,7 +874,6 @@ class Toolbar extends events.EventEmitter {
     }
 
     show_reference() {
-        send("show_reference_touchbar");
         send("disable_brush_size_shortcuts");
         $("select_panel").classList.add("hidden");
         $("brush_panel").classList.add("hidden");

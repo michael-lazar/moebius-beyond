@@ -1,21 +1,38 @@
 const prefs = require("./prefs");
 const electron = require("electron");
 const window = require("./window"); // eslint-disable-line no-redeclare
+const { EventEmitter } = require("events");
+const menu = require("./menu");
+const path = require("path");
+const { new_win } = require("./window");
 
 // Initialize @electron/remote for renderer processes
 require("@electron/remote/main").initialize();
-const menu = require("./menu");
-const touchbar = require("./touchbar");
-const path = require("path");
-const docs = {};
-let last_win_pos;
+
 const darwin = process.platform == "darwin";
 const win32 = process.platform == "win32";
 const linux = process.platform == "linux";
+
+const docs = {};
+let last_win_pos;
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
-let prevent_splash_screen_at_startup = false;
+let prevent_splash_screen_at_startup =
+    process.argv.includes("--no-splash") || prefs.get("no_splash");
 let splash_screen;
-const { new_win } = require("./window");
+
+const appEvents = new EventEmitter();
+let documentWindowInitialized = false;
+
+// Global function for tests to check initialization status
+global.waitForDocumentWindowInitialization = () => {
+    return new Promise((resolve) => {
+        if (documentWindowInitialized) {
+            resolve();
+        } else {
+            appEvents.once("document-window-initialized", resolve);
+        }
+    });
+};
 
 // This switch is required for <input type="color"> to utilize the OS color
 // picker, which is nicer than the one that's provided by chromium. At some
@@ -52,7 +69,6 @@ async function new_document_window() {
         destroyed: false,
         open_in_current_window: false,
     };
-    touchbar.create_touch_bars(win);
     prefs.send(win);
     win.on("focus", (event) => {
         if (darwin) {
@@ -74,6 +90,9 @@ async function new_document_window() {
             cleanup(win.id);
         }
     });
+
+    documentWindowInitialized = true;
+    appEvents.emit("document-window-initialized", { windowId: win.id, window: win });
     return win;
 }
 
@@ -225,12 +244,11 @@ async function open_reference_window(win) {
 menu.on("open_reference_window", open_reference_window);
 
 async function show_splash_screen() {
-    splash_screen = await window.static(
-        "app/html/splash_screen.html",
-        { width: 720, height: 500, ...frameless },
-        touchbar.splash_screen,
-        { preferences, new_document, open }
-    );
+    splash_screen = await window.static("app/html/splash_screen.html", {
+        width: 720,
+        height: 500,
+        ...frameless,
+    });
 }
 
 menu.on("show_cheatsheet", () =>
@@ -260,17 +278,13 @@ function has_documents_open() {
 }
 
 electron.ipcMain.on("get_canvas_size", async (event, { id, columns, rows }) => {
-    docs[id].modal = await window.new_modal(
-        "app/html/resize.html",
-        {
-            width: 300,
-            height: 190,
-            parent: docs[id].win,
-            frame: false,
-            ...get_centered_xy(id, 300, 190),
-        },
-        touchbar.get_canvas_size
-    );
+    docs[id].modal = await window.new_modal("app/html/resize.html", {
+        width: 300,
+        height: 190,
+        parent: docs[id].win,
+        frame: false,
+        ...get_centered_xy(id, 300, 190),
+    });
     if (darwin) add_darwin_window_menu_handler(id);
     docs[id].modal.send("set_canvas_size", { columns, rows });
     event.returnValue = true;
@@ -325,17 +339,13 @@ function add_darwin_window_menu_handler(id) {
 }
 
 electron.ipcMain.on("get_sauce_info", async (event, { id, title, author, group, comments }) => {
-    docs[id].modal = await window.new_modal(
-        "app/html/sauce.html",
-        {
-            width: 600,
-            height: 340,
-            parent: docs[id].win,
-            frame: false,
-            ...get_centered_xy(id, 350, 340),
-        },
-        touchbar.get_sauce_info
-    );
+    docs[id].modal = await window.new_modal("app/html/sauce.html", {
+        width: 600,
+        height: 340,
+        parent: docs[id].win,
+        frame: false,
+        ...get_centered_xy(id, 350, 340),
+    });
     if (darwin) add_darwin_window_menu_handler(id);
     docs[id].modal.send("set_sauce_info", {
         title,
@@ -370,17 +380,13 @@ electron.ipcMain.on("select_attribute", async (event, { id, fg, bg, palette }) =
         event.returnValue = true;
         return;
     }
-    docs[id].modal = await window.new_modal(
-        "app/html/select_attribute.html",
-        {
-            width: 340,
-            height: 340,
-            parent: docs[id].win,
-            frame: false,
-            ...get_centered_xy(id, 340, 340),
-        },
-        touchbar.select_attribute
-    );
+    docs[id].modal = await window.new_modal("app/html/select_attribute.html", {
+        width: 340,
+        height: 340,
+        parent: docs[id].win,
+        frame: false,
+        ...get_centered_xy(id, 340, 340),
+    });
     if (darwin) add_darwin_window_menu_handler(id);
     docs[id].modal.send("select_attribute", { fg, bg, palette });
     event.returnValue = true;
@@ -480,7 +486,12 @@ electron.app.on("ready", (event) => {
     ) {
         for (let i = 1; i < process.argv.length; i++) open_file(process.argv[i]);
     } else {
-        if (!prevent_splash_screen_at_startup) show_splash_screen();
+        if (!prevent_splash_screen_at_startup) {
+            show_splash_screen();
+        } else {
+            // If skipping splash screen, create a new document
+            new_document();
+        }
     }
     if (darwin) electron.app.dock.setMenu(menu.dock_menu);
 });

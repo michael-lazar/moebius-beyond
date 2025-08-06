@@ -2,11 +2,25 @@
 
 ## Unreleased
 
+The project/installer has been renamed to "MoebiusXBINUltimate" to
+distinguish from the upstream project and allow installing both
+versions of MoebiusXBIN side-by-side.
+
+### Added
+
+- Added a preference to skip the slash screen at startup.
+
 ### Changed
 
-- The project is now packaged and installed as "MoebiusXBINUltimate",
-  to distinguish it from the original MoebiusXBIN and to allow
-  installing both forks side-by-side.
+- Updated Electron to 37.2.5 (latest stable).
+- Lots of internal project maintenance including setting up a unit
+  testing framework with playrwight and linting/code formatting.
+
+### Removed
+
+- Removed support for the touchbar on macOS. I don't have any
+  way to test this feature, and Apple has discontinued it on
+  new models.
 
 # v3.2.1 (2025-07-23)
 
