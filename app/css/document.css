@@ -295,6 +295,9 @@ body.dark #statusbar > div > div {
     text-align: center;
     width: calc(100% - 630px);
 }
+#dimensions {
+    cursor: pointer;
+}
 #right_info {
     float: right;
     width: 330px;

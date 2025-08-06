@@ -13,6 +13,8 @@ versions of MoebiusXBIN side-by-side.
       (font, palette, SAUCE, etc.) in an uncompressed JSON structure
       that mirrors the internal format used by the application.
 - Added a preference to skip the slash screen at startup.
+- Clicking the canvas size display in the bottom status bar now
+  opens the dialog to resize the canvas.
 
 ### Changed
 

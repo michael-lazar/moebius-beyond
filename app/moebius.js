@@ -278,6 +278,11 @@ function has_documents_open() {
 }
 
 electron.ipcMain.on("get_canvas_size", async (event, { id, columns, rows }) => {
+    if (docs[id].modal && !docs[id].modal.isDestroyed()) {
+        docs[id].modal.focus();
+        event.returnValue = true;
+        return;
+    }
     docs[id].modal = await window.new_modal("app/html/resize.html", {
         width: 300,
         height: 190,

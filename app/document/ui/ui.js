@@ -530,6 +530,15 @@ document.addEventListener(
             (event) => (doc.ice_colors = !doc.ice_colors),
             true
         );
+        $("dimensions").addEventListener(
+            "mousedown",
+            (event) =>
+                send_sync("get_canvas_size", {
+                    columns: doc.columns,
+                    rows: doc.rows,
+                }),
+            true
+        );
     },
     true
 );
