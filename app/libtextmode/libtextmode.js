@@ -3,6 +3,7 @@ const { create_canvas, join_canvases } = require("./canvas");
 const { fromAnsi, encode_as_ansi } = require("./ansi");
 const { fromBinaryText, encode_as_bin } = require("./binary_text");
 const { fromXBin, encode_as_xbin } = require("./xbin");
+const { encode_as_mbxd, fromMBXD } = require("./moebius_document");
 const { palette_4bit } = require("./palette");
 const path = require("path");
 const { open_box } = require("../senders");
@@ -14,6 +15,8 @@ const { getSync } = require("@andreekeberg/imagedata");
 
 function read_bytes(bytes, file) {
     switch (path.extname(file).toLowerCase()) {
+        case ".mbxd":
+            return fromMBXD(bytes);
         case ".bin":
             return fromBinaryText(bytes);
         case ".xb":
@@ -61,6 +64,9 @@ async function animate({ file, ctx }) {
 function write_file(doc, file, { utf8 = false, save_without_sauce = false } = {}) {
     let bytes;
     switch (path.extname(file).toLowerCase()) {
+        case ".mbxd":
+            bytes = encode_as_mbxd(doc);
+            break;
         case ".bin":
             bytes = encode_as_bin(doc, save_without_sauce);
             break;
@@ -1775,5 +1781,6 @@ module.exports = {
     encode_as_bin,
     encode_as_xbin,
     encode_as_ansi,
+    encode_as_mbxd,
     remove_ice_colors,
 };

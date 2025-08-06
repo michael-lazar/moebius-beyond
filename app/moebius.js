@@ -179,7 +179,7 @@ function open(win) {
         filters: [
             {
                 name: "TextArt",
-                extensions: ["ans", "xb", "bin", "diz", "asc", "txt", "nfo"],
+                extensions: ["mbxd", "ans", "xb", "bin", "diz", "asc", "txt", "nfo"],
             },
             { name: "All Files", extensions: ["*"] },
         ],
