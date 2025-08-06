@@ -217,18 +217,22 @@ async function preferences() {
 menu.on("preferences", preferences);
 electron.ipcMain.on("preferences", (event) => preferences());
 
-async function open_reference_window(win) {
-    const files = electron.dialog.showOpenDialogSync(win, {
-        filters: [
-            {
-                name: "Images",
-                extensions: ["png", "jpg", "jpeg"],
-            },
-        ],
-        properties: ["openFile", "multiSelections"],
-    });
+async function open_reference_window(win, files = null) {
+    if (!files) {
+        files = electron.dialog.showOpenDialogSync(win, {
+            filters: [
+                {
+                    name: "Images",
+                    extensions: ["png", "jpg", "jpeg"],
+                },
+            ],
+            properties: ["openFile", "multiSelections"],
+        });
+        if (!files) return;
+    } else if (typeof files === "string") {
+        files = [files];
+    }
 
-    if (!files) return;
     for (const file of files) {
         let reference = await new_win(file, {
             width: 480,
@@ -242,6 +246,10 @@ async function open_reference_window(win) {
     }
 }
 menu.on("open_reference_window", open_reference_window);
+electron.ipcMain.on("open_reference_window", (event, { files }) => {
+    const win = electron.BrowserWindow.fromWebContents(event.sender);
+    open_reference_window(win, files);
+});
 
 async function show_splash_screen() {
     splash_screen = await window.static("app/html/splash_screen.html", {

@@ -64,11 +64,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 "Open Reference",
                 `Open ${file.name} as the current reference image.`,
                 {
-                    buttons: ["Open Reference", "Cancel"],
+                    buttons: ["Open Reference in Background", "Open Reference in Window", "Cancel"],
                 }
             );
             if (choice === 0) {
                 open_reference_image({ file: webUtils.getPathForFile(file) });
+            } else if (choice === 1) {
+                send("open_reference_window", { files: webUtils.getPathForFile(file) });
             }
         } else if (font_extensions.includes(ext)) {
             const choice = msg_box("Load Font", `Load file ${file.name} as the current font.`, {

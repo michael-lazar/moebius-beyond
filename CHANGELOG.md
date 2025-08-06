@@ -15,6 +15,8 @@ versions of MoebiusXBIN side-by-side.
 - Added a preference to skip the slash screen at startup.
 - Clicking the canvas size display in the bottom status bar now
   opens the dialog to resize the canvas.
+- Added "Open Reference in Window" option to drag-and-drop dialog for
+  image files.
 
 ### Changed
 
