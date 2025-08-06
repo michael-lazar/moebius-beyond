@@ -1,5 +1,8 @@
 # Moebius XBIN ✨Ultimate✨ Edition
 
+<img width="1305" height="828" alt="Screenshot 2025-08-06 at 12 18 14 AM" src="https://github.com/user-attachments/assets/8700e89d-8084-4f1c-8c81-2e385f14ffd7" />
+
+
 Moebius is an ANSI Art Editor for MacOS, Linux and Windows.
 
 This repo is a fork of the original project. The rough timeline is as follows...
