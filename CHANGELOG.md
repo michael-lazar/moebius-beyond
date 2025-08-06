@@ -8,6 +8,10 @@ versions of MoebiusXBIN side-by-side.
 
 ### Added
 
+- Added a new ASCII/ANSI file format (.mbxd).
+    - The MBXD document format stores all of the document information
+      (font, palette, SAUCE, etc.) in an uncompressed JSON structure
+      that mirrors the internal format used by the application.
 - Added a preference to skip the slash screen at startup.
 
 ### Changed
