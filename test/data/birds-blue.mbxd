@@ -1,10 +1,10 @@
 {
-  "format": "moebius-xbin-ultimate-document",
+  "format": "moebius-beyond-document",
   "version": "1-alpha1",
   "metadata": {
     "created": "2025-08-06T03:18:50.244Z",
     "modified": "2025-08-06T03:18:50.244Z",
-    "application": "MoebiusXBINUltimate",
+    "application": "MoebiusBeyond",
     "applicationVersion": "3.2.1"
   },
   "document": {

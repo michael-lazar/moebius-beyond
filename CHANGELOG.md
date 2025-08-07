@@ -1,15 +1,15 @@
-# Moebius XBIN Ultimate Edition Changelog
+# Moebius Beyond Ultimate Edition Changelog
 
 ## Unreleased
 
-The project/installer has been renamed to "MoebiusXBINUltimate" to
+The project/installer has been renamed to "MoebiusBeyond" to
 distinguish from the upstream project and allow installing both
-versions of MoebiusXBIN side-by-side.
+versions of the fork side-by-side
 
 ### Added
 
-- Added a new ASCII/ANSI file format (.mbxd).
-    - The MBXD document format stores all of the document information
+- Added a new ASCII/ANSI file format (.mbd).
+    - The MBD document format stores all of the document information
       (font, palette, SAUCE, etc.) in an uncompressed JSON structure
       that mirrors the internal format used by the application.
 - Added a preference to skip the slash screen at startup.

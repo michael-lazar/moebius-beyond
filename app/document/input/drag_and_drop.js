@@ -4,7 +4,7 @@ const { send, msg_box } = require("../../senders");
 const doc = require("../doc");
 const { open_reference_image } = require("../ui/ui");
 
-const document_extensions = [".mbxd", ".ans", ".asc", ".diz", ".nfo", ".txt", ".xb", ".bin"];
+const document_extensions = [".mbd", ".ans", ".asc", ".diz", ".nfo", ".txt", ".xb", ".bin"];
 const reference_extensions = [".png", ".jpg", ".jpeg"];
 const font_extensions = [
     ".f06",

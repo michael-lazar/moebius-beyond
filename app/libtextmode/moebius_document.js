@@ -4,18 +4,18 @@ const remote = require("@electron/remote");
 
 const dev = !electron.app || !electron.app.isPackaged;
 
-function encode_as_mbxd(doc) {
+function encode_as_mbd(doc) {
     const now = new Date().toISOString();
 
     const appVersion = dev ? process.env.npm_package_version : remote.app.getVersion();
 
-    const mbxd_doc = {
-        format: "moebius-xbin-ultimate-document",
+    const mbd_doc = {
+        format: "moebius-beyond-document",
         version: "1-alpha1",
         metadata: {
             created: now,
             modified: now,
-            application: "MoebiusXBINUltimate",
+            application: "MoebiusBeyond",
             applicationVersion: appVersion,
         },
         document: {
@@ -45,28 +45,28 @@ function encode_as_mbxd(doc) {
         },
     };
 
-    return Buffer.from(JSON.stringify(mbxd_doc, null, 2), "utf8");
+    return Buffer.from(JSON.stringify(mbd_doc, null, 2), "utf8");
 }
 
-function fromMBXD(bytes) {
+function fromMBD(bytes) {
     const json_string = bytes.toString("utf8");
-    const mbxd_doc = JSON.parse(json_string);
+    const mbd_doc = JSON.parse(json_string);
 
     // Validate format
-    if (mbxd_doc.format !== "moebius-xbin-ultimate-document") {
-        throw new Error("Invalid MBXD file: incorrect format identifier");
+    if (mbd_doc.format !== "moebius-beyond-document") {
+        throw new Error("Invalid MBD file: incorrect format identifier");
     }
 
     // Check version compatibility
-    if (!mbxd_doc.version || !mbxd_doc.version.startsWith("1")) {
-        throw new Error(`Unsupported MBXD version: ${mbxd_doc.version}`);
+    if (!mbd_doc.version || !mbd_doc.version.startsWith("1")) {
+        throw new Error(`Unsupported MBD version: ${mbd_doc.version}`);
     }
 
-    if (!mbxd_doc.document) {
-        throw new Error("Invalid MBXD file: missing document section");
+    if (!mbd_doc.document) {
+        throw new Error("Invalid MBD file: missing document section");
     }
 
-    const doc_data = mbxd_doc.document;
+    const doc_data = mbd_doc.document;
 
     // Create Textmode document
     const doc = new Textmode({
@@ -105,6 +105,6 @@ function fromMBXD(bytes) {
 }
 
 module.exports = {
-    encode_as_mbxd,
-    fromMBXD,
+    encode_as_mbd,
+    fromMBD,
 };

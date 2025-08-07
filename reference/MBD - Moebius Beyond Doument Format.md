@@ -1,10 +1,10 @@
-# MBXD File Format
+# MBD File Format
 
-The MBXD (Moebius XBIN Document) format is the internal file format for the Moebius XBIN Ultimate ASCII art editor.
+The MBD (Moebius Beyond Document) format is the internal file format for the Moebius Beyond Ultimate ASCII art editor.
 
 ## File Extension
 
-`.mbxd`
+`.mbd`
 
 ## Format
 
@@ -16,12 +16,12 @@ JSON-based text file, UTF-8 encoded.
 
 ```json
 {
-    "format": "moebius-xbin-ultimate-document",
+    "format": "moebius-beyond-document",
     "version": "1-alpha1",
     "metadata": {
         "created": "2025-01-01T12:00:00.000Z",
         "modified": "2025-01-01T12:00:00.000Z",
-        "application": "MoebiusXBINUltimate",
+        "application": "MoebiusBeyond",
         "applicationVersion": "3.2.1"
     },
     "document": {
@@ -68,7 +68,7 @@ JSON-based text file, UTF-8 encoded.
 
 ### Root Level
 
-- `format`: Always "moebius-xbin-ultimate-document"
+- `format`: Always "moebius-beyond-document"
 - `version`: Format version string
 - `metadata`: File creation and modification info
 - `document`: All document data

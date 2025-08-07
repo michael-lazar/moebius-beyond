@@ -16,11 +16,11 @@ fi
 
 # Files to copy from dist/
 FILES=(
-    "MoebiusXBINUltimate.deb"
-    "MoebiusXBINUltimate.dmg"
-    "MoebiusXBINUltimate.exe"
-    "MoebiusXBINUltimate.rpm"
-    "MoebiusXBINUltimate.Setup.exe"
+    "MoebiusBeyond.deb"
+    "MoebiusBeyond.dmg"
+    "MoebiusBeyond.exe"
+    "MoebiusBeyond.rpm"
+    "MoebiusBeyond.Setup.exe"
 )
 
 echo "Copying distribution files..."

@@ -2247,7 +2247,7 @@ const help_menu_items = {
             id: "show_released",
             click(item) {
                 electron.shell.openExternal(
-                    "https://github.com/michael-lazar/moebius-xbin-ultimate/releases"
+                    "https://github.com/michael-lazar/moebius-beyond/releases"
                 );
             },
         },
@@ -2256,7 +2256,7 @@ const help_menu_items = {
             id: "show_issues",
             click(item) {
                 electron.shell.openExternal(
-                    "https://github.com/michael-lazar/moebius-xbin-ultimate/issues"
+                    "https://github.com/michael-lazar/moebius-beyond/issues"
                 );
             },
         },

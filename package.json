@@ -1,10 +1,10 @@
 {
-    "name": "moebius-xbin-ultimate",
+    "name": "moebius-beyond",
     "version": "3.2.1",
     "description": "Modern ANSI Art Editor",
     "repository": {
         "type": "git",
-        "url": "https://github.com/michael-lazar/moebius-xbin-ultimate.git"
+        "url": "https://github.com/michael-lazar/moebius-beyond.git"
     },
     "main": "app/moebius.js",
     "scripts": {

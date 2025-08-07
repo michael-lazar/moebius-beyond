@@ -105,8 +105,8 @@ test.describe("Document Load and Save Tests", () => {
         }
 
         function normalizeJsonTimestamps(buffer, filename) {
-            // Only normalize MBXD files (JSON format)
-            if (!filename.endsWith(".mbxd")) return buffer;
+            // Only normalize MBD files (JSON format)
+            if (!filename.endsWith(".mbd")) return buffer;
 
             const jsonString = buffer.toString("utf8");
             const jsonObj = JSON.parse(jsonString);
@@ -241,8 +241,8 @@ test.describe("Document Load and Save Tests", () => {
         });
     });
 
-    test("birds-blue.mbxd: load, verify, save, and verify bytes match", async ({ page }) => {
-        await performLoadAndSaveTest(page, "birds-blue.mbxd", {
+    test("birds-blue.mbd: load, verify, save, and verify bytes match", async ({ page }) => {
+        await performLoadAndSaveTest(page, "birds-blue.mbd", {
             columns: 60,
             rows: 18,
             title: "Birds",

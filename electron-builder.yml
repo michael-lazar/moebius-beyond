@@ -2,8 +2,8 @@ directories:
     output: dist
     buildResources: build
 
-appId: org.michaellazar.moebiusxbinultimate
-productName: MoebiusXBINUltimate
+appId: org.michaellazar.moebius-beyond
+productName: MoebiusBeyond
 copyright: Copyright © 2020 Andy Herbert, Copyright Michael Lazar
 
 files:
@@ -51,7 +51,7 @@ fileAssociations:
       icon: document_icon.icns
 
 mac:
-    artifactName: MoebiusXBINUltimate.dmg
+    artifactName: MoebiusBeyond.dmg
     category: public.app-category.graphics-design
     target:
         - target: dmg
@@ -59,7 +59,7 @@ mac:
     darkModeSupport: true
 
 win:
-    artifactName: MoebiusXBINUltimate.Setup.exe
+    artifactName: MoebiusBeyond.Setup.exe
     target:
         - target: nsis
           arch: [x64]
@@ -67,14 +67,14 @@ win:
           arch: [x64]
 
 portable:
-    artifactName: MoebiusXBINUltimate.exe
+    artifactName: MoebiusBeyond.exe
 
 linux:
-    artifactName: MoebiusXBINUltimate.${ext}
+    artifactName: MoebiusBeyond.${ext}
     target:
         - target: rpm
         - target: deb
-    description: MoebiusXBINUltimate is an ANSI and ASCII Editor for Linux, MacOS, and Windows.
+    description: MoebiusBeyond is an ANSI and ASCII Editor for Linux, MacOS, and Windows.
     category: Graphics
 
 electronVersion: 37.2.5
