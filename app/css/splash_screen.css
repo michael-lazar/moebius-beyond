@@ -6,15 +6,16 @@ body {
 body div:first-child {
     margin: 0px auto;
     width: 640px;
-    height: 396px;
+    height: 500px;
     -webkit-app-region: drag;
+    position: relative;
 }
 
 button {
     width: 100px;
     height: 32px;
     border-radius: 3px;
-    background: none;
+    background: transparent;
     color: white;
     outline: none;
     border: 1px solid #aaaaaa;
