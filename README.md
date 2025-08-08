@@ -18,7 +18,7 @@ If you're only interested in traditional "scene" ANSI Art, you may prefer the or
 
 ## New features
 
-See the [Changelog](CHANGELOG.md) for a list of recent changes.
+See the [Changelog](CHANGELOG.md) for a list of post-fork changes.
 
 ## Download packages
 
