@@ -253,8 +253,8 @@ electron.ipcMain.on("open_reference_window", (event, { files }) => {
 
 async function show_splash_screen() {
     splash_screen = await window.static("app/html/splash_screen.html", {
-        width: 720,
-        height: 500,
+        width: 680,
+        height: 400,
         ...frameless,
     });
 }

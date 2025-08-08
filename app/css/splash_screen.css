@@ -5,8 +5,8 @@ body {
 
 body div:first-child {
     margin: 0px auto;
-    width: 640px;
-    height: 500px;
+    justify-content: center;
+    display: flex;
     -webkit-app-region: drag;
     position: relative;
 }
@@ -24,6 +24,7 @@ button {
 
 .bottom_button {
     animation: slide 0.5s ease-out;
+    bottom: 16px;
 }
 
 @keyframes slide {
@@ -38,19 +39,16 @@ button {
 #new_document {
     position: absolute;
     left: 16px;
-    bottom: 16px;
 }
 
 #open {
     position: absolute;
     left: 132px;
-    bottom: 16px;
 }
 
 #preferences {
     position: absolute;
     left: 248px;
-    bottom: 16px;
 }
 
 label {
