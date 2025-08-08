@@ -1,5 +1,7 @@
 # Moebius Beyond ✈️
 
+<img width="1000" height="747" alt="screenshot" src="https://github.com/user-attachments/assets/2cb1fa85-431c-4060-b6c8-6ea9f0c033af" />
+
 Moebius Beyond is an ASCII/ANSI Art Editor for MacOS, Linux and Windows.
 
 This repo is a fork of the original project. The rough timeline is as follows...
@@ -16,7 +18,7 @@ If you're only interested in traditional "scene" ANSI Art, you may prefer the or
 
 ## New features
 
-See the [Changelog](CHANGELOG.md) for an overview of recent changes.
+See the [Changelog](CHANGELOG.md) for a list of recent changes.
 
 ## Download packages
 
