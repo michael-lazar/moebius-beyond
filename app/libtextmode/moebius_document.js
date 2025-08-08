@@ -1,5 +1,6 @@
 const { Textmode } = require("./textmode");
 const remote = require("@electron/remote");
+const zlib = require("zlib");
 
 const dev = !remote.app.isPackaged;
 
@@ -10,7 +11,7 @@ function encode_as_mbd(doc) {
 
     const mbd_doc = {
         format: "moebius-beyond-document",
-        version: "1-alpha1",
+        version: "1",
         metadata: {
             created: now,
             modified: now,
@@ -44,11 +45,13 @@ function encode_as_mbd(doc) {
         },
     };
 
-    return Buffer.from(JSON.stringify(mbd_doc, null, 2), "utf8");
+    const jsonString = JSON.stringify(mbd_doc, null, 2);
+    return zlib.gzipSync(Buffer.from(jsonString, "utf8"));
 }
 
 function fromMBD(bytes) {
-    const json_string = bytes.toString("utf8");
+    const decompressed = zlib.gunzipSync(bytes);
+    const json_string = decompressed.toString("utf8");
     const mbd_doc = JSON.parse(json_string);
 
     // Validate format

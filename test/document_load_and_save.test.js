@@ -105,10 +105,12 @@ test.describe("Document Load and Save Tests", () => {
         }
 
         function normalizeJsonTimestamps(buffer, filename) {
-            // Only normalize MBD files (JSON format)
+            // Only normalize MBD files (gzipped JSON format)
             if (!filename.endsWith(".mbd")) return buffer;
 
-            const jsonString = buffer.toString("utf8");
+            const zlib = require("zlib");
+            const decompressed = zlib.gunzipSync(buffer);
+            const jsonString = decompressed.toString("utf8");
             const jsonObj = JSON.parse(jsonString);
 
             // Normalize timestamps to fixed values for comparison
@@ -117,7 +119,8 @@ test.describe("Document Load and Save Tests", () => {
                 jsonObj.metadata.modified = "2025-01-01T00:00:00.000Z";
             }
 
-            return Buffer.from(JSON.stringify(jsonObj, null, 2), "utf8");
+            const normalizedJson = JSON.stringify(jsonObj, null, 2);
+            return zlib.gzipSync(Buffer.from(normalizedJson, "utf8"));
         }
 
         function hexDump(buffer, offset = 0) {

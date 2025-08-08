@@ -8,16 +8,18 @@ The MBD (Moebius Beyond Document) format is the internal file format for the Moe
 
 ## Format
 
-JSON-based text file, UTF-8 encoded.
+Gzip-compressed JSON structure, UTF-8 encoded.
 
 ## Structure
 
-### Version 1-alpha1
+### Version 1
+
+The file contains a gzip-compressed JSON structure with the following format:
 
 ```json
 {
     "format": "moebius-beyond-document",
-    "version": "1-alpha1",
+    "version": "1",
     "metadata": {
         "created": "2025-01-01T12:00:00.000Z",
         "modified": "2025-01-01T12:00:00.000Z",

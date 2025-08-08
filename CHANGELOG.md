@@ -8,8 +8,9 @@ versions of the fork side-by-side
 
 This release also adds a native file format for saving ASCII/ANSI
 art files. The "Moebius Beyond Document" (.mbd) stores all of the
-uncompressed JSON structure that mirrors the internal format used by
-Moebius. See the reference document for more information:
+document data as a gzip-compressed JSON structure that mirrors the
+internal format used by Moebius. See the reference document for more
+information:
 
 [MBD - Moebius Beyond Doument Format.md](reference/MBD%20-%20Moebius%20Beyond%20Doument%20Format.md)
 
