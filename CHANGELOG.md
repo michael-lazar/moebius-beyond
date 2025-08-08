@@ -6,21 +6,24 @@ The project/installer has been renamed to "MoebiusBeyond" to
 distinguish from the upstream project and allow installing both
 versions of the fork side-by-side
 
+This release also adds a native file format for saving ASCII/ANSI
+art files. The "Moebius Beyond Document" (.mbd) stores all of the
+uncompressed JSON structure that mirrors the internal format used by
+Moebius. See the reference document for more information:
+
+[MBD - Moebius Beyond Doument Format.md](reference/MBD%20-%20Moebius%20Beyond%20Doument%20Format.md)
+
 ### Added
 
-- Added a new ASCII/ANSI file format (.mbd).
-    - The MBD document format stores all of the document information
-      (font, palette, SAUCE, etc.) in an uncompressed JSON structure
-      that mirrors the internal format used by the application.
 - Added a preference to skip the slash screen at startup.
 - Clicking the canvas size display in the bottom status bar now
   opens the dialog to resize the canvas.
-- Added "Open Reference in Window" option to drag-and-drop dialog for
-  image files.
+- Added "Open Reference in Window" option to the drag-and-drop dialog
+  for image files.
 
 ### Changed
 
-- Updated Electron to 37.2.5 (latest stable).
+- Updated Electron to 37.2.5 (latest stable version).
 - Lots of internal project maintenance including setting up a unit
   testing framework with playrwight and linting/code formatting.
 
