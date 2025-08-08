@@ -24,7 +24,7 @@ The file contains a gzip-compressed JSON structure with the following format:
         "created": "2025-01-01T12:00:00.000Z",
         "modified": "2025-01-01T12:00:00.000Z",
         "application": "MoebiusBeyond",
-        "applicationVersion": "3.2.1"
+        "applicationVersion": "3.3.0"
     },
     "document": {
         "columns": 80,

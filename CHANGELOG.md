@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.3.0 (2025-08-07)
+
 The project/installer has been renamed to "MoebiusBeyond" to
 distinguish from the upstream project and allow installing both
 versions of the fork side-by-side
@@ -34,7 +36,7 @@ information:
   way to test this feature, and Apple has discontinued it on
   new models.
 
-# v3.2.1 (2025-07-23)
+## v3.2.1 (2025-07-23)
 
 ### Fixed
 
