@@ -1,8 +1,8 @@
 const libtextmode = require("../libtextmode/libtextmode");
 const electron = require("electron");
-const dev = !electron.app || !electron.app.isPackaged;
-const ans_path = dev ? "./build/ans/" : `${process.resourcesPath}/ans/`;
 const remote = require("@electron/remote");
+const dev = !remote.app.isPackaged;
+const ans_path = dev ? "./build/ans/" : `${process.resourcesPath}/ans/`;
 
 document.addEventListener(
     "keydown",

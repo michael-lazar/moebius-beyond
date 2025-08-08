@@ -49,6 +49,10 @@ fileAssociations:
       name: ASCII Art
       role: Editor
       icon: document_icon.icns
+    - ext: .mbd
+      name: Moebius Beyond Document
+      role: Editor
+      icon: document_icon.icns
 
 mac:
     artifactName: MoebiusBeyond.dmg

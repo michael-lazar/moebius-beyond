@@ -1,8 +1,7 @@
 const { Textmode } = require("./textmode");
-const electron = require("electron");
 const remote = require("@electron/remote");
 
-const dev = !electron.app || !electron.app.isPackaged;
+const dev = !remote.app.isPackaged;
 
 function encode_as_mbd(doc) {
     const now = new Date().toISOString();
