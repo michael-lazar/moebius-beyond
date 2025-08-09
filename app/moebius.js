@@ -16,8 +16,13 @@ const linux = process.platform == "linux";
 const docs = {};
 let last_win_pos;
 const frameless = darwin ? { frame: false, titleBarStyle: "hiddenInset" } : { frame: true };
-let prevent_splash_screen_at_startup =
-    process.argv.includes("--no-splash") || prefs.get("no_splash");
+
+const options = {
+    noSplash: process.argv.includes("--no-splash") || prefs.get("no_splash"),
+    showDevTools: process.argv.includes("--show-dev-tools"),
+};
+
+let prevent_splash_screen_at_startup = options.noSplash;
 let splash_screen;
 
 const appEvents = new EventEmitter();
@@ -80,8 +85,11 @@ async function new_document_window() {
         } else {
             docs[win.id].win.setMenu(docs[win.id].menu);
         }
-        // win.openDevTools({mode: "detach"});
     });
+
+    if (options.showDevTools) {
+        win.openDevTools({ mode: "detach" });
+    }
     win.on("close", (event) => {
         if (prefs.get("unsaved_changes") && docs[win.id].edited && !docs[win.id].destroyed) {
             event.preventDefault();
@@ -257,6 +265,9 @@ async function show_splash_screen() {
         height: 400,
         ...frameless,
     });
+    if (options.showDevTools) {
+        splash_screen.openDevTools({ mode: "detach" });
+    }
 }
 
 menu.on("show_cheatsheet", () =>
