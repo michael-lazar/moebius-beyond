@@ -178,15 +178,31 @@ body.dark #viewport {
     border-color: var(--dark-border-color);
     background-color: var(--dark-view-color);
 }
-#charlist {
+#charlist_window {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: var(--mid-color);
     border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+#charlist_titlebar {
+    background-color: var(--border-color);
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+#charlist {
+    background-color: var(--mid-color);
     overflow-y: auto;
     overflow-x: hidden;
     cursor: pointer;
+    flex-grow: 1;
+    position: relative;
 }
 #charlist_selector {
     position: absolute;
@@ -206,9 +222,16 @@ body.dark #viewport {
         opacity: 0;
     }
 }
+body.dark #charlist_window {
+    border-color: var(--dark-border-color);
+}
 body.dark #charlist {
     background-color: var(--dark-mid-color);
-    border-color: var(--dark-border-color);
+}
+body.dark #charlist_titlebar {
+    background-color: var(--dark-border-color);
+    color: rgba(255, 255, 255, 0.3);
+    border-bottom-color: var(--dark-border-color);
 }
 #preview {
     position: relative;

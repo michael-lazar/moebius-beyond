@@ -336,8 +336,8 @@ function hide_scrollbars(value) {
 }
 
 function show_charlist(visible) {
-    const width = charlist_zoom_toggled ? "288px" : "144px";
-    set_var("charlist-width", visible ? width : "1px");
+    const charlist_window = $("charlist_window");
+    charlist_window.style.display = visible ? "flex" : "none";
 }
 
 function current_zoom_factor() {
@@ -426,11 +426,6 @@ function actual_size() {
 
 function charlist_zoom_toggle() {
     charlist_zoom_toggled = !charlist_zoom_toggled;
-    if (charlist_zoom_toggled) {
-        set_var("charlist-width", "288px");
-    } else {
-        set_var("charlist-width", "144px");
-    }
 
     toolbar.redraw_charlist();
 
@@ -473,6 +468,7 @@ function use_9px_font(value) {
 
 function change_font(font_name) {
     set_text("font_name", font_name);
+    set_text("charlist_font_name", font_name);
     send("update_menu_checkboxes", { font_name });
 }
 
