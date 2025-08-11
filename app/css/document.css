@@ -3,7 +3,6 @@
     --toolbar-height: 48px;
     --statusbar-height: 22px;
     --preview-width: 300px;
-    --charlist-width: 144px;
     --reference-control-opacity: 0.4;
 }
 #sidebar {
@@ -15,7 +14,7 @@
 #toolbar {
     position: relative;
     float: right;
-    width: calc(100% - var(--preview-width) - var(--charlist-width) - var(--sidebar-width));
+    width: calc(100% - var(--preview-width) - var(--sidebar-width));
     height: var(--toolbar-height);
 }
 .tool {
@@ -157,7 +156,8 @@ body.dark #current_colors > canvas {
 }
 #viewport {
     float: left;
-    width: calc(100% - var(--sidebar-width) - var(--preview-width) - var(--charlist-width) - 1px);
+    position: relative;
+    width: calc(100% - var(--sidebar-width) - var(--preview-width) - 1px);
     height: calc(100% - var(--toolbar-height) - var(--statusbar-height) - 1px);
     border-top: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
@@ -179,12 +179,11 @@ body.dark #viewport {
     background-color: var(--dark-view-color);
 }
 #charlist {
-    position: relative;
-    float: right;
-    width: calc(var(--charlist-width) - 1px);
+    position: absolute;
+    top: 0;
+    right: 0;
     background-color: var(--mid-color);
-    height: calc(100% - var(--statusbar-height));
-    border-left: 1px solid var(--border-color);
+    border: 1px solid var(--border-color);
     overflow-y: auto;
     overflow-x: hidden;
     cursor: pointer;
