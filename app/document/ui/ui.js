@@ -429,6 +429,8 @@ function charlist_zoom_toggle() {
 
     toolbar.redraw_charlist();
 
+    $("charlist_zoom_button").textContent = charlist_zoom_toggled ? "2x" : "1x";
+
     send("update_menu_checkboxes", {
         charlist_zoom_toggle: charlist_zoom_toggled,
     });
@@ -533,6 +535,11 @@ document.addEventListener(
                     columns: doc.columns,
                     rows: doc.rows,
                 }),
+            true
+        );
+        $("charlist_zoom_button").addEventListener(
+            "click",
+            (event) => charlist_zoom_toggle(),
             true
         );
     },

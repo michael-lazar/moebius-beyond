@@ -195,6 +195,21 @@ body.dark #viewport {
     text-align: center;
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#charlist_zoom_button {
+    background-color: var(--view-color);
+    border: 1px solid var(--border-color);
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 10px;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+#charlist_zoom_button:hover {
+    background-color: var(--mid-color);
 }
 #charlist {
     background-color: var(--mid-color);
@@ -232,6 +247,14 @@ body.dark #charlist_titlebar {
     background-color: var(--dark-border-color);
     color: rgba(255, 255, 255, 0.3);
     border-bottom-color: var(--dark-border-color);
+}
+body.dark #charlist_zoom_button {
+    background-color: var(--dark-view-color);
+    border-color: var(--dark-border-color);
+    color: rgba(255, 255, 255, 0.3);
+}
+body.dark #charlist_zoom_button:hover {
+    background-color: var(--dark-mid-color);
 }
 #preview {
     position: relative;
