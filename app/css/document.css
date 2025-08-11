@@ -180,8 +180,8 @@ body.dark #viewport {
 }
 #charlist_window {
     position: fixed;
-    top: 0;
-    right: 0;
+    top: var(--toolbar-height);
+    right: var(--preview-width);
     border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -204,6 +204,11 @@ body.dark #viewport {
 }
 #charlist_titlebar:active {
     cursor: grabbing;
+}
+#charlist_font_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #charlist_zoom_button {
     background-color: var(--view-color);

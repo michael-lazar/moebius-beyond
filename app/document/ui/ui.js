@@ -18,6 +18,10 @@ function set_var(name, value) {
     document.documentElement.style.setProperty(`--${name}`, value);
 }
 
+function get_var(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
+}
+
 function set_var_px(name, value) {
     set_var(name, `${value}px`);
 }
@@ -428,6 +432,7 @@ function charlist_zoom_toggle() {
     charlist_zoom_toggled = !charlist_zoom_toggled;
 
     toolbar.redraw_charlist();
+    toolbar.draw_charlist_cursor();
 
     $("charlist_zoom_button").textContent = charlist_zoom_toggled ? "2x" : "1x";
 
@@ -577,13 +582,17 @@ document.addEventListener(
                 let newX = event.clientX - dragOffsetX;
                 let newY = event.clientY - dragOffsetY;
 
-                // Get viewport boundaries (window dimensions)
+                // Get viewport boundaries accounting for sidebar and statusbar
+                const sidebarWidth = parseInt(get_var("sidebar-width"));
+                const statusbarHeight = parseInt(get_var("statusbar-height"));
+                const minX = sidebarWidth;
+                const minY = 0;
                 const maxX = window.innerWidth - windowRect.width;
-                const maxY = window.innerHeight - windowRect.height;
+                const maxY = window.innerHeight - windowRect.height - statusbarHeight;
 
                 // Constrain to viewport boundaries
-                newX = Math.max(0, Math.min(newX, maxX));
-                newY = Math.max(0, Math.min(newY, maxY));
+                newX = Math.max(minX, Math.min(newX, maxX));
+                newY = Math.max(minY, Math.min(newY, maxY));
 
                 charlistWindow.style.left = newX + "px";
                 charlistWindow.style.top = newY + "px";
@@ -822,10 +831,20 @@ class Toolbar extends events.EventEmitter {
         const cell_height = font.height + 1;
 
         let selector = document.getElementById("charlist_selector");
-        selector.style.top = `${Math.floor(this.char_index / 16) * cell_height * scale}px`;
-        selector.style.left = `${(this.char_index % 16) * cell_width * scale}px`;
-        selector.style.height = `${font.height * scale}px`;
-        selector.style.width = `${font.width * scale}px`;
+        const top = Math.floor(this.char_index / 16) * cell_height * scale;
+        const left = (this.char_index % 16) * cell_width * scale;
+
+        // Add 2px offset to prevent box-shadow clipping at edges
+        const offsetTop = Math.max(2, top);
+        const offsetLeft = Math.max(2, left);
+        selector.style.top = `${offsetTop}px`;
+        selector.style.left = `${offsetLeft}px`;
+
+        // Reduce dimensions by 2px when offset is applied to maintain visual alignment
+        const heightReduction = offsetTop > top ? 2 : 0;
+        const widthReduction = offsetLeft > left ? 2 : 0;
+        selector.style.height = `${font.height * scale - heightReduction}px`;
+        selector.style.width = `${font.width * scale - widthReduction}px`;
         this.custom_block_index = this.char_index;
         this.draw_custom_block();
     }
