@@ -542,6 +542,68 @@ document.addEventListener(
             (event) => charlist_zoom_toggle(),
             true
         );
+
+        // Charlist window drag functionality
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        $("charlist_titlebar").addEventListener(
+            "mousedown",
+            (event) => {
+                // Don't start dragging if clicking on the zoom button
+                if (event.target.id === "charlist_zoom_button") return;
+
+                isDragging = true;
+                const rect = $("charlist_window").getBoundingClientRect();
+                dragOffsetX = event.clientX - rect.left;
+                dragOffsetY = event.clientY - rect.top;
+
+                event.preventDefault();
+                document.body.classList.add("grabbing");
+            },
+            true
+        );
+
+        document.addEventListener(
+            "mousemove",
+            (event) => {
+                if (!isDragging) return;
+
+                const charlistWindow = $("charlist_window");
+                const windowRect = charlistWindow.getBoundingClientRect();
+
+                // Calculate new position
+                let newX = event.clientX - dragOffsetX;
+                let newY = event.clientY - dragOffsetY;
+
+                // Get viewport boundaries (window dimensions)
+                const maxX = window.innerWidth - windowRect.width;
+                const maxY = window.innerHeight - windowRect.height;
+
+                // Constrain to viewport boundaries
+                newX = Math.max(0, Math.min(newX, maxX));
+                newY = Math.max(0, Math.min(newY, maxY));
+
+                charlistWindow.style.left = newX + "px";
+                charlistWindow.style.top = newY + "px";
+                charlistWindow.style.right = "auto";
+
+                event.preventDefault();
+            },
+            true
+        );
+
+        document.addEventListener(
+            "mouseup",
+            (event) => {
+                if (isDragging) {
+                    isDragging = false;
+                    document.body.classList.remove("grabbing");
+                }
+            },
+            true
+        );
     },
     true
 );

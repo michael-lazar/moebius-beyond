@@ -89,6 +89,8 @@ class MouseListener extends events.EventEmitter {
 
     mouse_down(event) {
         if (!this.font || this.started || this.drawing) return;
+        // Skip if event originated from charlist window
+        if (event.target.closest("#charlist_window")) return;
         if (event.button == 1) {
             const now = Date.now();
             const double_click_threshold = 400; // milliseconds

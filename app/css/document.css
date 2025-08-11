@@ -179,12 +179,13 @@ body.dark #viewport {
     background-color: var(--dark-view-color);
 }
 #charlist_window {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
+    z-index: 1000;
 }
 #charlist_titlebar {
     background-color: var(--border-color);
@@ -198,6 +199,11 @@ body.dark #viewport {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: grab;
+    user-select: none;
+}
+#charlist_titlebar:active {
+    cursor: grabbing;
 }
 #charlist_zoom_button {
     background-color: var(--view-color);
