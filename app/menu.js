@@ -3814,6 +3814,8 @@ electron.ipcMain.on(
             actual_size,
             font_name,
             lospec_palette_name,
+            charlist_zoom_toggle,
+            show_charlist,
         }
     ) => {
         if (insert_mode != undefined) set_check(id, "toggle_insert_mode", insert_mode);
@@ -3840,6 +3842,9 @@ electron.ipcMain.on(
                 font_names[id] = font_name;
             }
         }
+        if (charlist_zoom_toggle != undefined)
+            set_check(id, "charlist_zoom_toggle", charlist_zoom_toggle);
+        if (show_charlist != undefined) set_check(id, "show_charlist", show_charlist);
     }
 );
 

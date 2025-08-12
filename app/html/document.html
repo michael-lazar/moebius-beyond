@@ -32,9 +32,6 @@
         <div id="preview">
             <div id="view_frame" class="hidden"></div>
         </div>
-        <div id="charlist">
-            <div id="charlist_selector"></div>
-        </div>
         <div id="toolbar">
             <div class="panel hidden" id="select_panel">
                 <div>
@@ -195,6 +192,18 @@
                 <div id="guide" class="hidden"></div>
                 <div id="drawing_grid" style="opacity: 0.4" class="hidden"></div>
             </div>
+            <div id="charlist_window">
+                <div id="charlist_titlebar">
+                    <span id="charlist_font_name"></span>
+                    <div id="charlist_titlebar_buttons">
+                        <button id="charlist_zoom_button">1x</button>
+                        <button id="charlist_reset_button"></button>
+                    </div>
+                </div>
+                <div id="charlist">
+                    <div id="charlist_selector"></div>
+                </div>
+            </div>
         </div>
         <div id="statusbar">
             <div id="left_info">
@@ -210,7 +219,10 @@
                 </div>
             </div>
             <div id="right_info">
-                <div id="font_name"></div>
+                <div id="font_name_container">
+                    <div id="font_name"></div>
+                    <button id="charlist_visibility_toggle"></button>
+                </div>
                 <div id="cursor_position">
                     Ln <span id="cursor_y">0</span>, Col
                     <span id="cursor_x">0</span>

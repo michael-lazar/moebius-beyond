@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added
+
+- The character palette is now a floating window that can be dragged
+  to reposition within the application.
+- Added a button on the bottom statusbar to show/hide the character
+  palette.
+
 ## v3.3.0 (2025-08-07)
 
 The project/installer has been renamed to "MoebiusBeyond" to

@@ -3,7 +3,6 @@
     --toolbar-height: 48px;
     --statusbar-height: 22px;
     --preview-width: 300px;
-    --charlist-width: 144px;
     --reference-control-opacity: 0.4;
 }
 #sidebar {
@@ -15,7 +14,7 @@
 #toolbar {
     position: relative;
     float: right;
-    width: calc(100% - var(--preview-width) - var(--charlist-width) - var(--sidebar-width));
+    width: calc(100% - var(--preview-width) - var(--sidebar-width));
     height: var(--toolbar-height);
 }
 .tool {
@@ -157,7 +156,8 @@ body.dark #current_colors > canvas {
 }
 #viewport {
     float: left;
-    width: calc(100% - var(--sidebar-width) - var(--preview-width) - var(--charlist-width) - 1px);
+    position: relative;
+    width: calc(100% - var(--sidebar-width) - var(--preview-width) - 1px);
     height: calc(100% - var(--toolbar-height) - var(--statusbar-height) - 1px);
     border-top: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
@@ -178,16 +178,94 @@ body.dark #viewport {
     border-color: var(--dark-border-color);
     background-color: var(--dark-view-color);
 }
-#charlist {
-    position: relative;
-    float: right;
-    width: calc(var(--charlist-width) - 1px);
+#charlist_window {
+    position: fixed;
+    top: var(--toolbar-height);
+    right: var(--preview-width);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid;
+    border-top: 3px solid;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+#charlist_titlebar {
+    background-color: var(--border-color);
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    user-select: none;
+    contain: inline-size;
+}
+#charlist_titlebar:active {
+    cursor: grabbing;
+}
+#charlist_font_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#charlist_zoom_button {
     background-color: var(--mid-color);
-    height: calc(100% - var(--statusbar-height));
-    border-left: 1px solid var(--border-color);
+    border: 1px solid var(--border-color);
+    color: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+#charlist_zoom_button:hover {
+    background-color: var(--view-color);
+}
+#charlist_titlebar_buttons {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+#charlist_reset_button {
+    background-color: var(--mid-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    border-radius: 3px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    position: relative;
+}
+#charlist_reset_button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background-image: url("../img/arrow_outward.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(1) opacity(0.7);
+}
+#charlist_reset_button:hover {
+    background-color: var(--view-color);
+}
+#charlist_reset_button:hover::before {
+    filter: invert(1) opacity(0.9);
+}
+#charlist {
+    background-color: var(--mid-color);
     overflow-y: auto;
     overflow-x: hidden;
     cursor: pointer;
+    flex-grow: 1;
+    position: relative;
 }
 #charlist_selector {
     position: absolute;
@@ -207,9 +285,37 @@ body.dark #viewport {
         opacity: 0;
     }
 }
+body.dark #charlist_window {
+    border-color: var(--dark-border-color);
+}
 body.dark #charlist {
     background-color: var(--dark-mid-color);
+}
+body.dark #charlist_titlebar {
+    background-color: var(--dark-border-color);
+    color: rgba(255, 255, 255, 0.3);
+    border-bottom-color: var(--dark-border-color);
+}
+body.dark #charlist_zoom_button {
+    background-color: var(--dark-mid-color);
     border-color: var(--dark-border-color);
+    color: rgba(255, 255, 255, 0.3);
+}
+body.dark #charlist_zoom_button:hover {
+    background-color: var(--dark-view-color);
+}
+body.dark #charlist_reset_button {
+    background-color: var(--dark-mid-color);
+    border-color: var(--dark-border-color);
+}
+body.dark #charlist_reset_button::before {
+    filter: opacity(0.3);
+}
+body.dark #charlist_reset_button:hover {
+    background-color: var(--dark-view-color);
+}
+body.dark #charlist_reset_button:hover::before {
+    filter: opacity(0.5);
 }
 #preview {
     position: relative;
@@ -303,9 +409,46 @@ body.dark #statusbar > div > div {
     width: 330px;
     text-align: center;
 }
-#font_name {
+#font_name_container {
     float: left;
     width: 160px;
+    display: flex !important;
+    gap: 4px;
+    padding-left: 4px;
+    align-items: center;
+    height: var(--statusbar-height);
+}
+#charlist_visibility_toggle {
+    width: 20px;
+    height: var(--statusbar-height);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url("../img/visibility.png");
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(1) opacity(0.7);
+    flex-shrink: 0;
+}
+#charlist_visibility_toggle.off {
+    background-image: url("../img/visibility_off.png");
+}
+#charlist_visibility_toggle:hover {
+    filter: invert(1) opacity(0.9);
+}
+body.dark #charlist_visibility_toggle {
+    filter: opacity(0.3);
+}
+body.dark #charlist_visibility_toggle:hover {
+    filter: opacity(0.5);
+}
+#font_name {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 12px;
+}
+body.dark #font_name {
+    color: rgba(255, 255, 255, 0.3);
 }
 #cursor_position {
     float: left;
