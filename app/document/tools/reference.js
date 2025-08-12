@@ -40,6 +40,8 @@ function move_reference(y, x) {
 
 function pointer_down(event) {
     if (event.button !== 0) return;
+    // Skip if event originated from charlist window
+    if (event.target.closest("#charlist_window")) return;
     viewport.classList.add("grabbing");
 
     mouse_start_pos = {
