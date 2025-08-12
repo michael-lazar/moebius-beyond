@@ -342,6 +342,12 @@ function hide_scrollbars(value) {
 function show_charlist(visible) {
     const charlist_window = $("charlist_window");
     charlist_window.style.display = visible ? "flex" : "none";
+
+    // Update the statusbar toggle button state
+    const toggleButton = $("charlist_visibility_toggle");
+    if (toggleButton) {
+        toggleButton.classList.toggle("off", !visible);
+    }
 }
 
 function current_zoom_factor() {
@@ -626,6 +632,24 @@ document.addEventListener(
                     isDragging = false;
                     document.body.classList.remove("grabbing");
                 }
+            },
+            true
+        );
+
+        // Charlist visibility toggle button
+        $("charlist_visibility_toggle").addEventListener(
+            "click",
+            (event) => {
+                // Get current visibility state
+                const charlist_window = $("charlist_window");
+                const isVisible = charlist_window.style.display !== "none";
+                const newVisibility = !isVisible;
+
+                // Toggle visibility
+                show_charlist(newVisibility);
+
+                // Update menu item state
+                send("update_menu_checkboxes", { show_charlist: newVisibility });
             },
             true
         );

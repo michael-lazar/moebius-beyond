@@ -192,9 +192,9 @@ body.dark #viewport {
 #charlist_titlebar {
     background-color: var(--border-color);
     color: rgba(0, 0, 0, 0.7);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: bold;
-    padding: 4px 8px;
+    padding: 2px;
     text-align: center;
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
@@ -217,7 +217,6 @@ body.dark #viewport {
     background-color: var(--mid-color);
     border: 1px solid var(--border-color);
     color: rgba(0, 0, 0, 0.7);
-    font-size: 10px;
     padding: 2px 6px;
     cursor: pointer;
     border-radius: 3px;
@@ -235,8 +234,8 @@ body.dark #viewport {
     border: 1px solid var(--border-color);
     cursor: pointer;
     border-radius: 3px;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     padding: 0;
     position: relative;
 }
@@ -410,9 +409,46 @@ body.dark #statusbar > div > div {
     width: 330px;
     text-align: center;
 }
-#font_name {
+#font_name_container {
     float: left;
     width: 160px;
+    display: flex !important;
+    gap: 4px;
+    padding-left: 4px;
+    align-items: center;
+    height: var(--statusbar-height);
+}
+#charlist_visibility_toggle {
+    width: 20px;
+    height: var(--statusbar-height);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url("../img/visibility.png");
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(1) opacity(0.7);
+    flex-shrink: 0;
+}
+#charlist_visibility_toggle.off {
+    background-image: url("../img/visibility_off.png");
+}
+#charlist_visibility_toggle:hover {
+    filter: invert(1) opacity(0.9);
+}
+body.dark #charlist_visibility_toggle {
+    filter: opacity(0.3);
+}
+body.dark #charlist_visibility_toggle:hover {
+    filter: opacity(0.5);
+}
+#font_name {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 12px;
+}
+body.dark #font_name {
+    color: rgba(255, 255, 255, 0.3);
 }
 #cursor_position {
     float: left;
