@@ -339,6 +339,45 @@ function hide_scrollbars(value) {
     set_var("scrollbar-height", value ? "0px" : "8px");
 }
 
+function get_charlist_bounds() {
+    const charlistWindow = $("charlist_window");
+    const windowRect = charlistWindow.getBoundingClientRect();
+
+    // Get viewport boundaries accounting for sidebar and statusbar
+    const sidebarWidth = parseInt(get_var("sidebar-width"));
+    const statusbarHeight = parseInt(get_var("statusbar-height"));
+    const minX = sidebarWidth;
+    const minY = 0;
+    const maxX = window.innerWidth - windowRect.width;
+    const maxY = window.innerHeight - windowRect.height - statusbarHeight;
+
+    return { minX, minY, maxX, maxY };
+}
+
+function constrain_charlist_bounds(x = null, y = null) {
+    const charlistWindow = $("charlist_window");
+    if (charlistWindow.style.display === "none") return;
+
+    const bounds = get_charlist_bounds();
+
+    // Use provided coordinates or get current position
+    let currentX = x !== null ? x : charlistWindow.getBoundingClientRect().left;
+    let currentY = y !== null ? y : charlistWindow.getBoundingClientRect().top;
+
+    // Constrain to viewport boundaries
+    const newX = Math.max(bounds.minX, Math.min(currentX, bounds.maxX));
+    const newY = Math.max(bounds.minY, Math.min(currentY, bounds.maxY));
+
+    // Always update when called with specific coordinates, or only when position needs to change
+    if (x !== null || y !== null || newX !== currentX || newY !== currentY) {
+        charlistWindow.style.left = newX + "px";
+        charlistWindow.style.top = newY + "px";
+        charlistWindow.style.right = "auto";
+    }
+
+    return { x: newX, y: newY };
+}
+
 function show_charlist(visible) {
     const charlist_window = $("charlist_window");
     charlist_window.style.display = visible ? "flex" : "none";
@@ -441,6 +480,9 @@ function charlist_zoom_toggle() {
     toolbar.draw_charlist_cursor();
 
     $("charlist_zoom_button").textContent = charlist_zoom_toggled ? "2x" : "1x";
+
+    // Check bounds after zoom change (window size changed)
+    constrain_charlist_bounds();
 
     send("update_menu_checkboxes", {
         charlist_zoom_toggle: charlist_zoom_toggled,
@@ -597,28 +639,12 @@ document.addEventListener(
             (event) => {
                 if (!isDragging) return;
 
-                const charlistWindow = $("charlist_window");
-                const windowRect = charlistWindow.getBoundingClientRect();
-
                 // Calculate new position
                 let newX = event.clientX - dragOffsetX;
                 let newY = event.clientY - dragOffsetY;
 
-                // Get viewport boundaries accounting for sidebar and statusbar
-                const sidebarWidth = parseInt(get_var("sidebar-width"));
-                const statusbarHeight = parseInt(get_var("statusbar-height"));
-                const minX = sidebarWidth;
-                const minY = 0;
-                const maxX = window.innerWidth - windowRect.width;
-                const maxY = window.innerHeight - windowRect.height - statusbarHeight;
-
-                // Constrain to viewport boundaries
-                newX = Math.max(minX, Math.min(newX, maxX));
-                newY = Math.max(minY, Math.min(newY, maxY));
-
-                charlistWindow.style.left = newX + "px";
-                charlistWindow.style.top = newY + "px";
-                charlistWindow.style.right = "auto";
+                // Apply boundary constraints using shared logic
+                constrain_charlist_bounds(newX, newY);
 
                 event.preventDefault();
             },
@@ -653,6 +679,11 @@ document.addEventListener(
             },
             true
         );
+
+        // Window resize handler to keep charlist window in bounds
+        window.addEventListener("resize", () => {
+            constrain_charlist_bounds();
+        });
     },
     true
 );
