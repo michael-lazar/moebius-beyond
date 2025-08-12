@@ -183,6 +183,8 @@ body.dark #viewport {
     top: var(--toolbar-height);
     right: var(--preview-width);
     border: 1px solid var(--border-color);
+    border-left: 3px solid;
+    border-top: 3px solid;
     display: flex;
     flex-direction: column;
     z-index: 1000;
