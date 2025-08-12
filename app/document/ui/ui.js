@@ -548,6 +548,18 @@ document.addEventListener(
             true
         );
 
+        $("charlist_reset_button").addEventListener(
+            "click",
+            (event) => {
+                // Reset charlist window to original position
+                const charlistWindow = $("charlist_window");
+                charlistWindow.style.top = "";
+                charlistWindow.style.left = "";
+                charlistWindow.style.right = "";
+            },
+            true
+        );
+
         // Charlist window drag functionality
         let isDragging = false;
         let dragOffsetX = 0;
@@ -556,8 +568,12 @@ document.addEventListener(
         $("charlist_titlebar").addEventListener(
             "mousedown",
             (event) => {
-                // Don't start dragging if clicking on the zoom button
-                if (event.target.id === "charlist_zoom_button") return;
+                // Don't start dragging if clicking on buttons
+                if (
+                    event.target.id === "charlist_zoom_button" ||
+                    event.target.id === "charlist_reset_button"
+                )
+                    return;
 
                 isDragging = true;
                 const rect = $("charlist_window").getBoundingClientRect();

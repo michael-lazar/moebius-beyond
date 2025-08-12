@@ -212,7 +212,7 @@ body.dark #viewport {
     white-space: nowrap;
 }
 #charlist_zoom_button {
-    background-color: var(--view-color);
+    background-color: var(--mid-color);
     border: 1px solid var(--border-color);
     color: rgba(0, 0, 0, 0.7);
     font-size: 10px;
@@ -221,7 +221,42 @@ body.dark #viewport {
     border-radius: 3px;
 }
 #charlist_zoom_button:hover {
+    background-color: var(--view-color);
+}
+#charlist_titlebar_buttons {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+#charlist_reset_button {
     background-color: var(--mid-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    border-radius: 3px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    position: relative;
+}
+#charlist_reset_button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background-image: url("../img/arrow_outward.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(1) opacity(0.7);
+}
+#charlist_reset_button:hover {
+    background-color: var(--view-color);
+}
+#charlist_reset_button:hover::before {
+    filter: invert(1) opacity(0.9);
 }
 #charlist {
     background-color: var(--mid-color);
@@ -261,12 +296,25 @@ body.dark #charlist_titlebar {
     border-bottom-color: var(--dark-border-color);
 }
 body.dark #charlist_zoom_button {
-    background-color: var(--dark-view-color);
+    background-color: var(--dark-mid-color);
     border-color: var(--dark-border-color);
     color: rgba(255, 255, 255, 0.3);
 }
 body.dark #charlist_zoom_button:hover {
+    background-color: var(--dark-view-color);
+}
+body.dark #charlist_reset_button {
     background-color: var(--dark-mid-color);
+    border-color: var(--dark-border-color);
+}
+body.dark #charlist_reset_button::before {
+    filter: opacity(0.3);
+}
+body.dark #charlist_reset_button:hover {
+    background-color: var(--dark-view-color);
+}
+body.dark #charlist_reset_button:hover::before {
+    filter: opacity(0.5);
 }
 #preview {
     position: relative;
