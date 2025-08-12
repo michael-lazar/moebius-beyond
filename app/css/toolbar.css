@@ -13,10 +13,6 @@
     margin: 0px auto;
     font-size: 10px;
     line-height: 48px;
-    color: rgba(0, 0, 0, 0.7);
-}
-
-body.dark .panel > div {
     color: rgba(255, 255, 255, 0.3);
 }
 

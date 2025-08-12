@@ -24,16 +24,9 @@
     background-position: center center;
     background-size: 24px 24px;
     background-repeat: no-repeat;
-    filter: invert(1);
     cursor: pointer;
 }
 .tool.selected {
-    background-color: rgba(255, 255, 255, 0.4);
-}
-body.dark .tool {
-    filter: none;
-}
-body.dark .tool.selected {
     background-color: rgba(0, 0, 0, 0.8);
 }
 .seperator {
@@ -82,10 +75,6 @@ body.dark .tool.selected {
 }
 #sidebar,
 #toolbar {
-    background-color: var(--mid-color);
-}
-body.dark #sidebar,
-body.dark #toolbar {
     background-color: var(--dark-mid-color);
 }
 #current_colors {
@@ -95,12 +84,9 @@ body.dark #toolbar {
 }
 #current_colors > canvas {
     position: absolute;
-    border: 1px solid black;
+    border: 1px solid white;
     width: 24px;
     height: 24px;
-}
-body.dark #current_colors > canvas {
-    border: 1px solid white;
 }
 #color_picker {
     position: absolute;
@@ -159,9 +145,10 @@ body.dark #current_colors > canvas {
     position: relative;
     width: calc(100% - var(--sidebar-width) - var(--preview-width) - 1px);
     height: calc(100% - var(--toolbar-height) - var(--statusbar-height) - 1px);
-    border-top: 1px solid var(--border-color);
-    border-left: 1px solid var(--border-color);
-    background-color: var(--view-color);
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: var(--dark-border-color);
+    background-color: var(--dark-view-color);
     overflow: auto;
     touch-action: none;
     cursor:
@@ -174,29 +161,24 @@ body.dark #current_colors > canvas {
 #viewport.reference-tool.grabbing {
     cursor: grabbing;
 }
-body.dark #viewport {
-    border-color: var(--dark-border-color);
-    background-color: var(--dark-view-color);
-}
 #charlist_window {
     position: fixed;
     top: var(--toolbar-height);
     right: var(--preview-width);
-    border: 1px solid var(--border-color);
+    border: 1px solid;
     border-left: 3px solid;
     border-top: 3px solid;
     display: flex;
     flex-direction: column;
     z-index: 1000;
+    border-color: var(--dark-border-color);
 }
 #charlist_titlebar {
-    background-color: var(--border-color);
-    color: rgba(0, 0, 0, 0.7);
     font-size: 12px;
     font-weight: bold;
     padding: 2px;
     text-align: center;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid;
     flex-shrink: 0;
     display: flex;
     justify-content: space-between;
@@ -204,6 +186,9 @@ body.dark #viewport {
     cursor: grab;
     user-select: none;
     contain: inline-size;
+    background-color: var(--dark-border-color);
+    color: rgba(255, 255, 255, 0.3);
+    border-color: var(--dark-border-color);
 }
 #charlist_titlebar:active {
     cursor: grabbing;
@@ -214,16 +199,17 @@ body.dark #viewport {
     white-space: nowrap;
 }
 #charlist_zoom_button {
-    background-color: var(--mid-color);
-    border: 1px solid var(--border-color);
-    color: rgba(0, 0, 0, 0.7);
+    border: 1px solid;
     padding: 2px 6px;
     cursor: pointer;
     border-radius: 3px;
     height: 20px;
+    background-color: var(--dark-mid-color);
+    border-color: var(--dark-border-color);
+    color: rgba(255, 255, 255, 0.3);
 }
 #charlist_zoom_button:hover {
-    background-color: var(--view-color);
+    background-color: var(--dark-view-color);
 }
 #charlist_titlebar_buttons {
     display: flex;
@@ -231,14 +217,15 @@ body.dark #viewport {
     align-items: center;
 }
 #charlist_reset_button {
-    background-color: var(--mid-color);
-    border: 1px solid var(--border-color);
     cursor: pointer;
+    border: 1px solid;
     border-radius: 3px;
     width: 20px;
     height: 20px;
     padding: 0;
     position: relative;
+    background-color: var(--dark-mid-color);
+    border-color: var(--dark-border-color);
 }
 #charlist_reset_button::before {
     content: "";
@@ -252,21 +239,21 @@ body.dark #viewport {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    filter: invert(1) opacity(0.7);
+    filter: opacity(0.3);
 }
 #charlist_reset_button:hover {
-    background-color: var(--view-color);
+    background-color: var(--dark-view-color);
 }
 #charlist_reset_button:hover::before {
-    filter: invert(1) opacity(0.9);
+    filter: opacity(0.5);
 }
 #charlist {
-    background-color: var(--mid-color);
     overflow-y: auto;
     overflow-x: hidden;
     cursor: pointer;
     flex-grow: 1;
     position: relative;
+    background-color: var(--dark-mid-color);
 }
 #charlist_selector {
     position: absolute;
@@ -286,48 +273,18 @@ body.dark #viewport {
         opacity: 0;
     }
 }
-body.dark #charlist_window {
-    border-color: var(--dark-border-color);
-}
-body.dark #charlist {
-    background-color: var(--dark-mid-color);
-}
-body.dark #charlist_titlebar {
-    background-color: var(--dark-border-color);
-    color: rgba(255, 255, 255, 0.3);
-    border-bottom-color: var(--dark-border-color);
-}
-body.dark #charlist_zoom_button {
-    background-color: var(--dark-mid-color);
-    border-color: var(--dark-border-color);
-    color: rgba(255, 255, 255, 0.3);
-}
-body.dark #charlist_zoom_button:hover {
-    background-color: var(--dark-view-color);
-}
-body.dark #charlist_reset_button {
-    background-color: var(--dark-mid-color);
-    border-color: var(--dark-border-color);
-}
-body.dark #charlist_reset_button::before {
-    filter: opacity(0.3);
-}
-body.dark #charlist_reset_button:hover {
-    background-color: var(--dark-view-color);
-}
-body.dark #charlist_reset_button:hover::before {
-    filter: opacity(0.5);
-}
+
 #preview {
     position: relative;
     float: right;
     width: calc(var(--preview-width) - 1px);
-    background-color: var(--mid-color);
     height: calc(100% - var(--statusbar-height));
-    border-left: 1px solid var(--border-color);
+    border-left: 1px solid);
     overflow-y: auto;
     overflow-x: hidden;
     cursor: grab;
+    background-color: var(--dark-mid-color);
+    border-color: var(--dark-border-color);
 }
 #preview.grabbing {
     cursor: grabbing;
@@ -344,10 +301,6 @@ body.dark #charlist_reset_button:hover::before {
     border: 1px solid rgba(255, 255, 255, 0.6);
     position: absolute;
     pointer-events: none;
-}
-body.dark #preview {
-    background-color: var(--dark-mid-color);
-    border-color: var(--dark-border-color);
 }
 #canvas_container {
     position: relative;
@@ -372,21 +325,15 @@ body.dark #preview {
     bottom: 0px;
     width: 100%;
     height: var(--statusbar-height);
-    background-color: var(--border-color);
-    overflow: hidden;
-}
-body.dark #statusbar {
     background-color: var(--dark-border-color);
+    overflow: hidden;
 }
 #statusbar > div > div {
     height: var(--statusbar-height);
-    color: rgba(0, 0, 0, 0.7);
+    color: rgba(255, 255, 255, 0.3);
     font-size: 12px;
     line-height: var(--statusbar-height);
     display: inline-block;
-}
-body.dark #statusbar > div > div {
-    color: rgba(255, 255, 255, 0.3);
 }
 #left_info {
     float: left;
@@ -429,27 +376,18 @@ body.dark #statusbar > div > div {
     background-size: 16px 16px;
     background-repeat: no-repeat;
     background-position: center;
-    filter: invert(1) opacity(0.7);
+    filter: opacity(0.3);
     flex-shrink: 0;
 }
 #charlist_visibility_toggle.off {
     background-image: url("../img/visibility_off.png");
 }
 #charlist_visibility_toggle:hover {
-    filter: invert(1) opacity(0.9);
-}
-body.dark #charlist_visibility_toggle {
-    filter: opacity(0.3);
-}
-body.dark #charlist_visibility_toggle:hover {
     filter: opacity(0.5);
 }
 #font_name {
-    color: rgba(0, 0, 0, 0.7);
-    font-size: 12px;
-}
-body.dark #font_name {
     color: rgba(255, 255, 255, 0.3);
+    font-size: 12px;
 }
 #cursor_position {
     float: left;
