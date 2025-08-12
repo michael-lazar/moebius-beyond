@@ -201,6 +201,7 @@ body.dark #viewport {
     align-items: center;
     cursor: grab;
     user-select: none;
+    contain: inline-size;
 }
 #charlist_titlebar:active {
     cursor: grabbing;
