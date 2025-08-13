@@ -878,6 +878,7 @@ class Toolbar extends events.EventEmitter {
                     Math.floor(this.charlist_y / cell_height / scale) * 16 +
                     Math.floor(this.charlist_x / cell_width / scale);
                 this.draw_charlist_cursor();
+                this.change_mode(this.modes.CUSTOM_BLOCK);
             },
             true
         );
@@ -1062,17 +1063,6 @@ class Toolbar extends events.EventEmitter {
     }
 
     change_mode(new_mode) {
-        if (this.mode == new_mode && this.mode == this.modes.CUSTOM_BLOCK) {
-            send_sync("fkey_prefs", {
-                num: -1,
-                fkey_index: 0,
-                current: this.custom_block_index,
-                bitmask: doc.font.bitmask,
-                use_9px_font: doc.font.use_9px_font,
-                font_height: doc.font.height,
-            });
-            return;
-        }
         this.mode = new_mode;
         $("half_block").classList.remove("brush_mode_selected");
         $("custom_block").classList.remove("brush_mode_selected");

@@ -8,6 +8,12 @@
   to reposition within the application.
 - Added a button on the bottom statusbar to show/hide the character
   palette.
+- Clicking inside of the character palette now automatically activates
+  the custom block brush tool with the given character selected.
+
+### Removed
+
+- Removed double click on the custom block tool to set the character.
 
 ## v3.3.0 (2025-08-07)
 
