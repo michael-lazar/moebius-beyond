@@ -203,7 +203,8 @@
     padding: 2px 6px;
     cursor: pointer;
     border-radius: 3px;
-    height: 20px;
+    height: 16px;
+    font-size: 10px;
     background-color: var(--dark-mid-color);
     border-color: var(--dark-border-color);
     color: rgba(255, 255, 255, 0.3);
@@ -220,8 +221,8 @@
     cursor: pointer;
     border: 1px solid;
     border-radius: 3px;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     padding: 0;
     position: relative;
     background-color: var(--dark-mid-color);
@@ -279,7 +280,7 @@
     float: right;
     width: calc(var(--preview-width) - 1px);
     height: calc(100% - var(--statusbar-height));
-    border-left: 1px solid);
+    border-left: 1px solid;
     overflow-y: auto;
     overflow-x: hidden;
     cursor: grab;
