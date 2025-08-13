@@ -11,6 +11,11 @@
 - Clicking inside of the character palette now automatically activates
   the custom block brush tool with the given character selected.
 
+### Changed
+
+- Rectangle and ellipse tools now toggle between outline and filled modes
+  when clicked repeatedly, replacing the previous split-button behavior.
+
 ### Removed
 
 - Removed double click on the custom block tool to set the character.

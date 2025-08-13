@@ -802,11 +802,12 @@ class Tools extends events.EventEmitter {
             $("rectangle_mode").addEventListener(
                 "mousedown",
                 (event) => {
-                    const rect = $("rectangle_mode").getBoundingClientRect();
-                    if (Math.floor(event.clientX - rect.left) < 24) {
+                    if (this.mode === this.modes.RECTANGLE_OUTLINE) {
+                        this.start(this.modes.RECTANGLE_FILLED);
+                    } else if (this.mode === this.modes.RECTANGLE_FILLED) {
                         this.start(this.modes.RECTANGLE_OUTLINE);
                     } else {
-                        this.start(this.modes.RECTANGLE_FILLED);
+                        this.start(this.modes.RECTANGLE_OUTLINE);
                     }
                 },
                 true
@@ -814,11 +815,12 @@ class Tools extends events.EventEmitter {
             $("ellipse_mode").addEventListener(
                 "mousedown",
                 (event) => {
-                    const rect = $("ellipse_mode").getBoundingClientRect();
-                    if (Math.floor(event.clientX - rect.left) < 24) {
+                    if (this.mode === this.modes.ELLIPSE_OUTLINE) {
+                        this.start(this.modes.ELLIPSE_FILLED);
+                    } else if (this.mode === this.modes.ELLIPSE_FILLED) {
                         this.start(this.modes.ELLIPSE_OUTLINE);
                     } else {
-                        this.start(this.modes.ELLIPSE_FILLED);
+                        this.start(this.modes.ELLIPSE_OUTLINE);
                     }
                 },
                 true
