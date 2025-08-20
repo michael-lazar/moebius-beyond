@@ -64,7 +64,7 @@ function save(destroy_when_done = false, save_without_sauce = false) {
 }
 
 async function save_as(destroy_when_done = false) {
-    const file = save_box(doc.file, "mbd", {
+    const file = save_box(doc.file, "xb", {
         filters: [
             { name: "Moebius Beyond Document", extensions: ["mbd"] },
             { name: "XBin", extensions: ["xb"] },
