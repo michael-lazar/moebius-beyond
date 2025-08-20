@@ -84,6 +84,7 @@
     flex-direction: column;
     align-items: center;
     font-size: 12px;
+    padding-left: 1px;
     border-left: 1px solid var(--dark-border-color);
     box-sizing: border-box;
 }
@@ -92,12 +93,12 @@
     cursor: pointer;
     transition: background-color 0.2s ease;
     padding: 15px 10px;
-    margin: 1px;
 }
 .right-sidebar-button:hover  {
     background-color: var(--dark-view-color);
 }
-#preview_toggle_button.active {
+#preview_toggle_button.active,
+#toolbar_toggle_button.active {
     background-color: var(--dark-view-color);
 }
 

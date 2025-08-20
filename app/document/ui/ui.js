@@ -10,6 +10,7 @@ let interval, guide_columns, guide_rows, grid_columns;
 let canvas_zoom = 1.0;
 let charlist_zoom_toggled = false;
 let preview_visible = true;
+let toolbar_visible = true;
 
 function $(name) {
     return document.getElementById(name);
@@ -337,6 +338,19 @@ function show_preview(visible) {
         previewToggle.classList.add("active");
     } else {
         previewToggle.classList.remove("active");
+    }
+}
+
+function show_toolbar(visible) {
+    toolbar_visible = visible;
+    set_var("toolbar-height", visible ? "48px" : "0px");
+
+    // Update the toolbar toggle button visual state
+    const toolbarToggle = $("toolbar_toggle_button");
+    if (visible) {
+        toolbarToggle.classList.add("active");
+    } else {
+        toolbarToggle.classList.remove("active");
     }
 }
 
@@ -701,6 +715,20 @@ document.addEventListener(
 
                 // Update menu item state
                 send("update_menu_checkboxes", { show_preview: newVisibility });
+            },
+            true
+        );
+
+        // Toolbar toggle button
+        $("toolbar_toggle_button").addEventListener(
+            "click",
+            (event) => {
+                // Toggle toolbar visibility
+                const newVisibility = !toolbar_visible;
+                show_toolbar(newVisibility);
+
+                // Update menu item state
+                send("update_menu_checkboxes", { show_toolbar: newVisibility });
             },
             true
         );
@@ -1184,7 +1212,7 @@ class Toolbar extends events.EventEmitter {
         this.colorize_bg = false;
         this.brush_size = 1;
         this.custom_block_index = 176;
-        on("show_toolbar", (event, visible) => set_var_px("toolbar-height", visible ? 48 : 0));
+        on("show_toolbar", (event, visible) => show_toolbar(visible));
         palette.on("set_fg", () => {
             this.redraw_fkeys();
             this.draw_custom_block();
