@@ -183,6 +183,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 4px;
     cursor: grab;
     user-select: none;
     contain: inline-size;
@@ -212,16 +213,11 @@
 #charlist_zoom_button:hover {
     background-color: var(--dark-view-color);
 }
-#charlist_titlebar_buttons {
-    display: flex;
-    gap: 2px;
-    align-items: center;
-}
 #charlist_reset_button {
     cursor: pointer;
     border: 1px solid;
     border-radius: 3px;
-    width: 16px;
+    min-width: 16px;
     height: 16px;
     padding: 0;
     position: relative;
@@ -236,7 +232,7 @@
     transform: translate(-50%, -50%);
     width: 12px;
     height: 12px;
-    background-image: url("../img/arrow_outward.png");
+    background-image: url("../img/close.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

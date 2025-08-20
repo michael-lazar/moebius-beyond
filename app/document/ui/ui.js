@@ -599,11 +599,11 @@ document.addEventListener(
         $("charlist_reset_button").addEventListener(
             "click",
             (event) => {
-                // Reset charlist window to original position
-                const charlistWindow = $("charlist_window");
-                charlistWindow.style.top = "";
-                charlistWindow.style.left = "";
-                charlistWindow.style.right = "";
+                // Hide charlist window
+                show_charlist(false);
+
+                // Update menu item state
+                send("update_menu_checkboxes", { show_charlist: false });
             },
             true
         );
