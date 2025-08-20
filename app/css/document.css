@@ -92,14 +92,15 @@
     writing-mode: vertical-rl;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    padding: 15px 10px;
+    padding: 10px 5px;
 }
 .right-sidebar-button:hover  {
     background-color: var(--dark-view-color);
 }
 #preview_toggle_button.active,
 #toolbar_toggle_button.active,
-#statusbar_toggle_button.active {
+#statusbar_toggle_button.active,
+#charlist_toggle_button.active {
     background-color: var(--dark-view-color);
 }
 

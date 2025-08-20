@@ -12,6 +12,7 @@ let charlist_zoom_toggled = false;
 let preview_visible = true;
 let toolbar_visible = true;
 let statusbar_visible = true;
+let charlist_visible = true;
 
 function $(name) {
     return document.getElementById(name);
@@ -414,6 +415,7 @@ function constrain_charlist_bounds(x = null, y = null) {
 }
 
 function show_charlist(visible) {
+    charlist_visible = visible;
     const charlist_window = $("charlist_window");
     charlist_window.style.display = visible ? "flex" : "none";
 
@@ -421,6 +423,14 @@ function show_charlist(visible) {
     const toggleButton = $("charlist_visibility_toggle");
     if (toggleButton) {
         toggleButton.classList.toggle("off", !visible);
+    }
+
+    // Update the character palette toggle button visual state
+    const charlistToggle = $("charlist_toggle_button");
+    if (visible) {
+        charlistToggle.classList.add("active");
+    } else {
+        charlistToggle.classList.remove("active");
     }
 }
 
@@ -701,12 +711,8 @@ document.addEventListener(
         $("charlist_visibility_toggle").addEventListener(
             "click",
             (event) => {
-                // Get current visibility state
-                const charlist_window = $("charlist_window");
-                const isVisible = charlist_window.style.display !== "none";
-                const newVisibility = !isVisible;
-
-                // Toggle visibility
+                // Toggle character palette visibility
+                const newVisibility = !charlist_visible;
                 show_charlist(newVisibility);
 
                 // Update menu item state
@@ -753,6 +759,20 @@ document.addEventListener(
 
                 // Update menu item state
                 send("update_menu_checkboxes", { show_statusbar: newVisibility });
+            },
+            true
+        );
+
+        // Character palette toggle button
+        $("charlist_toggle_button").addEventListener(
+            "click",
+            (event) => {
+                // Toggle character palette visibility
+                const newVisibility = !charlist_visible;
+                show_charlist(newVisibility);
+
+                // Update menu item state
+                send("update_menu_checkboxes", { show_charlist: newVisibility });
             },
             true
         );
