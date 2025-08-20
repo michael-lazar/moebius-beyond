@@ -6,15 +6,16 @@
 
 - The character palette is now a floating window that can be dragged
   to reposition within the application.
-- Added a button on the bottom statusbar to show/hide the character
-  palette.
-- Clicking inside of the character palette now automatically activates
-  the custom block brush tool with the given character selected.
+- Added a new sidebar on the main document window with buttons to
+  show/hide various UI elements.
 
 ### Changed
 
-- Rectangle and ellipse tools now toggle between outline and filled modes
-  when clicked repeatedly, replacing the previous split-button behavior.
+- The rectangle and ellipse tools now toggle between outline and
+  filled modes when clicked repeatedly, replacing the previous
+  split-button behavior.
+- Clicking inside of the character palette now automatically activates
+  the custom block brush tool with the given character selected.
 
 ### Removed
 
