@@ -9,6 +9,7 @@ let interval, guide_columns, guide_rows, grid_columns;
 
 let canvas_zoom = 1.0;
 let charlist_zoom_toggled = false;
+let preview_visible = true;
 
 function $(name) {
     return document.getElementById(name);
@@ -327,7 +328,16 @@ function show_statusbar(visible) {
 }
 
 function show_preview(visible) {
+    preview_visible = visible;
     set_var("preview-width", visible ? "300px" : "1px");
+
+    // Update the preview toggle button visual state
+    const previewToggle = $("preview_toggle_button");
+    if (visible) {
+        previewToggle.classList.add("active");
+    } else {
+        previewToggle.classList.remove("active");
+    }
 }
 
 function use_pixel_aliasing(value) {
@@ -345,10 +355,11 @@ function get_charlist_bounds() {
 
     // Get viewport boundaries accounting for sidebar and statusbar
     const sidebarWidth = parseInt(get_var("sidebar-width"));
+    const rightSidebarWidth = parseInt(get_var("right-sidebar-width"));
     const statusbarHeight = parseInt(get_var("statusbar-height"));
     const minX = sidebarWidth;
     const minY = 0;
-    const maxX = window.innerWidth - windowRect.width;
+    const maxX = window.innerWidth - windowRect.width - rightSidebarWidth;
     const maxY = window.innerHeight - windowRect.height - statusbarHeight;
 
     return { minX, minY, maxX, maxY };
@@ -676,6 +687,20 @@ document.addEventListener(
 
                 // Update menu item state
                 send("update_menu_checkboxes", { show_charlist: newVisibility });
+            },
+            true
+        );
+
+        // Preview toggle button
+        $("preview_toggle_button").addEventListener(
+            "click",
+            (event) => {
+                // Toggle preview visibility
+                const newVisibility = !preview_visible;
+                show_preview(newVisibility);
+
+                // Update menu item state
+                send("update_menu_checkboxes", { show_preview: newVisibility });
             },
             true
         );
