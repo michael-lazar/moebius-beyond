@@ -98,7 +98,8 @@
     background-color: var(--dark-view-color);
 }
 #preview_toggle_button.active,
-#toolbar_toggle_button.active {
+#toolbar_toggle_button.active,
+#statusbar_toggle_button.active {
     background-color: var(--dark-view-color);
 }
 

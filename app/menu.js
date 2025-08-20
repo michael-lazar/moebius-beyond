@@ -3818,6 +3818,7 @@ electron.ipcMain.on(
             show_charlist,
             show_preview,
             show_toolbar,
+            show_statusbar,
         }
     ) => {
         if (insert_mode != undefined) set_check(id, "toggle_insert_mode", insert_mode);
@@ -3849,6 +3850,7 @@ electron.ipcMain.on(
         if (show_charlist != undefined) set_check(id, "show_charlist", show_charlist);
         if (show_preview != undefined) set_check(id, "show_preview", show_preview);
         if (show_toolbar != undefined) set_check(id, "show_tool_bar", show_toolbar);
+        if (show_statusbar != undefined) set_check(id, "show_status_bar", show_statusbar);
     }
 );
 

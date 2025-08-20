@@ -11,6 +11,7 @@ let canvas_zoom = 1.0;
 let charlist_zoom_toggled = false;
 let preview_visible = true;
 let toolbar_visible = true;
+let statusbar_visible = true;
 
 function $(name) {
     return document.getElementById(name);
@@ -325,7 +326,16 @@ class StatusBar {
 }
 
 function show_statusbar(visible) {
+    statusbar_visible = visible;
     set_var("statusbar-height", visible ? "22px" : "0px");
+
+    // Update the status bar toggle button visual state
+    const statusbarToggle = $("statusbar_toggle_button");
+    if (visible) {
+        statusbarToggle.classList.add("active");
+    } else {
+        statusbarToggle.classList.remove("active");
+    }
 }
 
 function show_preview(visible) {
@@ -729,6 +739,20 @@ document.addEventListener(
 
                 // Update menu item state
                 send("update_menu_checkboxes", { show_toolbar: newVisibility });
+            },
+            true
+        );
+
+        // Status bar toggle button
+        $("statusbar_toggle_button").addEventListener(
+            "click",
+            (event) => {
+                // Toggle status bar visibility
+                const newVisibility = !statusbar_visible;
+                show_statusbar(newVisibility);
+
+                // Update menu item state
+                send("update_menu_checkboxes", { show_statusbar: newVisibility });
             },
             true
         );
