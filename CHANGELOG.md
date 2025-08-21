@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.4.0 (2025-08-20)
+
 ### Added
 
 - The character palette is now a floating window that can be dragged
