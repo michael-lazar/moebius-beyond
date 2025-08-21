@@ -2997,8 +2997,8 @@ function view_menu_template(win) {
                 checked: true,
             },
             {
-                label: "Show Tool Bar",
-                id: "show_tool_bar",
+                label: "Show Toolbar",
+                id: "show_toolbar",
                 accelerator: "CmdorCtrl+T",
                 click(item) {
                     win.send("show_toolbar", item.checked);
@@ -3849,7 +3849,7 @@ electron.ipcMain.on(
             set_check(id, "charlist_zoom_toggle", charlist_zoom_toggle);
         if (show_charlist != undefined) set_check(id, "show_charlist", show_charlist);
         if (show_preview != undefined) set_check(id, "show_preview", show_preview);
-        if (show_toolbar != undefined) set_check(id, "show_tool_bar", show_toolbar);
+        if (show_toolbar != undefined) set_check(id, "show_toolbar", show_toolbar);
         if (show_statusbar != undefined) set_check(id, "show_status_bar", show_statusbar);
     }
 );

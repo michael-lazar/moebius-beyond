@@ -5,9 +5,8 @@
 ### Added
 
 - The character palette is now a floating window that can be dragged
-  to reposition within the application.
-- Added a new sidebar on the main document window with buttons to
-  show/hide various UI elements.
+  and repositioned within the application.
+- Added a new sidebar with buttons to show/hide various UI elements.
 
 ### Changed
 
