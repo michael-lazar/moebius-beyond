@@ -7,7 +7,7 @@ const { encode_as_mbd, fromMBD } = require("./moebius_document");
 const { palette_4bit } = require("./palette");
 const path = require("path");
 const { open_box } = require("../senders");
-const { current_date, resize_canvas, Textmode } = require("./textmode");
+const { current_date, Textmode } = require("./textmode");
 const { cp437_to_unicode, cp437_to_unicode_bytes, unicode_to_cp437 } = require("./encodings");
 const fs = require("fs");
 const upng = require("upng-js");
@@ -1658,7 +1658,6 @@ module.exports = {
     render_insert_row,
     render_delete_row,
     new_document,
-    resize_canvas,
     cp437_to_unicode,
     cp437_to_unicode_bytes,
     unicode_to_cp437,

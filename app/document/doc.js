@@ -760,7 +760,25 @@ class TextModeDoc extends events.EventEmitter {
 
     resize(columns, rows) {
         this.undo_history.push_resize();
-        libtextmode.resize_canvas(this.doc, columns, rows);
+
+        const min_rows = Math.min(this.doc.rows, rows);
+        const min_columns = Math.min(this.doc.columns, columns);
+        const new_data = new Array(columns * rows);
+        for (let i = 0; i < new_data.length; i++) {
+            new_data[i] = { code: 32, fg: 7, bg: 0 };
+        }
+        for (let y = 0; y < min_rows; y++) {
+            for (let x = 0; x < min_columns; x++) {
+                new_data[y * columns + x] = this.doc.data[y * this.doc.columns + x];
+            }
+        }
+        this.doc.data = new_data;
+        this.doc.columns = columns;
+        this.doc.rows = rows;
+
+        const { toggle_off_guide } = require("./ui/ui");
+        toggle_off_guide();
+
         this.start_rendering();
     }
 

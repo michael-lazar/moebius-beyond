@@ -1,7 +1,3 @@
-function $(name) {
-    return document.getElementById(name);
-}
-
 function bytes_to_blocks({ columns, rows, bytes }) {
     const data = new Array(columns * rows);
     for (let i = 0, j = 0; i < data.length; i++, j++) {
@@ -263,39 +259,6 @@ class Textmode {
     }
 }
 
-function resize_canvas(doc, columns, rows) {
-    var client = false;
-    try {
-        const electron = require("electron");
-        if (typeof electron == "object") {
-            const remote = require("@electron/remote");
-            const win = remote.getCurrentWindow();
-            client = true;
-        }
-    } catch (err) {
-        console.log(err);
-    }
-    const min_rows = Math.min(doc.rows, rows);
-    const min_columns = Math.min(doc.columns, columns);
-    const new_data = new Array(columns * rows);
-    for (let i = 0; i < new_data.length; i++) {
-        new_data[i] = { code: 32, fg: 7, bg: 0 };
-    }
-    for (let y = 0; y < min_rows; y++) {
-        for (let x = 0; x < min_columns; x++) {
-            new_data[y * columns + x] = doc.data[y * doc.columns + x];
-        }
-    }
-    doc.data = new_data;
-    doc.columns = columns;
-    doc.rows = rows;
-    if (client) {
-        const { send } = require("../senders");
-        $("drawing_grid").classList.add("hidden");
-        send("uncheck_all_guides");
-    }
-}
-
 module.exports = {
     bytes_to_blocks,
     bytes_to_utf8,
@@ -305,5 +268,4 @@ module.exports = {
     add_sauce_for_ans,
     add_sauce_for_bin,
     add_sauce_for_xbin,
-    resize_canvas,
 };
