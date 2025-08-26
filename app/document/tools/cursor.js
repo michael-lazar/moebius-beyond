@@ -604,18 +604,7 @@ class Cursor {
 
     crop() {
         if (this.mode == modes.SELECTION) this.start_operation_mode(false);
-        send("new_document", {
-            title: doc.title,
-            author: doc.author,
-            group: doc.group,
-            date: doc.date,
-            palette: doc.palette,
-            font_bytes: doc.font_bytes,
-            font_name: doc.font_name,
-            use_9px_font: doc.use_9px_font,
-            ice_colors: doc.ice_colors,
-            ...this.operation_blocks,
-        });
+        doc.crop(this.operation_blocks);
         this.deselect();
     }
 
