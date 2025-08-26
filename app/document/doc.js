@@ -569,8 +569,8 @@ class TextModeDoc extends events.EventEmitter {
         return this.doc.data[y * this.doc.columns + x];
     }
 
-    get_blocks(sx, sy, dx, dy, opts) {
-        return libtextmode.get_blocks(this.doc, sx, sy, dx, dy, opts);
+    get_blocks(sx, sy, dx, dy) {
+        return libtextmode.get_blocks(this.doc, sx, sy, dx, dy);
     }
 
     change_data(x, y, code, fg, bg, prev_cursor, cursor, mirrored = true) {

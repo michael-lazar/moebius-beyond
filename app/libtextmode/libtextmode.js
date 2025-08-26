@@ -1445,12 +1445,12 @@ function get_data_url(canvases) {
     return join_canvases(canvases).toDataURL("image/png");
 }
 
-function get_blocks(doc, sx, sy, dx, dy, opts = {}) {
+function get_blocks(doc, sx, sy, dx, dy) {
     dx = Math.min(doc.columns - 1, dx);
     dy = Math.min(doc.rows - 1, dy);
     const columns = dx - sx + 1;
     const rows = dy - sy + 1;
-    const blocks = { columns, rows, data: new Array(columns * rows), ...opts };
+    const blocks = { columns, rows, data: new Array(columns * rows) };
     for (let y = sy, i = 0; y <= dy; y++) {
         for (let x = sx; x <= dx; x++, i++) {
             blocks.data[i] = Object.assign(doc.data[y * doc.columns + x]);
