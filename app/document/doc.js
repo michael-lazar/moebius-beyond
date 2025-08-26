@@ -1026,6 +1026,15 @@ class TextModeDoc extends events.EventEmitter {
     export_as_apng(file) {
         libtextmode.export_as_apng(this.render, file);
     }
+
+    has_control_characters() {
+        var ctrl = false;
+        this.data.forEach((block, index) => {
+            if (block.code == 9 || block.code == 10 || block.code == 13 || block.code == 26)
+                ctrl = true;
+        });
+        return ctrl;
+    }
     async import_font() {
         const possibleHeights = new Set([
             128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384,
