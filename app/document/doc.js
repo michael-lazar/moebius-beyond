@@ -1035,6 +1035,19 @@ class TextModeDoc extends events.EventEmitter {
         });
         return ctrl;
     }
+
+    duplicate() {
+        this.new_document({
+            columns: this.columns,
+            rows: this.rows,
+            data: this.data,
+            palette: this.palette,
+            font_name: this.font_name,
+            use_9px_font: this.use_9px_font,
+            ice_colors: this.ice_colors,
+            font_bytes: this.font_bytes,
+        });
+    }
     async import_font() {
         const possibleHeights = new Set([
             128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384,
