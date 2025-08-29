@@ -70,11 +70,9 @@ class PaletteChooser extends EventEmitter {
 
             this.color_picker_spawner = e.target;
             this.color_picker_el.value = rgb_to_hex(doc.palette[e.target.dataset.id]);
-
-            this.color_picker_el.click();
+            this.color_picker_el.showPicker();
         });
 
-        // this.color_picker_el.addEventListener("input", (e) => this.color_picked(e.target.value));
         this.color_picker_el.addEventListener("change", (e) => this.color_picked(e.target.value));
     }
 
@@ -109,22 +107,6 @@ class PaletteChooser extends EventEmitter {
 
         this.update_selected("bg");
         this.update_selected("fg");
-    }
-
-    add_color(button, rgb) {
-        doc.update_palette(null, rgb);
-        const hex = rgb_to_hex(rgb);
-
-        const div = document.createElement("div");
-        div.style.backgroundColor = hex;
-        div.dataset.id = doc.palette.length - 1;
-
-        button.before(div);
-
-        this.color_picker_spawner = div;
-        this.color_picker_el.value = hex;
-
-        this.color_picker_el.click();
     }
 
     update_selected(level) {

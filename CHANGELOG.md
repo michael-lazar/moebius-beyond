@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed a regression that broke the color picker when electron was
+  updated. The color picker is now part of the app rather than
+  opening the operating system's color utility.
+
 ## v3.4.0 (2025-08-20)
 
 ### Added
