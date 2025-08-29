@@ -270,7 +270,7 @@ test.describe("Document Load and Save Tests", () => {
             use_9px_font: false,
             ice_colors: false,
             dataLength: 2000,
-            paletteLength: 527,
+            paletteLength: 527, // 512 + 16 base colors
         });
     });
 });

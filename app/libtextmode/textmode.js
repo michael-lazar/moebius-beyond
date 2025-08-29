@@ -261,33 +261,6 @@ class Textmode {
         this.data = options.data || [];
         this.palette = options.palette || [];
     }
-
-    get palette() {
-        return this.palette_array;
-    }
-
-    set palette(rgb_array) {
-        this.palette_array = rgb_array;
-        this.palette_hashmap = {};
-        for (let index in this.palette_array) {
-            index = parseInt(index, 10);
-            const rgb = this.palette_array[index];
-            this.palette_hashmap[Object.values(rgb).join("|")] = index;
-        }
-    }
-
-    resolve_palette(rgb) {
-        const key = Object.values(rgb).join("|");
-        let index = this.palette_hashmap[key];
-        if (index > 15) return index;
-        return this.add_to_palette(rgb, key);
-    }
-
-    add_to_palette(rgb, key = null) {
-        key = key || Object.values(rgb).join("|");
-        this.palette_array.push(rgb);
-        return (this.palette_hashmap[key] = this.palette_array.length - 1);
-    }
 }
 
 function resize_canvas(doc, columns, rows) {

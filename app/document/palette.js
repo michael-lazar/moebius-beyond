@@ -87,7 +87,7 @@ class PaletteChooser extends EventEmitter {
             if (this.bg_index === id) document.getElementById("bg").style.backgroundColor = hex;
             if (this.fg_index === id) document.getElementById("fg").style.backgroundColor = hex;
 
-            doc.update_palette(parseInt(this.color_picker_spawner.dataset.id, 10), hex_to_rbg(hex));
+            doc.update_palette(id, hex_to_rbg(hex));
         }, 150);
     }
 

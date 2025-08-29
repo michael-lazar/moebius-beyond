@@ -605,8 +605,8 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     update_palette(index, rgb) {
-        if (index === null) index = this.doc.add_to_palette(rgb);
-        this.render.font.replace_cache_at(index, (this.palette[index] = rgb));
+        this.palette[index] = rgb;
+        this.render.font.replace_cache_at(index, rgb);
 
         // TODO: should this be undoable? it doesn't fit in nicely, but I think it should be.
         for (let y = 0; y <= this.doc.rows - 1; y++) {

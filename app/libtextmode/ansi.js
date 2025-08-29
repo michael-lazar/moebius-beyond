@@ -153,29 +153,6 @@ function tokenize_file({ bytes, filesize }) {
     return tokens;
 }
 
-function ansi_to_bin_color(ansi_color) {
-    switch (ansi_color) {
-        case 4:
-            return 1;
-        case 6:
-            return 3;
-        case 1:
-            return 4;
-        case 3:
-            return 6;
-        case 12:
-            return 9;
-        case 14:
-            return 11;
-        case 9:
-            return 12;
-        case 11:
-            return 14;
-        default:
-            return ansi_color;
-    }
-}
-
 class Screen {
     reset_attributes() {
         this.bold = false;
@@ -269,55 +246,6 @@ class Screen {
         this.y = y - 1 + this.top_of_screen;
     }
 
-    clear_until_end_of_screen() {
-        const tmp_x = this.x;
-        const tmp_y = this.y;
-        this.x = 0;
-        while (!(this.x == this.columns && this.y == this.bottom_of_screen - 1)) {
-            this.put();
-        }
-        this.x = tmp_x;
-        this.y = tmp_y;
-    }
-
-    clear_from_start_of_screen() {
-        const tmp_x = this.x;
-        const tmp_y = this.y;
-        this.x = 0;
-        this.y = 0;
-        while (!(this.x == this.columns && this.y == tmp_y)) {
-            this.put();
-        }
-        this.x = tmp_x;
-        this.y = tmp_y;
-    }
-
-    clear_until_end_of_line() {
-        const tmp_x = this.x;
-        while (this.x < this.columns) {
-            this.put();
-        }
-        this.x = tmp_x;
-    }
-
-    clear_from_start_of_line() {
-        const tmp_x = this.x;
-        this.x = 0;
-        while (this.x < tmp_x + 1) {
-            this.put();
-        }
-        this.x = tmp_x;
-    }
-
-    clear_line() {
-        const tmp_x = this.x;
-        this.x = 0;
-        while (this.x < this.columns) {
-            this.put();
-        }
-        this.x = tmp_x;
-    }
-
     save_pos() {
         this.position_saved = true;
         this.save_x = this.x;
@@ -336,16 +264,6 @@ class Screen {
     }
 }
 
-const erase_display_types = {
-    UNTIL_END_OF_SCREEN: 0,
-    FROM_START_OF_SCREEN: 1,
-    CLEAR_SCREEN: 2,
-};
-const erase_line_types = {
-    UNTIL_END_OF_LINE: 0,
-    FROM_START_OF_LINE: 1,
-    CLEAR_LINE: 2,
-};
 const sgr_types = {
     RESET_ATTRIBUTES: 0,
     BOLD_ON: 1,
@@ -386,8 +304,29 @@ function fromAnsi(bytes) {
         bytes: fileBytes,
         filesize: sauce.filesize,
     });
+
     if (!instance.columns) instance.columns = 80;
+
     let screen = new Screen(instance.columns);
+
+    const palette_hashmap = {};
+    for (let index in instance.palette) {
+        index = parseInt(index, 10);
+        const rgb = instance.palette[index];
+        palette_hashmap[Object.values(rgb).join("|")] = index;
+    }
+
+    const resolve_palette = (rgb) => {
+        const key = Object.values(rgb).join("|");
+        let index = palette_hashmap[key];
+        if (index > 15) return index;
+
+        instance.palette.push(rgb);
+        index = instance.palette.length - 1;
+        palette_hashmap[key] = index;
+        return index;
+    };
+
     for (const token of tokens) {
         if (token.type == token_type.LITERAL) {
             const code = token.code;
@@ -418,22 +357,6 @@ function fromAnsi(bytes) {
                     break;
                 case sequence_type.MOVE:
                     screen.move(sequence.values[1], sequence.values[0]);
-                    break;
-                case sequence.ERASE_DISPLAY:
-                    // TODO: Implement erase display functionality
-                    // switch (sequence.values[0]) {
-                    //     case erase_display_types.UNTIL_END_OF_SCREEN: screen.clear_until_end_of_screen(); break;
-                    //     case erase_display_types.FROM_START_OF_SCREEN: screen.clear_from_start_of_screen(); break;
-                    //     case erase_display_types.CLEAR_SCREEN: screen.clear(); break;
-                    // }
-                    break;
-                case sequence_type.ERASE_LINE:
-                    // TODO: Implement erase line functionality
-                    // switch (sequence.values[0]) {
-                    //     case erase_line_types.UNTIL_END_OF_LINE: screen.clear_until_end_of_line(); break;
-                    //     case erase_line_types.FROM_START_OF_LINE: screen.clear_from_start_of_line(); break;
-                    //     case erase_line_types.CLEAR_LINE: screen.clear_line(); break;
-                    // }
                     break;
                 case sequence_type.SGR:
                     for (const value of sequence.values) {
@@ -480,7 +403,7 @@ function fromAnsi(bytes) {
                     break;
                 case sequence_type.TRUE_COLOR:
                     if (sequence.values.length >= 4) {
-                        const index = instance.resolve_palette({
+                        const index = resolve_palette({
                             r: sequence.values[1],
                             g: sequence.values[2],
                             b: sequence.values[3],
