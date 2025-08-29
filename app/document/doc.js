@@ -1097,7 +1097,6 @@ class TextModeDoc extends events.EventEmitter {
         }
 
         const { bytes, filename } = await libtextmode.load_custom_font(file);
-        console.log(bytes, filename);
         this.doc.font_name = path.parse(filename).name;
         this.doc.font_bytes = bytes;
         this.start_rendering().then(() => this.emit("change_font", this.doc.font_name));

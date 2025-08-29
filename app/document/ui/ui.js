@@ -991,7 +991,6 @@ class Toolbar extends events.EventEmitter {
 
     update_charlist_cursor(char_index) {
         this.char_index = char_index;
-        console.log(char_index);
         this.draw_charlist_cursor();
     }
 
