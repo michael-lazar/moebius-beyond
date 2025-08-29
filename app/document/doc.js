@@ -441,10 +441,12 @@ class UndoHistory extends events.EventEmitter {
 class TextModeDoc extends events.EventEmitter {
     constructor() {
         super();
+
         this._tmdata = null;
         this._render = null;
         this.init = false;
         this.mirror_mode = false;
+
         this.undo_history = new UndoHistory(this);
         this.undo_history.on("resize", () => this.start_rendering());
 
@@ -458,16 +460,16 @@ class TextModeDoc extends events.EventEmitter {
         );
         on("get_sauce_info", (event) =>
             send_sync("get_sauce_info", {
-                title: this._tmdata.title,
-                author: this._tmdata.author,
-                group: this._tmdata.group,
-                comments: this._tmdata.comments,
+                title: this.title,
+                author: this.author,
+                group: this.group,
+                comments: this.comments,
             })
         );
         on("get_canvas_size", (event) =>
             send_sync("get_canvas_size", {
-                columns: this._tmdata.columns,
-                rows: this._tmdata.rows,
+                columns: this.columns,
+                rows: this.rows,
             })
         );
         on("set_canvas_size", (event, { columns, rows }) => this.resize(columns, rows));
@@ -485,7 +487,7 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async start_rendering() {
-        const big_data = this._tmdata.data.length > 80 * 1000;
+        const big_data = this.data.length > 80 * 1000;
         if (big_data) this.emit("start_rendering");
         this._render = await libtextmode.render_split(this._tmdata);
         if (big_data) this.emit("end_rendering");
@@ -532,14 +534,27 @@ class TextModeDoc extends events.EventEmitter {
     get font_name() {
         return this._tmdata.font_name;
     }
+    set font_name(font_name) {
+        this._tmdata.font_name = font_name;
+        this._tmdata.font_bytes = null;
+        this.start_rendering().then(() => this.emit("change_font", this.font_name));
+    }
     get font_bytes() {
         return this._tmdata.font_bytes;
     }
     get ice_colors() {
         return this._tmdata.ice_colors;
     }
+    set ice_colors(value) {
+        this._tmdata.ice_colors = value;
+        this.emit("ice_colors", this.ice_colors);
+    }
     get use_9px_font() {
         return this._tmdata.use_9px_font;
+    }
+    set use_9px_font(value) {
+        this._tmdata.use_9px_font = value;
+        this.start_rendering().then(() => this.emit("use_9px_font", this.use_9px_font));
     }
     get data() {
         return this._tmdata.data;
@@ -557,25 +572,9 @@ class TextModeDoc extends events.EventEmitter {
         this.start_rendering().then(() => this.emit("change_palette", lospec_palette_name));
     }
 
-    set font_name(font_name) {
-        this._tmdata.font_name = font_name;
-        this._tmdata.font_bytes = null;
-        this.start_rendering().then(() => this.emit("change_font", this._tmdata.font_name));
-    }
-
-    set use_9px_font(value) {
-        this._tmdata.use_9px_font = value;
-        this.start_rendering().then(() => this.emit("use_9px_font", this._tmdata.use_9px_font));
-    }
-
-    set ice_colors(value) {
-        this._tmdata.ice_colors = value;
-        this.emit("ice_colors", this._tmdata.ice_colors);
-    }
-
     at(x, y) {
-        if (x < 0 || x >= this._tmdata.columns || y < 0 || y >= this._tmdata.rows) return;
-        return this._tmdata.data[y * this._tmdata.columns + x];
+        if (x < 0 || x >= this.columns || y < 0 || y >= this.rows) return;
+        return this.data[y * this.columns + x];
     }
 
     get_blocks(sx, sy, dx, dy) {
@@ -583,25 +582,22 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     change_data(x, y, code, fg, bg, prev_cursor, cursor, mirrored = true) {
-        if (x < 0 || x >= this._tmdata.columns || y < 0 || y >= this._tmdata.rows) return;
-        const i = this._tmdata.columns * y + x;
+        if (x < 0 || x >= this.columns || y < 0 || y >= this.rows) return;
+        const i = this.columns * y + x;
         if (prev_cursor) {
-            this.undo_history.push(x, y, this._tmdata.data[i], {
+            this.undo_history.push(x, y, this.data[i], {
                 prev_x: prev_cursor.prev_x,
                 prev_y: prev_cursor.prev_y,
                 post_x: cursor.x,
                 post_y: cursor.y,
             });
         } else {
-            this.undo_history.push(x, y, this._tmdata.data[i]);
+            this.undo_history.push(x, y, this.data[i]);
         }
-        this._tmdata.data[i] = { code, fg, bg };
-        libtextmode.render_at(this.render, x, y, this._tmdata.data[i]);
+        this.data[i] = { code, fg, bg };
+        libtextmode.render_at(this.render, x, y, this.data[i]);
         if (this.mirror_mode && mirrored) {
-            const opposing_x =
-                Math.floor(this._tmdata.columns / 2) -
-                (x - Math.ceil(this._tmdata.columns / 2)) -
-                1;
+            const opposing_x = Math.floor(this.columns / 2) - (x - Math.ceil(this.columns / 2)) - 1;
             this.change_data(
                 opposing_x,
                 y,
@@ -620,9 +616,9 @@ class TextModeDoc extends events.EventEmitter {
         this.render.font.replace_cache_at(index, rgb);
 
         // TODO: should this be undoable? it doesn't fit in nicely, but I think it should be.
-        for (let y = 0; y <= this._tmdata.rows - 1; y++) {
-            for (let x = 0; x <= this._tmdata.columns - 1; x++) {
-                const block = this._tmdata.data[this._tmdata.columns * y + x];
+        for (let y = 0; y <= this.rows - 1; y++) {
+            for (let x = 0; x <= this.columns - 1; x++) {
+                const block = this.data[this.columns * y + x];
                 if (block.bg === index || block.fg === index) {
                     libtextmode.render_at(this.render, x, y, block);
                 }
@@ -641,7 +637,7 @@ class TextModeDoc extends events.EventEmitter {
     get_half_block(x, y) {
         const text_y = Math.floor(y / 2);
         const is_top = y % 2 == 0;
-        const block = this._tmdata.data[this._tmdata.columns * text_y + x];
+        const block = this.data[this.columns * text_y + x];
         let upper_block_color = 0;
         let lower_block_color = 0;
         let left_block_color = 0;
@@ -746,7 +742,7 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     set_half_block(x, y, col) {
-        if (x < 0 || x >= this._tmdata.columns || y < 0 || y >= this._tmdata.rows * 2) return;
+        if (x < 0 || x >= this.columns || y < 0 || y >= this.rows * 2) return;
         const block = this.get_half_block(x, y);
         if (block.is_blocky) {
             if (
@@ -772,15 +768,15 @@ class TextModeDoc extends events.EventEmitter {
     resize(columns, rows) {
         this.undo_history.push_resize();
 
-        const min_rows = Math.min(this._tmdata.rows, rows);
-        const min_columns = Math.min(this._tmdata.columns, columns);
+        const min_rows = Math.min(this.rows, rows);
+        const min_columns = Math.min(this.columns, columns);
         const new_data = new Array(columns * rows);
         for (let i = 0; i < new_data.length; i++) {
             new_data[i] = { code: 32, fg: 7, bg: 0 };
         }
         for (let y = 0; y < min_rows; y++) {
             for (let x = 0; x < min_columns; x++) {
-                new_data[y * columns + x] = this._tmdata.data[y * this._tmdata.columns + x];
+                new_data[y * columns + x] = this.data[y * this.columns + x];
             }
         }
         this._tmdata.data = new_data;
@@ -794,7 +790,7 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     count_left(y) {
-        for (let x = 0; x < this._tmdata.columns; x++) {
+        for (let x = 0; x < this.columns; x++) {
             const half_block = this.get_half_block(x, y * 2);
             if (
                 !half_block.is_blocky ||
@@ -807,8 +803,8 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     count_right(y) {
-        for (let x = 0; x < this._tmdata.columns; x++) {
-            const half_block = this.get_half_block(this._tmdata.columns - 1 - x, y * 2);
+        for (let x = 0; x < this.columns; x++) {
+            const half_block = this.get_half_block(this.columns - 1 - x, y * 2);
             if (
                 !half_block.is_blocky ||
                 half_block.lower_block_color != 0 ||
@@ -823,11 +819,11 @@ class TextModeDoc extends events.EventEmitter {
         const count = this.count_left(y);
         if (count) {
             this.undo_history.start_chunk();
-            for (let x = 0; x < this._tmdata.columns - count; x++) {
-                const block = this._tmdata.data[y * this._tmdata.columns + x + count];
+            for (let x = 0; x < this.columns - count; x++) {
+                const block = this.data[y * this.columns + x + count];
                 this.change_data(x, y, block.code, block.fg, block.bg);
             }
-            for (let x = this._tmdata.columns - count; x < this._tmdata.columns; x++)
+            for (let x = this.columns - count; x < this.columns; x++)
                 this.change_data(x, y, 32, 7, 0);
         }
     }
@@ -836,8 +832,8 @@ class TextModeDoc extends events.EventEmitter {
         const count = this.count_right(y);
         if (count) {
             this.undo_history.start_chunk();
-            for (let x = this._tmdata.columns - 1; x > count - 1; x--) {
-                const block = this._tmdata.data[y * this._tmdata.columns + x - count];
+            for (let x = this.columns - 1; x > count - 1; x--) {
+                const block = this.data[y * this.columns + x - count];
                 this.change_data(x, y, block.code, block.fg, block.bg);
             }
             for (let x = count - 1; x >= 0; x--) this.change_data(x, y, 32, 7, 0);
@@ -849,21 +845,21 @@ class TextModeDoc extends events.EventEmitter {
         const right = this.count_right(y);
         if (left || right) {
             this.undo_history.start_chunk();
-            const blocks = new Array(this._tmdata.columns - right - left);
+            const blocks = new Array(this.columns - right - left);
             for (let i = 0; i < blocks.length; i++)
-                blocks[i] = Object.assign(this._tmdata.data[y * this._tmdata.columns + left + i]);
+                blocks[i] = Object.assign(this.data[y * this.columns + left + i]);
             const new_left = Math.floor((left + right) / 2);
             for (let x = 0; x < new_left; x++) this.change_data(x, y, 32, 7, 0);
             for (let x = 0; x < blocks.length; x++)
                 this.change_data(new_left + x, y, blocks[x].code, blocks[x].fg, blocks[x].bg);
-            for (let x = 0; x < this._tmdata.columns - new_left - blocks.length; x++)
+            for (let x = 0; x < this.columns - new_left - blocks.length; x++)
                 this.change_data(new_left + blocks.length + x, y, 32, 7, 0);
         }
     }
 
     erase_line(y) {
         this.undo_history.start_chunk();
-        for (let x = 0; x < this._tmdata.columns; x++) this.change_data(x, y, 32, 7, 0);
+        for (let x = 0; x < this.columns; x++) this.change_data(x, y, 32, 7, 0);
     }
 
     erase_to_start_of_line(x, y) {
@@ -873,12 +869,12 @@ class TextModeDoc extends events.EventEmitter {
 
     erase_to_end_of_line(x, y) {
         this.undo_history.start_chunk();
-        for (let dx = x; dx < this._tmdata.columns; dx++) this.change_data(dx, y, 32, 7, 0);
+        for (let dx = x; dx < this.columns; dx++) this.change_data(dx, y, 32, 7, 0);
     }
 
     erase_column(x) {
         this.undo_history.start_chunk();
-        for (let y = 0; y < this._tmdata.rows; y++) this.change_data(x, y, 32, 7, 0);
+        for (let y = 0; y < this.rows; y++) this.change_data(x, y, 32, 7, 0);
     }
 
     erase_to_start_of_column(x, y) {
@@ -888,15 +884,15 @@ class TextModeDoc extends events.EventEmitter {
 
     erase_to_end_of_column(x, y) {
         this.undo_history.start_chunk();
-        for (let dy = y; dy < this._tmdata.rows; dy++) this.change_data(x, dy, 32, 7, 0);
+        for (let dy = y; dy < this.rows; dy++) this.change_data(x, dy, 32, 7, 0);
     }
 
     place(blocks, dx, dy, single_undo) {
-        const mid_point = Math.floor(this._tmdata.columns / 2);
+        const mid_point = Math.floor(this.columns / 2);
         const dont_mirror = dx < mid_point && dx + blocks.columns > mid_point;
         if (!single_undo) this.undo_history.start_chunk();
-        for (let y = 0; y + dy < this._tmdata.rows && y < blocks.rows; y++) {
-            for (let x = 0; x + dx < this._tmdata.columns && x < blocks.columns; x++) {
+        for (let y = 0; y + dy < this.rows && y < blocks.rows; y++) {
+            for (let x = 0; x + dx < this.columns && x < blocks.columns; x++) {
                 const block = blocks.data[y * blocks.columns + x];
                 if (!blocks.transparent || block.code != 32 || block.bg != 0)
                     this.change_data(
@@ -1144,7 +1140,7 @@ class TextModeDoc extends events.EventEmitter {
         const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height);
         this._tmdata.font_name = path.parse(filename).name;
         this._tmdata.font_bytes = Buffer.from(chunkedBitArray, "hex");
-        this.start_rendering().then(() => this.emit("change_font", this._tmdata.font_name));
+        this.start_rendering().then(() => this.emit("change_font", this.font_name));
     }
 
     async load_custom_font({ file } = {}) {
@@ -1192,7 +1188,7 @@ class TextModeDoc extends events.EventEmitter {
         const { bytes, filename } = await libtextmode.load_custom_font(file);
         this._tmdata.font_name = path.parse(filename).name;
         this._tmdata.font_bytes = bytes;
-        this.start_rendering().then(() => this.emit("change_font", this._tmdata.font_name));
+        this.start_rendering().then(() => this.emit("change_font", this.font_name));
     }
 }
 
