@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.4.1 (2025-08-29)
+
 ### Fixed
 
 - Fixed a regression that broke the color picker when electron was
