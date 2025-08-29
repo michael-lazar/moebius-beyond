@@ -1,7 +1,5 @@
 const { white, bright_white, palette_4bit, rgb_to_hex } = require("./palette");
 const { create_canvas, clone_canvas } = require("./canvas");
-const fs = require("fs");
-const path = require("path");
 const { lookup_url } = require("./font_lookup");
 
 function generate_font_canvas(bitmask, height, length) {

@@ -236,7 +236,7 @@ async function open_reference_window(win, files = null) {
     }
 
     for (const file of files) {
-        let reference = await new_win(file, {
+        await new_win(file, {
             width: 480,
             height: 340,
             parent: win,

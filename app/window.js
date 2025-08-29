@@ -64,8 +64,4 @@ async function static(file, window_opts) {
     return static_wins[file];
 }
 
-function close_static(name) {
-    if (static_wins[name]) static_wins[name].close();
-}
-
-module.exports = { new_doc, new_modal, static, close_static, new_win };
+module.exports = { new_doc, new_modal, static, new_win };

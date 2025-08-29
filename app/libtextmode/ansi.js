@@ -608,4 +608,4 @@ function encode_as_utf8ansi(doc, bit_depth) {
     return new Uint8Array(output);
 }
 
-module.exports = { fromAnsi, encode_as_ansi, tokenize_file, Screen };
+module.exports = { fromAnsi, encode_as_ansi, Screen };

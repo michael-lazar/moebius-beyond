@@ -3,7 +3,7 @@ const { tools, toolbar } = require("../ui/ui");
 const mouse = require("../input/mouse");
 const keyboard = require("../input/keyboard");
 const palette = require("../palette");
-const { on, msg_box } = require("../../senders");
+const { on } = require("../../senders");
 let enabled = false;
 
 tools.on("start", (mode) => {
