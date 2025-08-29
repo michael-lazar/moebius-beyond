@@ -14,7 +14,7 @@ const sequence_type = {
     ERASE_LINE: "K",
     SGR: "m",
     SAVE_POS: "s",
-    TRUE_COLOR: "t",
+    TRUE_COLOR: "t", // https://web.archive.org/web/20220119052803/https://picoe.ca/2014/03/07/24-bit-ansi/
     RESTORE_POS: "u",
 };
 const token_type = { ESCAPE_SEQUENCE: 0, LITERAL: 1 };
@@ -515,29 +515,6 @@ function fromAnsi(bytes) {
 
     instance.data = screen.trim_data();
     return instance;
-}
-
-function bin_to_ansi_colour(bin_colour) {
-    switch (bin_colour) {
-        case 1:
-            return 4;
-        case 3:
-            return 6;
-        case 4:
-            return 1;
-        case 6:
-            return 3;
-        case 9:
-            return 12;
-        case 11:
-            return 14;
-        case 12:
-            return 9;
-        case 14:
-            return 11;
-        default:
-            return bin_colour;
-    }
 }
 
 function to_bytes(string) {
