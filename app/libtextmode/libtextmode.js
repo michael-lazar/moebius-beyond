@@ -1416,9 +1416,15 @@ function new_document({
     data,
     font_bytes,
 } = {}) {
-    const doc = new Textmode({
+    if (!data || data.length != columns * rows) {
+        data = new Array(columns * rows);
+        for (let i = 0; i < data.length; i++) data[i] = { fg: 7, bg: 0, code: 32 };
+    }
+
+    return new Textmode({
         columns,
         rows,
+        data,
         title,
         author,
         group,
@@ -1430,13 +1436,6 @@ function new_document({
         comments,
         font_bytes,
     });
-    if (!data || data.length != columns * rows) {
-        doc.data = new Array(columns * rows);
-        for (let i = 0; i < doc.data.length; i++) doc.data[i] = { fg: 7, bg: 0, code: 32 };
-    } else {
-        doc.data = data;
-    }
-    return doc;
 }
 
 function get_data_url(canvases) {
