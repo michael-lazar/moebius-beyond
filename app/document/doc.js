@@ -991,6 +991,12 @@ class TextModeDoc extends events.EventEmitter {
         send("set_file", { file: this.file });
     }
 
+    async export_selection(sx, sy, dx, dy, file) {
+        const blocks = this.get_blocks(sx, sy, dx, dy);
+        const doc = libtextmode.new_document({ ...blocks });
+        await libtextmode.write_file(doc, file);
+    }
+
     async share_online() {
         const bytes = libtextmode.encode_as_ansi(this, false);
         const filename = this.file ? path.basename(this.file) : "unknown" + "." + "ans";

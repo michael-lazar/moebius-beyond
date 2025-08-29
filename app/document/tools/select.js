@@ -114,10 +114,6 @@ on("import_selection", async (event) => {
 
 on("export_selection", async (event) => {
     if (!enabled || cursor.mode == cursor.modes.EDITING) return;
-    const { sx, sy, dx, dy } = cursor.reorientate_selection();
-    const selection_doc = libtextmode.new_document({
-        ...doc.get_blocks(sx, sy, dx, dy),
-    });
     const file = save_box(doc.file, "ans", {
         filters: [
             {
@@ -128,5 +124,8 @@ on("export_selection", async (event) => {
             { name: "Binary Text", extensions: ["bin"] },
         ],
     });
-    if (file) await libtextmode.write_file(selection_doc, file);
+    if (file) {
+        const { sx, sy, dx, dy } = cursor.reorientate_selection();
+        await doc.export_selection(sx, sy, dx, dy, file);
+    }
 });
