@@ -241,7 +241,7 @@ function get_sauce(bytes) {
     return sauce;
 }
 
-class Textmode {
+class TextModeData {
     constructor(options = {}) {
         this.columns = options.columns;
         this.rows = options.rows;
@@ -265,7 +265,7 @@ module.exports = {
     bytes_to_blocks,
     bytes_to_utf8,
     get_sauce,
-    Textmode,
+    TextModeData,
     add_sauce_for_ans,
     add_sauce_for_bin,
     add_sauce_for_xbin,

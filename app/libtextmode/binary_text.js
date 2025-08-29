@@ -1,5 +1,5 @@
 const { palette_4bit } = require("./palette");
-const { bytes_to_blocks, Textmode, add_sauce_for_bin } = require("./textmode");
+const { bytes_to_blocks, TextModeData, add_sauce_for_bin } = require("./textmode");
 const { send } = require("../senders");
 
 function fromBinaryText(bytes) {
@@ -19,7 +19,7 @@ function fromBinaryText(bytes) {
         bytes: fileBytes,
     });
 
-    return new Textmode({
+    return new TextModeData({
         columns,
         rows,
         title: sauce.title,

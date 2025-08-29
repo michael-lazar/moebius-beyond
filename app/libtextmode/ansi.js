@@ -1,5 +1,5 @@
 const { palette_4bit, base_palette_index, index_to_ansi, rgb_to_ansi } = require("./palette");
-const { Textmode, add_sauce_for_ans } = require("./textmode");
+const { TextModeData, add_sauce_for_ans } = require("./textmode");
 const { cp437_to_unicode_bytes } = require("./encodings");
 
 const sequence_type = {
@@ -424,7 +424,7 @@ function fromAnsi(bytes) {
 
     const data = screen.trim_data();
 
-    return new Textmode({
+    return new TextModeData({
         columns,
         rows,
         data,

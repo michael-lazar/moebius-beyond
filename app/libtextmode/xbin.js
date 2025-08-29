@@ -1,4 +1,4 @@
-const { bytes_to_utf8, bytes_to_blocks, Textmode, add_sauce_for_xbin } = require("./textmode");
+const { bytes_to_utf8, bytes_to_blocks, TextModeData, add_sauce_for_xbin } = require("./textmode");
 const { palette_4bit, xbin_to_rgb, rgb_to_xbin } = require("./palette");
 const repeating = {
     NONE: 0,
@@ -105,7 +105,7 @@ function fromXBin(bytes) {
         });
     }
 
-    return new Textmode({
+    return new TextModeData({
         columns,
         rows,
         title: sauce.title,

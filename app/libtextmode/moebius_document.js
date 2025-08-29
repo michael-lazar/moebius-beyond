@@ -1,4 +1,4 @@
-const { Textmode } = require("./textmode");
+const { TextModeData } = require("./textmode");
 const remote = require("@electron/remote");
 const zlib = require("zlib");
 
@@ -76,7 +76,7 @@ function fromMBD(bytes) {
         bg: block.bg || 0,
     }));
 
-    return new Textmode({
+    return new TextModeData({
         columns: document.columns,
         rows: document.rows,
         title: document.title,
