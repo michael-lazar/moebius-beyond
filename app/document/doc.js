@@ -550,7 +550,7 @@ class TextModeDoc extends events.EventEmitter {
 
     set font_name(font_name) {
         this.doc.font_name = font_name;
-        this.doc.font_bytes = undefined;
+        this.doc.font_bytes = null;
         this.start_rendering().then(() => this.emit("change_font", this.doc.font_name));
     }
 

@@ -7,7 +7,7 @@ const { encode_as_mbd, fromMBD } = require("./moebius_document");
 const { palette_4bit } = require("./palette");
 const path = require("path");
 const { open_box } = require("../senders");
-const { current_date, Textmode } = require("./textmode");
+const { Textmode } = require("./textmode");
 const { cp437_to_unicode, cp437_to_unicode_bytes, unicode_to_cp437 } = require("./encodings");
 const fs = require("fs");
 const upng = require("upng-js");
@@ -1422,21 +1422,19 @@ function new_document({
         title,
         author,
         group,
-        date: date != "" ? date : current_date(),
+        date,
         palette,
         font_name,
         ice_colors,
         use_9px_font,
         comments,
+        font_bytes,
     });
     if (!data || data.length != columns * rows) {
         doc.data = new Array(columns * rows);
         for (let i = 0; i < doc.data.length; i++) doc.data[i] = { fg: 7, bg: 0, code: 32 };
     } else {
         doc.data = data;
-    }
-    if (font_bytes) {
-        doc.font_bytes = font_bytes;
     }
     return doc;
 }

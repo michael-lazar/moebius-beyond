@@ -54,12 +54,10 @@ function fromMBD(bytes) {
     const json_string = decompressed.toString("utf8");
     const mbd_doc = JSON.parse(json_string);
 
-    // Validate format
     if (mbd_doc.format !== "moebius-beyond-document") {
         throw new Error("Invalid MBD file: incorrect format identifier");
     }
 
-    // Check version compatibility
     if (!mbd_doc.version || !mbd_doc.version.startsWith("1")) {
         throw new Error(`Unsupported MBD version: ${mbd_doc.version}`);
     }
@@ -68,42 +66,33 @@ function fromMBD(bytes) {
         throw new Error("Invalid MBD file: missing document section");
     }
 
-    const doc_data = mbd_doc.document;
+    const document = mbd_doc.document;
 
-    // Create Textmode document
-    const doc = new Textmode({
-        columns: doc_data.columns,
-        rows: doc_data.rows,
-        title: doc_data.title,
-        author: doc_data.author,
-        group: doc_data.group,
-        date: doc_data.date,
-        comments: doc_data.comments,
-        filesize: doc_data.filesize,
-        palette: doc_data.palette,
-        font_name: doc_data.font_name,
-        use_9px_font: doc_data.use_9px_font,
-        ice_colors: doc_data.ice_colors,
-    });
+    const font_bytes = document.font_bytes ? Buffer.from(document.font_bytes, "base64") : null;
 
-    // Handle font bytes
-    if (doc_data.font_bytes) {
-        doc.font_bytes = Buffer.from(doc_data.font_bytes, "base64");
-    }
-
-    // Set font height
-    if (doc_data.font_height) {
-        doc.font_height = doc_data.font_height;
-    }
-
-    // Set character data
-    doc.data = doc_data.data.map((block) => ({
+    const data = document.data.map((block) => ({
         code: block.code || 32,
         fg: block.fg || 7,
         bg: block.bg || 0,
     }));
 
-    return doc;
+    return new Textmode({
+        columns: document.columns,
+        rows: document.rows,
+        title: document.title,
+        author: document.author,
+        group: document.group,
+        date: document.date,
+        comments: document.comments,
+        filesize: document.filesize,
+        palette: document.palette,
+        font_name: document.font_name,
+        use_9px_font: document.use_9px_font,
+        ice_colors: document.ice_colors,
+        font_height: document.font_height,
+        font_bytes,
+        data,
+    });
 }
 
 module.exports = {

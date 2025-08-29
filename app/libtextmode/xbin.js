@@ -105,7 +105,7 @@ function fromXBin(bytes) {
         });
     }
 
-    const instance = new Textmode({
+    return new Textmode({
         columns,
         rows,
         title: sauce.title,
@@ -119,12 +119,9 @@ function fromXBin(bytes) {
         comments: sauce.comments,
         data,
         palette,
+        font_bytes,
+        font_height,
     });
-    instance.font_height = font_height;
-    if (font_bytes) {
-        instance.font_bytes = font_bytes;
-    }
-    return instance;
 }
 
 function encode_as_xbin(doc, save_without_sauce) {
@@ -180,4 +177,4 @@ function encode_as_xbin(doc, save_without_sauce) {
     return bytes;
 }
 
-module.exports = { fromXBin, encode_as_xbin, uncompress };
+module.exports = { fromXBin, encode_as_xbin };

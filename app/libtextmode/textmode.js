@@ -248,11 +248,13 @@ class Textmode {
         this.title = options.title || "";
         this.author = options.author || "";
         this.group = options.group || "";
-        this.date = options.date;
+        this.date = options.date || current_date();
         this.filesize = options.filesize || 0;
         this.ice_colors = options.ice_colors || false;
         this.use_9px_font = options.use_9px_font || false;
         this.font_name = options.font_name || "Default";
+        this.font_bytes = options.font_bytes || null;
+        this.font_height = options.font_height || null;
         this.comments = options.comments || "";
         this.data = options.data || [];
         this.palette = options.palette || [];
@@ -262,7 +264,6 @@ class Textmode {
 module.exports = {
     bytes_to_blocks,
     bytes_to_utf8,
-    current_date,
     get_sauce,
     Textmode,
     add_sauce_for_ans,
