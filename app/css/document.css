@@ -94,7 +94,7 @@
     transition: background-color 0.2s ease;
     padding: 10px 5px;
 }
-.right-sidebar-button:hover  {
+.right-sidebar-button:hover {
     background-color: var(--dark-view-color);
 }
 #preview_toggle_button.active,
@@ -177,7 +177,9 @@
 #viewport {
     float: left;
     position: relative;
-    width: calc(100% - var(--sidebar-width) - var(--preview-width) - var(--right-sidebar-width) - 1px);
+    width: calc(
+        100% - var(--sidebar-width) - var(--preview-width) - var(--right-sidebar-width) - 1px
+    );
     height: calc(100% - var(--toolbar-height) - var(--statusbar-height) - 1px);
     border-top: 1px solid;
     border-left: 1px solid;
