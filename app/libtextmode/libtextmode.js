@@ -1530,26 +1530,6 @@ function remove_ice_color_for_block(block) {
     return { fg: block.fg, bg: block.bg - 8, code: block.code };
 }
 
-function remove_ice_colors(doc) {
-    const new_doc = new Textmode({
-        columns: doc.columns,
-        rows: doc.rows,
-        data: new Array(doc.data.length),
-        palette: doc.palette,
-        font_name: doc.font_name,
-        use_9px_font: doc.use_9px_font,
-        ice_colors: false,
-    });
-    doc.data.forEach((block, index) => {
-        if (block.bg > 7 && block.bg < 16) {
-            new_doc.data[index] = remove_ice_color_for_block(block);
-        } else {
-            new_doc.data[index] = Object.assign(block);
-        }
-    });
-    return new_doc;
-}
-
 async function importFontFromImage() {
     const file = open_box({
         filters: [
@@ -1685,5 +1665,5 @@ module.exports = {
     encode_as_xbin,
     encode_as_ansi,
     encode_as_mbd,
-    remove_ice_colors,
+    remove_ice_color_for_block,
 };

@@ -1083,6 +1083,29 @@ class TextModeDoc extends events.EventEmitter {
             data: blocks.data,
         });
     }
+
+    remove_ice_colors() {
+        const data = new Array(this.data.length);
+
+        this.data.forEach((block, index) => {
+            if (block.bg > 7 && block.bg < 16) {
+                data[index] = libtextmode.remove_ice_color_for_block(block);
+            } else {
+                data[index] = Object.assign(block);
+            }
+        });
+
+        this.new_document({
+            columns: this.columns,
+            rows: this.rows,
+            data,
+            palette: this.palette,
+            font_name: this.font_name,
+            use_9px_font: this.use_9px_font,
+            ice_colors: false,
+        });
+    }
+
     async import_font() {
         const possibleHeights = new Set([
             128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320, 336, 352, 368, 384,
