@@ -1,6 +1,6 @@
 const electron = require("electron");
 const remote = require("@electron/remote");
-const { send, open_box } = require("../senders");
+const { open_box } = require("../senders");
 let backup_folder_value;
 
 function $(name) {

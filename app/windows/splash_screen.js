@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (process.platform != "darwin") preferences.innerText = "Settings";
     document
         .getElementById("new_document")
-        .addEventListener("click", (event) => electron.ipcRenderer.send("new_document"));
+        .addEventListener("click", (event) => electron.ipcRenderer.send("open_new_document"));
     document
         .getElementById("open")
         .addEventListener("click", (event) => electron.ipcRenderer.send("open"));

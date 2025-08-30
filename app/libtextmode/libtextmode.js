@@ -7,7 +7,7 @@ const { encode_as_mbd, fromMBD } = require("./moebius_document");
 const { palette_4bit } = require("./palette");
 const path = require("path");
 const { open_box } = require("../senders");
-const { current_date, resize_canvas, Textmode } = require("./textmode");
+const { TextModeData } = require("./textmode");
 const { cp437_to_unicode, cp437_to_unicode_bytes, unicode_to_cp437 } = require("./encodings");
 const fs = require("fs");
 const upng = require("upng-js");
@@ -41,17 +41,17 @@ async function next_frame() {
 }
 
 async function animate({ file, ctx }) {
-    const doc = await read_file(file);
-    const font = new Font(doc.palette);
+    const tmdata = await read_file(file);
+    const font = new Font(tmdata.palette);
     await font.load({
-        name: doc.font_name,
-        bytes: doc.font_bytes,
-        use_9px_font: doc.use_9px_font,
+        name: tmdata.font_name,
+        bytes: tmdata.font_bytes,
+        use_9px_font: tmdata.use_9px_font,
     });
-    for (let y = 0, py = 0, i = 0; y < doc.rows; y++, py += font.height) {
-        for (let x = 0, px = 0; x < doc.columns; x++, px += font.width, i++) {
-            const block = doc.data[i];
-            if (!doc.ice_colors && block.bg > 7 && block.bg < 16) {
+    for (let y = 0, py = 0, i = 0; y < tmdata.rows; y++, py += font.height) {
+        for (let x = 0, px = 0; x < tmdata.columns; x++, px += font.width, i++) {
+            const block = tmdata.data[i];
+            if (!tmdata.ice_colors && block.bg > 7 && block.bg < 16) {
                 font.draw(ctx, { fg: block.fg, bg: block.bg - 8, code: block.code }, px, py);
             } else {
                 font.draw(ctx, block, px, py);
@@ -61,21 +61,21 @@ async function animate({ file, ctx }) {
     }
 }
 
-function write_file(doc, file, { utf8 = false, save_without_sauce = false } = {}) {
+function write_file(tmdata, file, { utf8 = false, save_without_sauce = false } = {}) {
     let bytes;
     switch (path.extname(file).toLowerCase()) {
         case ".mbd":
-            bytes = encode_as_mbd(doc);
+            bytes = encode_as_mbd(tmdata);
             break;
         case ".bin":
-            bytes = encode_as_bin(doc, save_without_sauce);
+            bytes = encode_as_bin(tmdata, save_without_sauce);
             break;
         case ".xb":
-            bytes = encode_as_xbin(doc, save_without_sauce);
+            bytes = encode_as_xbin(tmdata, save_without_sauce);
             break;
         case ".ans":
         default:
-            bytes = encode_as_ansi(doc, save_without_sauce, { utf8 });
+            bytes = encode_as_ansi(tmdata, save_without_sauce, { utf8 });
     }
     fs.writeFileSync(file, bytes, "binary");
 }
@@ -98,18 +98,18 @@ function create_canvases(width, height, maximum_height) {
     return { canvases, ctxs };
 }
 
-async function render(doc) {
-    const font = new Font(doc.palette);
+async function render(tmdata) {
+    const font = new Font(tmdata.palette);
     await font.load({
-        name: doc.font_name,
-        bytes: doc.font_bytes,
-        use_9px_font: doc.use_9px_font,
+        name: tmdata.font_name,
+        bytes: tmdata.font_bytes,
+        use_9px_font: tmdata.use_9px_font,
     });
-    const { canvas, ctx } = create_canvas(font.width * doc.columns, font.height * doc.rows);
-    for (let y = 0, py = 0, i = 0; y < doc.rows; y++, py += font.height) {
-        for (let x = 0, px = 0; x < doc.columns; x++, px += font.width, i++) {
-            const block = doc.data[i];
-            if (!doc.ice_colors && block.bg > 7 && block.bg < 16) {
+    const { canvas, ctx } = create_canvas(font.width * tmdata.columns, font.height * tmdata.rows);
+    for (let y = 0, py = 0, i = 0; y < tmdata.rows; y++, py += font.height) {
+        for (let x = 0, px = 0; x < tmdata.columns; x++, px += font.width, i++) {
+            const block = tmdata.data[i];
+            if (!tmdata.ice_colors && block.bg > 7 && block.bg < 16) {
                 font.draw(ctx, { fg: block.fg, bg: block.bg - 8, code: block.code }, px, py);
             } else {
                 font.draw(ctx, block, px, py);
@@ -169,36 +169,36 @@ function copy_canvases(sources) {
     });
 }
 
-async function render_split(doc, maximum_rows = 100) {
-    const font = new Font(doc.palette);
+async function render_split(tmdata, maximum_rows = 100) {
+    const font = new Font(tmdata.palette);
     await font.load({
-        name: doc.font_name,
-        bytes: doc.font_bytes,
-        use_9px_font: doc.use_9px_font,
+        name: tmdata.font_name,
+        bytes: tmdata.font_bytes,
+        use_9px_font: tmdata.use_9px_font,
     });
     const { canvases, ctxs } = create_canvases(
-        font.width * doc.columns,
-        font.height * doc.rows,
+        font.width * tmdata.columns,
+        font.height * tmdata.rows,
         font.height * maximum_rows
     );
-    for (let y = 0, py = 0, i = 0, canvas_i = 0; y < doc.rows; y++, py += font.height) {
+    for (let y = 0, py = 0, i = 0, canvas_i = 0; y < tmdata.rows; y++, py += font.height) {
         if (py == 100 * font.height) {
             py = 0;
             canvas_i += 1;
         }
-        for (let x = 0, px = 0; x < doc.columns; x++, px += font.width, i++) {
-            font.draw(ctxs[canvas_i], doc.data[i], px, py);
+        for (let x = 0, px = 0; x < tmdata.columns; x++, px += font.width, i++) {
+            font.draw(ctxs[canvas_i], tmdata.data[i], px, py);
         }
     }
     const blink_on_collection = copy_canvases(canvases);
     const blink_off_collection = copy_canvases(canvases);
-    for (let y = 0, py = 0, i = 0, canvas_i = 0; y < doc.rows; y++, py += font.height) {
+    for (let y = 0, py = 0, i = 0, canvas_i = 0; y < tmdata.rows; y++, py += font.height) {
         if (py == 100 * font.height) {
             py = 0;
             canvas_i += 1;
         }
-        for (let x = 0, px = 0; x < doc.columns; x++, px += font.width, i++) {
-            const block = doc.data[i];
+        for (let x = 0, px = 0; x < tmdata.columns; x++, px += font.width, i++) {
+            const block = tmdata.data[i];
             if (block.bg > 7 && block.bg < 16) {
                 font.draw_bg(blink_on_collection[canvas_i].ctx, block.bg - 8, px, py);
                 font.draw(
@@ -211,10 +211,10 @@ async function render_split(doc, maximum_rows = 100) {
         }
     }
     return {
-        columns: doc.columns,
-        rows: doc.rows,
-        width: doc.columns * font.width,
-        height: doc.rows * font.height,
+        columns: tmdata.columns,
+        rows: tmdata.rows,
+        width: tmdata.columns * font.width,
+        height: tmdata.rows * font.height,
         ice_color_collection: canvases,
         blink_on_collection: blink_on_collection.map((blink_on) => blink_on.canvas),
         blink_off_collection: blink_off_collection.map((blink_off) => blink_off.canvas),
@@ -244,7 +244,7 @@ function render_at(render, x, y, block) {
     }
 }
 
-function render_insert_column(doc, x, render) {
+function render_insert_column(tmdata, x, render) {
     const sx = x * render.font.width;
     const width = render.width - x * render.font.width - render.font.width;
     const dx = sx + render.font.width;
@@ -302,10 +302,11 @@ function render_insert_column(doc, x, render) {
                 render.blink_off_collection[i].height
             );
     }
-    for (let y = 0; y < doc.rows; y++) render_at(render, x, y, doc.data[y * doc.columns + x]);
+    for (let y = 0; y < tmdata.rows; y++)
+        render_at(render, x, y, tmdata.data[y * tmdata.columns + x]);
 }
 
-function render_delete_column(doc, x, render) {
+function render_delete_column(tmdata, x, render) {
     const sx = x * render.font.width + render.font.width;
     const width = render.width - x * render.font.width - render.font.width;
     const dx = sx - render.font.width;
@@ -363,11 +364,16 @@ function render_delete_column(doc, x, render) {
                 render.blink_off_collection[i].height
             );
     }
-    for (let y = 0; y < doc.rows; y++)
-        render_at(render, doc.columns - 1, y, doc.data[y * doc.columns + doc.columns - 1]);
+    for (let y = 0; y < tmdata.rows; y++)
+        render_at(
+            render,
+            tmdata.columns - 1,
+            y,
+            tmdata.data[y * tmdata.columns + tmdata.columns - 1]
+        );
 }
 
-function render_insert_row(doc, y, render) {
+function render_insert_row(tmdata, y, render) {
     const canvas_row = Math.floor(y / render.maximum_rows);
     for (let i = render.ice_color_collection.length - 1; i > canvas_row; i--) {
         const ice_color_ctx = render.ice_color_collection[i].getContext("2d");
@@ -517,10 +523,11 @@ function render_insert_row(doc, y, render) {
             render.blink_off_collection[canvas_row].width,
             height
         );
-    for (let x = 0; x < doc.columns; x++) render_at(render, x, y, doc.data[y * doc.columns + x]);
+    for (let x = 0; x < tmdata.columns; x++)
+        render_at(render, x, y, tmdata.data[y * tmdata.columns + x]);
 }
 
-function render_delete_row(doc, y, render) {
+function render_delete_row(tmdata, y, render) {
     const canvas_row = Math.floor(y / render.maximum_rows);
     if ((y % render.maximum_rows) + 1 < render.maximum_rows) {
         const sy = (y % render.maximum_rows) * render.font.height + render.font.height;
@@ -740,8 +747,8 @@ function render_delete_row(doc, y, render) {
                 );
         }
     }
-    for (let x = 0; x < doc.columns; x++)
-        render_at(render, x, doc.rows - 1, doc.data[(doc.rows - 1) * doc.columns + x]);
+    for (let x = 0; x < tmdata.columns; x++)
+        render_at(render, x, tmdata.rows - 1, tmdata.data[(tmdata.rows - 1) * tmdata.columns + x]);
 }
 
 function flip_code_x(code) {
@@ -959,119 +966,123 @@ function rotate(blocks) {
     return blocks;
 }
 
-function insert_row(doc, insert_y, blocks) {
-    const removed_blocks = new Array(doc.columns);
-    for (let x = 0; x < doc.columns; x++)
-        removed_blocks[x] = Object.assign(doc.data[(doc.rows - 1) * doc.columns + x]);
-    for (let y = doc.rows - 1; y > insert_y; y--) {
-        for (let x = 0; x < doc.columns; x++) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i - doc.columns]);
+function insert_row(tmdata, insert_y, blocks) {
+    const removed_blocks = new Array(tmdata.columns);
+    for (let x = 0; x < tmdata.columns; x++)
+        removed_blocks[x] = Object.assign(tmdata.data[(tmdata.rows - 1) * tmdata.columns + x]);
+    for (let y = tmdata.rows - 1; y > insert_y; y--) {
+        for (let x = 0; x < tmdata.columns; x++) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i - tmdata.columns]);
         }
     }
-    for (let x = 0; x < doc.columns; x++)
-        doc.data[insert_y * doc.columns + x] = blocks
+    for (let x = 0; x < tmdata.columns; x++)
+        tmdata.data[insert_y * tmdata.columns + x] = blocks
             ? Object.assign(blocks[x])
             : { fg: 7, bg: 0, code: 32 };
     return removed_blocks;
 }
 
-function delete_row(doc, delete_y, blocks) {
-    const removed_blocks = new Array(doc.columns);
-    for (let x = 0; x < doc.columns; x++)
-        removed_blocks[x] = Object.assign(doc.data[delete_y * doc.columns + x]);
-    for (let y = delete_y; y < doc.rows - 1; y++) {
-        for (let x = 0; x < doc.columns; x++) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i + doc.columns]);
+function delete_row(tmdata, delete_y, blocks) {
+    const removed_blocks = new Array(tmdata.columns);
+    for (let x = 0; x < tmdata.columns; x++)
+        removed_blocks[x] = Object.assign(tmdata.data[delete_y * tmdata.columns + x]);
+    for (let y = delete_y; y < tmdata.rows - 1; y++) {
+        for (let x = 0; x < tmdata.columns; x++) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i + tmdata.columns]);
         }
     }
-    for (let x = 0; x < doc.columns; x++)
-        doc.data[(doc.rows - 1) * doc.columns + x] = blocks
+    for (let x = 0; x < tmdata.columns; x++)
+        tmdata.data[(tmdata.rows - 1) * tmdata.columns + x] = blocks
             ? Object.assign(blocks[x])
             : { fg: 7, bg: 0, code: 32 };
     return removed_blocks;
 }
 
-function insert_column(doc, insert_x, blocks) {
-    const removed_blocks = new Array(doc.rows);
-    for (let y = 0; y < doc.rows; y++)
-        removed_blocks[y] = Object.assign(doc.data[y * doc.columns + doc.columns - 1]);
-    for (let x = doc.columns - 1; x > insert_x; x--) {
-        for (let y = 0; y < doc.rows; y++) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i - 1]);
+function insert_column(tmdata, insert_x, blocks) {
+    const removed_blocks = new Array(tmdata.rows);
+    for (let y = 0; y < tmdata.rows; y++)
+        removed_blocks[y] = Object.assign(tmdata.data[y * tmdata.columns + tmdata.columns - 1]);
+    for (let x = tmdata.columns - 1; x > insert_x; x--) {
+        for (let y = 0; y < tmdata.rows; y++) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i - 1]);
         }
     }
-    for (let y = 0; y < doc.rows; y++)
-        doc.data[y * doc.columns + insert_x] = blocks
+    for (let y = 0; y < tmdata.rows; y++)
+        tmdata.data[y * tmdata.columns + insert_x] = blocks
             ? Object.assign(blocks[y])
             : { fg: 7, bg: 0, code: 32 };
     return removed_blocks;
 }
 
-function delete_column(doc, delete_x, blocks) {
-    const removed_blocks = new Array(doc.rows);
-    for (let y = 0; y < doc.rows; y++)
-        removed_blocks[y] = Object.assign(doc.data[y * doc.columns + delete_x]);
-    for (let x = delete_x; x < doc.columns - 1; x++) {
-        for (let y = 0; y < doc.rows; y++) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i + 1]);
+function delete_column(tmdata, delete_x, blocks) {
+    const removed_blocks = new Array(tmdata.rows);
+    for (let y = 0; y < tmdata.rows; y++)
+        removed_blocks[y] = Object.assign(tmdata.data[y * tmdata.columns + delete_x]);
+    for (let x = delete_x; x < tmdata.columns - 1; x++) {
+        for (let y = 0; y < tmdata.rows; y++) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i + 1]);
         }
     }
-    for (let y = 0; y < doc.rows; y++)
-        doc.data[y * doc.columns + doc.columns - 1] = blocks
+    for (let y = 0; y < tmdata.rows; y++)
+        tmdata.data[y * tmdata.columns + tmdata.columns - 1] = blocks
             ? Object.assign(blocks[y])
             : { fg: 7, bg: 0, code: 32 };
     return removed_blocks;
 }
 
-function scroll_canvas_up(doc) {
-    for (let x = 0; x < doc.columns; x++) {
-        const overwritten_block = Object.assign(doc.data[x]);
-        for (let y = 0; y < doc.rows - 1; y++) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i + doc.columns]);
+function scroll_canvas_up(tmdata) {
+    for (let x = 0; x < tmdata.columns; x++) {
+        const overwritten_block = Object.assign(tmdata.data[x]);
+        for (let y = 0; y < tmdata.rows - 1; y++) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i + tmdata.columns]);
         }
-        doc.data[(doc.rows - 1) * doc.columns + x] = Object.assign(overwritten_block);
+        tmdata.data[(tmdata.rows - 1) * tmdata.columns + x] = Object.assign(overwritten_block);
     }
 }
 
-function scroll_canvas_down(doc) {
-    for (let x = 0; x < doc.columns; x++) {
-        const overwritten_block = Object.assign(doc.data[(doc.rows - 1) * doc.columns + x]);
-        for (let y = doc.rows; y > 0; y--) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i - doc.columns]);
+function scroll_canvas_down(tmdata) {
+    for (let x = 0; x < tmdata.columns; x++) {
+        const overwritten_block = Object.assign(
+            tmdata.data[(tmdata.rows - 1) * tmdata.columns + x]
+        );
+        for (let y = tmdata.rows; y > 0; y--) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i - tmdata.columns]);
         }
-        doc.data[x] = Object.assign(overwritten_block);
+        tmdata.data[x] = Object.assign(overwritten_block);
     }
 }
 
-function scroll_canvas_left(doc) {
-    for (let y = 0; y < doc.rows; y++) {
-        const overwritten_block = Object.assign(doc.data[y * doc.columns]);
-        for (let x = 0; x < doc.columns - 1; x++) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i + 1]);
+function scroll_canvas_left(tmdata) {
+    for (let y = 0; y < tmdata.rows; y++) {
+        const overwritten_block = Object.assign(tmdata.data[y * tmdata.columns]);
+        for (let x = 0; x < tmdata.columns - 1; x++) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i + 1]);
         }
-        doc.data[y * doc.columns + doc.columns - 1] = Object.assign(overwritten_block);
+        tmdata.data[y * tmdata.columns + tmdata.columns - 1] = Object.assign(overwritten_block);
     }
 }
 
-function scroll_canvas_right(doc) {
-    for (let y = 0; y < doc.rows; y++) {
-        const overwritten_block = Object.assign(doc.data[y * doc.columns + doc.columns - 1]);
-        for (let x = doc.columns - 1; x > 0; x--) {
-            const i = y * doc.columns + x;
-            doc.data[i] = Object.assign(doc.data[i - 1]);
+function scroll_canvas_right(tmdata) {
+    for (let y = 0; y < tmdata.rows; y++) {
+        const overwritten_block = Object.assign(
+            tmdata.data[y * tmdata.columns + tmdata.columns - 1]
+        );
+        for (let x = tmdata.columns - 1; x > 0; x--) {
+            const i = y * tmdata.columns + x;
+            tmdata.data[i] = Object.assign(tmdata.data[i - 1]);
         }
-        doc.data[y * doc.columns] = Object.assign(overwritten_block);
+        tmdata.data[y * tmdata.columns] = Object.assign(overwritten_block);
     }
 }
 
-function render_scroll_canvas_up(doc, render) {
+function render_scroll_canvas_up(tmdata, render) {
     for (let i = 0; i < render.ice_color_collection.length; i++) {
         render.ice_color_collection[i]
             .getContext("2d")
@@ -1180,11 +1191,11 @@ function render_scroll_canvas_up(doc, render) {
                 );
         }
     }
-    for (let x = 0; x < doc.columns; x++)
-        render_at(render, x, doc.rows - 1, doc.data[(doc.rows - 1) * doc.columns + x]);
+    for (let x = 0; x < tmdata.columns; x++)
+        render_at(render, x, tmdata.rows - 1, tmdata.data[(tmdata.rows - 1) * tmdata.columns + x]);
 }
 
-function render_scroll_canvas_down(doc, render) {
+function render_scroll_canvas_down(tmdata, render) {
     for (let i = render.ice_color_collection.length - 1; i >= 0; i--) {
         const ice_color_ctx = render.ice_color_collection[i].getContext("2d");
         const preview_collection_ctx = render.preview_collection[i].getContext("2d");
@@ -1281,10 +1292,10 @@ function render_scroll_canvas_down(doc, render) {
             );
         }
     }
-    for (let x = 0; x < doc.columns; x++) render_at(render, x, 0, doc.data[x]);
+    for (let x = 0; x < tmdata.columns; x++) render_at(render, x, 0, tmdata.data[x]);
 }
 
-function render_scroll_canvas_left(doc, render) {
+function render_scroll_canvas_left(tmdata, render) {
     for (let i = 0; i < render.ice_color_collection.length; i++) {
         render.ice_color_collection[i]
             .getContext("2d")
@@ -1339,11 +1350,16 @@ function render_scroll_canvas_left(doc, render) {
                 render.blink_off_collection[i].height
             );
     }
-    for (let y = 0; y < doc.rows; y++)
-        render_at(render, doc.columns - 1, y, doc.data[y * doc.columns + doc.columns - 1]);
+    for (let y = 0; y < tmdata.rows; y++)
+        render_at(
+            render,
+            tmdata.columns - 1,
+            y,
+            tmdata.data[y * tmdata.columns + tmdata.columns - 1]
+        );
 }
 
-function render_scroll_canvas_right(doc, render) {
+function render_scroll_canvas_right(tmdata, render) {
     for (let i = 0; i < render.ice_color_collection.length; i++) {
         render.ice_color_collection[i]
             .getContext("2d")
@@ -1398,10 +1414,10 @@ function render_scroll_canvas_right(doc, render) {
                 render.blink_off_collection[i].height
             );
     }
-    for (let y = 0; y < doc.rows; y++) render_at(render, 0, y, doc.data[y * doc.columns]);
+    for (let y = 0; y < tmdata.rows; y++) render_at(render, 0, y, tmdata.data[y * tmdata.columns]);
 }
 
-function new_document({
+function new_tmdata({
     columns = 80,
     rows = 100,
     title = "",
@@ -1416,46 +1432,25 @@ function new_document({
     data,
     font_bytes,
 } = {}) {
-    const doc = new Textmode({
+    if (!data || data.length != columns * rows) {
+        data = new Array(columns * rows);
+        for (let i = 0; i < data.length; i++) data[i] = { fg: 7, bg: 0, code: 32 };
+    }
+
+    return new TextModeData({
         columns,
         rows,
+        data,
         title,
         author,
         group,
-        date: date != "" ? date : current_date(),
+        date,
         palette,
         font_name,
         ice_colors,
         use_9px_font,
         comments,
-    });
-    if (!data || data.length != columns * rows) {
-        doc.data = new Array(columns * rows);
-        for (let i = 0; i < doc.data.length; i++) doc.data[i] = { fg: 7, bg: 0, code: 32 };
-    } else {
-        doc.data = data;
-    }
-    if (font_bytes) {
-        doc.font_bytes = font_bytes;
-    }
-    return doc;
-}
-
-function clone_document(doc) {
-    return new_document({
-        columns: doc.columns,
-        rows: doc.rows,
-        title: doc.title,
-        author: doc.author,
-        group: doc.group,
-        date: doc.data,
-        palette: doc.palette,
-        font_bytes: doc.font_bytes,
-        font_name: doc.font_name,
-        ice_colors: doc.ice_colors,
-        use_9px_font: doc.use_9px_font,
-        comments: doc.comments,
-        data: doc.data,
+        font_bytes,
     });
 }
 
@@ -1463,107 +1458,37 @@ function get_data_url(canvases) {
     return join_canvases(canvases).toDataURL("image/png");
 }
 
-function compress(doc) {
-    const compressed_data = { code: [], fg: [], bg: [] };
-    for (let i = 0, code_repeat = 0, fg_repeat = 0, bg_repeat = 0; i < doc.data.length; i++) {
-        const block = doc.data[i];
-        if (i + 1 == doc.data.length) {
-            compressed_data.code.push([block.code, code_repeat]);
-            compressed_data.fg.push([block.fg, fg_repeat]);
-            compressed_data.bg.push([block.bg, bg_repeat]);
-        } else {
-            const next_block = doc.data[i + 1];
-            if (block.code != next_block.code) {
-                compressed_data.code.push([block.code, code_repeat]);
-                code_repeat = 0;
-            } else {
-                code_repeat += 1;
-            }
-            if (block.fg != next_block.fg) {
-                compressed_data.fg.push([block.fg, fg_repeat]);
-                fg_repeat = 0;
-            } else {
-                fg_repeat += 1;
-            }
-            if (block.bg != next_block.bg) {
-                compressed_data.bg.push([block.bg, bg_repeat]);
-                bg_repeat = 0;
-            } else {
-                bg_repeat += 1;
-            }
-        }
-    }
-    return {
-        columns: doc.columns,
-        rows: doc.rows,
-        title: doc.title,
-        author: doc.author,
-        group: doc.group,
-        date: doc.date,
-        palette: doc.palette,
-        font_bytes: doc.font_bytes,
-        font_name: doc.font_name,
-        ice_colors: doc.ice_colors,
-        use_9px_font: doc.use_9px_font,
-        comments: doc.comments,
-        compressed_data,
-        c64_background: doc.c64_background,
-    };
-}
-
-function uncompress(doc) {
-    if (doc.compressed_data) {
-        const codes = [];
-        const fgs = [];
-        const bgs = [];
-        for (const code of doc.compressed_data.code) {
-            for (let i = 0; i <= code[1]; i++) codes.push(code[0]);
-        }
-        for (const fg of doc.compressed_data.fg) {
-            for (let i = 0; i <= fg[1]; i++) fgs.push(fg[0]);
-        }
-        for (const bg of doc.compressed_data.bg) {
-            for (let i = 0; i <= bg[1]; i++) bgs.push(bg[0]);
-        }
-        doc.data = new Array(codes.length);
-        for (let i = 0; i < doc.data.length; i++)
-            doc.data[i] = { code: codes[i], fg: fgs[i], bg: bgs[i] };
-        delete doc.compressed_data;
-    }
-    return doc;
-}
-
-function get_blocks(doc, sx, sy, dx, dy, opts = {}) {
-    dx = Math.min(doc.columns - 1, dx);
-    dy = Math.min(doc.rows - 1, dy);
+function get_blocks(tmdata, sx, sy, dx, dy) {
+    dx = Math.min(tmdata.columns - 1, dx);
+    dy = Math.min(tmdata.rows - 1, dy);
     const columns = dx - sx + 1;
     const rows = dy - sy + 1;
-    const blocks = { columns, rows, data: new Array(columns * rows), ...opts };
+    const blocks = { columns, rows, data: new Array(columns * rows) };
     for (let y = sy, i = 0; y <= dy; y++) {
         for (let x = sx; x <= dx; x++, i++) {
-            blocks.data[i] = Object.assign(doc.data[y * doc.columns + x]);
+            blocks.data[i] = Object.assign(tmdata.data[y * tmdata.columns + x]);
         }
     }
     return blocks;
 }
 
-function get_all_blocks(doc) {
-    return get_blocks(doc, 0, 0, doc.columns - 1, doc.rows - 1);
+function get_all_blocks(tmdata) {
+    return get_blocks(tmdata, 0, 0, tmdata.columns - 1, tmdata.rows - 1);
 }
 
-function export_font(doc, render, file) {
+function export_font(tmdata, render, file) {
     let bytes;
-    if (doc.font != null) {
-        bytes = doc.font.bitmask;
+    if (tmdata.font != null) {
+        bytes = tmdata.font.bitmask;
     } else {
-        bytes = doc.font_bytes;
+        bytes = tmdata.font_bytes;
     }
     fs.writeFileSync(file, Buffer.from(bytes));
 }
 
-function export_as_png(doc, render, file) {
+function export_as_png(tmdata, render, file) {
     const base64_string = get_data_url(
-        doc.ice_colors ? render.ice_color_collection : render.blink_off_collection
+        tmdata.ice_colors ? render.ice_color_collection : render.blink_off_collection
     )
         .split(";base64,")
         .pop();
@@ -1618,26 +1543,6 @@ function remove_ice_color_for_block(block) {
         }
     }
     return { fg: block.fg, bg: block.bg - 8, code: block.code };
-}
-
-function remove_ice_colors(doc) {
-    const new_doc = new Textmode({
-        columns: doc.columns,
-        rows: doc.rows,
-        data: new Array(doc.data.length),
-        palette: doc.palette,
-        font_name: doc.font_name,
-        use_9px_font: doc.use_9px_font,
-        ice_colors: false,
-    });
-    doc.data.forEach((block, index) => {
-        if (block.bg > 7 && block.bg < 16) {
-            new_doc.data[index] = remove_ice_color_for_block(block);
-        } else {
-            new_doc.data[index] = Object.assign(block);
-        }
-    });
-    return new_doc;
 }
 
 async function importFontFromImage() {
@@ -1701,8 +1606,7 @@ async function rearrangeBitArray(bit_array, height) {
             }
         }
     }
-    const chunkedBitArray = splitToBulks(splitToHexBulks(rearrangedBitArray, 16), 8);
-    return chunkedBitArray;
+    return splitToBulks(splitToHexBulks(rearrangedBitArray, 16), 8);
 }
 
 function pad(num, size) {
@@ -1730,7 +1634,6 @@ function splitToBulks(arr, bulkSize) {
 
 module.exports = {
     Font,
-    read_bytes,
     read_file,
     export_font,
     load_custom_font,
@@ -1747,9 +1650,7 @@ module.exports = {
     render_delete_column,
     render_insert_row,
     render_delete_row,
-    new_document,
-    clone_document,
-    resize_canvas,
+    new_tmdata,
     cp437_to_unicode,
     cp437_to_unicode_bytes,
     unicode_to_cp437,
@@ -1771,9 +1672,6 @@ module.exports = {
     render_scroll_canvas_down,
     render_scroll_canvas_left,
     render_scroll_canvas_right,
-    get_data_url,
-    compress,
-    uncompress,
     get_blocks,
     get_all_blocks,
     export_as_png,
@@ -1782,5 +1680,5 @@ module.exports = {
     encode_as_xbin,
     encode_as_ansi,
     encode_as_mbd,
-    remove_ice_colors,
+    remove_ice_color_for_block,
 };

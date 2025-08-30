@@ -3,13 +3,6 @@ const remote = require("@electron/remote");
 var save_method = "";
 var save_destroy_when_done = false;
 
-function send(channel, opts) {
-    electron.ipcRenderer.send(channel, {
-        id: remote.getCurrentWindow().id,
-        ...opts,
-    });
-}
-
 function ok() {
     let method = save_method;
     let destroy_when_done = save_destroy_when_done;

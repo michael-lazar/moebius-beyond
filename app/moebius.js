@@ -98,44 +98,19 @@ async function new_document_window() {
     return win;
 }
 
-async function new_document({
-    columns,
-    rows,
-    title,
-    author,
-    group,
-    date,
-    palette,
-    font_name,
-    use_9px_font,
-    ice_colors,
-    comments,
-    data,
-    font_bytes,
-} = {}) {
+async function open_new_document() {
     const win = await new_document_window();
-    if (!author) author = prefs.get("nick");
-    if (!group) group = prefs.get("group");
-    if (!rows) {
-        const num = Number.parseInt(prefs.get("new_document_rows"));
-        rows = num >= 1 && num <= 3000 ? num : 25;
-    }
-    win.send("new_document", {
-        columns,
-        rows,
-        title,
-        author,
-        group,
-        date,
-        palette,
-        font_name,
-        use_9px_font,
-        ice_colors,
-        comments,
-        data,
-        font_bytes,
-    });
+
+    const author = prefs.get("nick");
+    const group = prefs.get("group");
+    let rows = Number.parseInt(prefs.get("new_document_rows"));
+    rows = rows >= 1 && rows <= 3000 ? rows : 25;
+
+    win.send("open_new_document", { rows, author, group });
 }
+
+menu.on("open_new_document", open_new_document);
+electron.ipcMain.on("open_new_document", open_new_document);
 
 function set_file(id, file) {
     docs[id].file = file;
@@ -147,9 +122,6 @@ function set_file(id, file) {
 }
 
 electron.ipcMain.on("set_file", (event, { id, file }) => set_file(id, file));
-
-menu.on("new_document", new_document);
-electron.ipcMain.on("new_document", (event, opts) => new_document(opts));
 
 function check_if_file_is_already_open(file) {
     for (const id of Object.keys(docs)) {
@@ -236,7 +208,7 @@ async function open_reference_window(win, files = null) {
     }
 
     for (const file of files) {
-        let reference = await new_win(file, {
+        await new_win(file, {
             width: 480,
             height: 340,
             parent: win,
@@ -508,7 +480,7 @@ electron.app.on("ready", (event) => {
             show_splash_screen();
         } else {
             // If skipping splash screen, create a new document
-            new_document();
+            open_new_document();
         }
     }
     if (darwin) electron.app.dock.setMenu(menu.dock_menu);

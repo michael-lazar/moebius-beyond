@@ -3,7 +3,6 @@ const { on, send, send_sync, msg_box, save_box } = require("./senders");
 const doc = require("./document/doc");
 const { tools } = require("./document/ui/ui");
 const { HourlySaver } = require("./hourly_saver");
-const { remove_ice_colors } = require("./libtextmode/libtextmode");
 let hourly_saver, backup_folder;
 require("./document/ui/canvas");
 require("./document/tools/select");
@@ -31,12 +30,7 @@ async function process_save(
     destroy_when_done = false,
     ignore_controlcharacters = true
 ) {
-    var ctrl = false;
-    doc.data.forEach((block, index) => {
-        if (block.code == 9 || block.code == 10 || block.code == 13 || block.code == 26)
-            ctrl = true;
-    });
-    if (ctrl && ignore_controlcharacters == false) {
+    if (doc.has_control_characters() && ignore_controlcharacters == false) {
         send("show_controlcharacters", { method, destroy_when_done });
     } else {
         switch (method) {
@@ -174,22 +168,10 @@ function use_backup(value) {
     }
 }
 
-// electron.remote.getCurrentWebContents().openDevTools();
 on("new_document", (event, opts) => doc.new_document(opts));
 on("revert_to_last_save", (event, opts) => doc.open(doc.file));
 on("show_file_in_folder", (event, opts) => electron.shell.showItemInFolder(doc.file));
-on("duplicate", (event, opts) =>
-    send("new_document", {
-        columns: doc.columns,
-        rows: doc.rows,
-        data: doc.data,
-        palette: doc.palette,
-        font_name: doc.font_name,
-        use_9px_font: doc.use_9px_font,
-        ice_colors: doc.ice_colors,
-        font_bytes: doc.font_bytes,
-    })
-);
+on("duplicate", (event, opts) => doc.duplicate());
 on("process_save", (event, { method, destroy_when_done, ignore_controlcharacters }) =>
     process_save(method, destroy_when_done, ignore_controlcharacters)
 );
@@ -204,6 +186,6 @@ on("export_font", (event, opts) => export_font());
 on("export_as_utf8", (event) => export_as_utf8());
 on("export_as_png", (event) => export_as_png());
 on("export_as_apng", (event) => export_as_apng());
-on("remove_ice_colors", (event) => send("new_document", remove_ice_colors(doc)));
+on("remove_ice_colors", (event) => doc.remove_ice_colors());
 on("backup_folder", (event, folder) => (backup_folder = folder));
 on("use_backup", (event, value) => use_backup(value));

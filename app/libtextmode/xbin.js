@@ -1,4 +1,4 @@
-const { bytes_to_utf8, bytes_to_blocks, Textmode, add_sauce_for_xbin } = require("./textmode");
+const { bytes_to_utf8, bytes_to_blocks, TextModeData, add_sauce_for_xbin } = require("./textmode");
 const { palette_4bit, xbin_to_rgb, rgb_to_xbin } = require("./palette");
 const repeating = {
     NONE: 0,
@@ -105,7 +105,7 @@ function fromXBin(bytes) {
         });
     }
 
-    const instance = new Textmode({
+    return new TextModeData({
         columns,
         rows,
         title: sauce.title,
@@ -119,12 +119,9 @@ function fromXBin(bytes) {
         comments: sauce.comments,
         data,
         palette,
+        font_bytes,
+        font_height,
     });
-    instance.font_height = font_height;
-    if (font_bytes) {
-        instance.font_bytes = font_bytes;
-    }
-    return instance;
 }
 
 function encode_as_xbin(doc, save_without_sauce) {
@@ -180,4 +177,4 @@ function encode_as_xbin(doc, save_without_sauce) {
     return bytes;
 }
 
-module.exports = { fromXBin, encode_as_xbin, uncompress };
+module.exports = { fromXBin, encode_as_xbin };

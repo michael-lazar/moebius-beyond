@@ -26,10 +26,6 @@ function get_var(name) {
     return getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
 }
 
-function set_var_px(name, value) {
-    set_var(name, `${value}px`);
-}
-
 function open_reference_image({ file } = {}) {
     if (!file) {
         const files = open_box({
@@ -152,6 +148,11 @@ on("clear_reference_image", (event) => clear_reference_image());
 
 function set_text(name, text) {
     $(name).textContent = text;
+}
+
+function toggle_off_guide() {
+    send("uncheck_all_guides");
+    $("drawing_grid").classList.add("hidden");
 }
 
 function toggle_smallscale_guide(visible) {
@@ -1389,4 +1390,5 @@ module.exports = {
     increase_reference_image_opacity,
     decrease_reference_image_opacity,
     open_reference_image,
+    toggle_off_guide,
 };

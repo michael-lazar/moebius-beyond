@@ -2273,7 +2273,7 @@ const application = electron.Menu.buildFromTemplate([
                 id: "new_document",
                 accelerator: "Cmd+N",
                 click(item) {
-                    event.emit("new_document");
+                    event.emit("open_new_document");
                 },
             },
             { type: "separator" },
@@ -2307,7 +2307,7 @@ function file_menu_template(win) {
                 id: "new_document",
                 accelerator: "CmdorCtrl+N",
                 click(item) {
-                    event.emit("new_document");
+                    event.emit("open_new_document");
                 },
             },
             {
@@ -3933,7 +3933,7 @@ class MenuEvent extends events.EventEmitter {
             {
                 label: "New Document",
                 click(item) {
-                    event.emit("new_document");
+                    event.emit("open_new_document");
                 },
             },
             {

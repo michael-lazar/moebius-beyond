@@ -1,5 +1,5 @@
 const { palette_4bit, base_palette_index, index_to_ansi, rgb_to_ansi } = require("./palette");
-const { Textmode, add_sauce_for_ans } = require("./textmode");
+const { TextModeData, add_sauce_for_ans } = require("./textmode");
 const { cp437_to_unicode_bytes } = require("./encodings");
 
 const sequence_type = {
@@ -285,34 +285,19 @@ function fromAnsi(bytes) {
     const sauce = get_sauce(bytes);
     const fileBytes = bytes.subarray(0, sauce.filesize);
 
-    const instance = new Textmode({
-        columns: sauce.columns,
-        rows: sauce.rows,
-        title: sauce.title,
-        author: sauce.author,
-        group: sauce.group,
-        date: sauce.date,
-        filesize: sauce.filesize,
-        ice_colors: sauce.ice_colors,
-        use_9px_font: sauce.use_9px_font,
-        font_name: sauce.font_name,
-        comments: sauce.comments,
-        palette: [...palette_4bit],
-    });
-
     const tokens = tokenize_file({
         bytes: fileBytes,
         filesize: sauce.filesize,
     });
 
-    if (!instance.columns) instance.columns = 80;
+    const columns = sauce.columns || 80;
 
-    let screen = new Screen(instance.columns);
-
+    const palette = [...palette_4bit];
     const palette_hashmap = {};
-    for (let index in instance.palette) {
+
+    for (let index in palette) {
         index = parseInt(index, 10);
-        const rgb = instance.palette[index];
+        const rgb = palette[index];
         palette_hashmap[Object.values(rgb).join("|")] = index;
     }
 
@@ -321,11 +306,13 @@ function fromAnsi(bytes) {
         let index = palette_hashmap[key];
         if (index > 15) return index;
 
-        instance.palette.push(rgb);
-        index = instance.palette.length - 1;
+        palette.push(rgb);
+        index = palette.length - 1;
         palette_hashmap[key] = index;
         return index;
     };
+
+    let screen = new Screen(columns);
 
     for (const token of tokens) {
         if (token.type == token_type.LITERAL) {
@@ -427,17 +414,31 @@ function fromAnsi(bytes) {
         }
     }
 
-    if (!instance.rows) {
-        instance.rows = screen.rows;
-    } else if (instance.rows > screen.rows) {
-        screen.fill(instance.rows - screen.rows);
-        screen.rows = instance.rows;
-    } else if (instance.rows < screen.rows) {
-        screen.rows = instance.rows;
+    let rows = sauce.rows || screen.rows;
+    if (sauce.rows > screen.rows) {
+        screen.fill(sauce.rows - screen.rows);
+        screen.rows = sauce.rows;
+    } else if (sauce.rows < screen.rows) {
+        screen.rows = sauce.rows;
     }
 
-    instance.data = screen.trim_data();
-    return instance;
+    const data = screen.trim_data();
+
+    return new TextModeData({
+        columns,
+        rows,
+        data,
+        title: sauce.title,
+        author: sauce.author,
+        group: sauce.group,
+        date: sauce.date,
+        filesize: sauce.filesize,
+        ice_colors: sauce.ice_colors,
+        use_9px_font: sauce.use_9px_font,
+        font_name: sauce.font_name,
+        comments: sauce.comments,
+        palette,
+    });
 }
 
 function to_bytes(string) {
@@ -608,4 +609,4 @@ function encode_as_utf8ansi(doc, bit_depth) {
     return new Uint8Array(output);
 }
 
-module.exports = { fromAnsi, encode_as_ansi, tokenize_file, Screen };
+module.exports = { fromAnsi, encode_as_ansi, Screen };

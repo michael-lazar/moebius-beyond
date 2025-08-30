@@ -1,10 +1,6 @@
 const electron = require("electron");
 const remote = require("@electron/remote");
 
-function $(name) {
-    return document.getElementById(name);
-}
-
 function send(channel, opts) {
     electron.ipcRenderer.send(channel, {
         id: remote.getCurrentWindow().getParentWindow().id,
