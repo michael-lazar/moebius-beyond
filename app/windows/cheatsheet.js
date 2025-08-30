@@ -1,5 +1,4 @@
 const libtextmode = require("../libtextmode/libtextmode");
-require("electron");
 const remote = require("@electron/remote");
 const dev = !remote.app.isPackaged;
 const ans_path = dev ? "./build/ans/" : `${process.resourcesPath}/ans/`;
