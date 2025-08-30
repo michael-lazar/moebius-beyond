@@ -106,7 +106,7 @@ async function open_new_document() {
     let rows = Number.parseInt(prefs.get("new_document_rows"));
     rows = rows >= 1 && rows <= 3000 ? rows : 25;
 
-    win.send("open_new_document", { rows, author, group });
+    win.send("new_document", { rows, author, group });
 }
 
 menu.on("open_new_document", open_new_document);
