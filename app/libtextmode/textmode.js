@@ -7,13 +7,27 @@ function bytes_to_blocks({ columns, rows, bytes }) {
 }
 
 class Sauce {
+    /**
+     * @param {Object} params
+     * @param {number} [params.columns]
+     * @param {number} [params.rows]
+     * @param {string} [params.title]
+     * @param {string} [params.author]
+     * @param {string} [params.group]
+     * @param {String} [params.date]
+     * @param {number} [params.filesize]
+     * @param {boolean} [params.ice_colors]
+     * @param {boolean} [params.use_9px_font]
+     * @param {string} [params.font_name]
+     * @param {string} [params.comments]
+     */
     constructor({
         columns,
         rows,
         title = "",
         author = "",
         group = "",
-        date,
+        date = "",
         filesize = 0,
         ice_colors = false,
         use_9px_font = false,
