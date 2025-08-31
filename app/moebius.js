@@ -275,6 +275,9 @@ electron.ipcMain.on("get_canvas_size", async (event, { id, columns, rows }) => {
         frame: false,
         ...get_centered_xy(id, 300, 190),
     });
+    if (options.showDevTools) {
+        docs[id].modal.openDevTools({ mode: "detach" });
+    }
     if (darwin) add_darwin_window_menu_handler(id);
     docs[id].modal.send("set_canvas_size", { columns, rows });
     event.returnValue = true;
