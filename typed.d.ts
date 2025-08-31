@@ -8,3 +8,11 @@ declare namespace App {
         height: number;
     };
 }
+
+declare global {
+    interface HTMLElement {
+        [key: string]: any;
+    }
+}
+
+export {};
