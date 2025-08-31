@@ -1092,17 +1092,17 @@ class Toolbar extends events.EventEmitter {
 
     increase_brush_size() {
         this.brush_size = Math.min(this.brush_size + 1, 9);
-        $("brush_size_num").innerText = this.brush_size;
+        $("brush_size_num").innerText = String(this.brush_size);
     }
 
     decrease_brush_size() {
         this.brush_size = Math.max(this.brush_size - 1, 1);
-        $("brush_size_num").innerText = this.brush_size;
+        $("brush_size_num").innerText = String(this.brush_size);
     }
 
     reset_brush_size() {
         this.brush_size = 1;
-        $("brush_size_num").innerText = this.brush_size;
+        $("brush_size_num").innerText = String(this.brush_size);
     }
 
     default_character_set() {
