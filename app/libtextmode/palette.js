@@ -4379,7 +4379,7 @@ module.exports = {
     },
 
     hex_to_rbg(hex) {
-        const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || [0, 0, 0];
+        const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || ["", "00", "00", "00"];
         return {
             r: parseInt(m[1], 16),
             g: parseInt(m[2], 16),
