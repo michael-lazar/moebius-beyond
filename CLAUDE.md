@@ -2,6 +2,7 @@
 
 - This is a legacy electron codebase that has been forked several times.
 - There is some functional testing with playright.
+- There is type checking using using JSDoc and tsc.
 - When adding tests, operate at the highest level possible and avoid mocking.
 - There is linting and formatting with eslint and prettier.
 - Manual smoke testing will be used to verify behavior and fixes.
