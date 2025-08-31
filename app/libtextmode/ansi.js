@@ -3,7 +3,7 @@ const { TextModeData, add_sauce_for_ans } = require("./textmode");
 const { cp437_to_unicode_bytes } = require("./encodings");
 
 const sequence_type = {
-    UNKNOWN: 0,
+    UNKNOWN: "",
     UP: "A",
     DOWN: "B",
     RIGHT: "C",

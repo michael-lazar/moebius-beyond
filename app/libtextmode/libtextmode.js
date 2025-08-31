@@ -1429,8 +1429,8 @@ function new_tmdata({
     ice_colors = true,
     use_9px_font = false,
     comments = "",
-    data,
-    font_bytes,
+    data = null,
+    font_bytes = null,
 } = {}) {
     if (!data || data.length != columns * rows) {
         data = new Array(columns * rows);
