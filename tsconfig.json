@@ -1,0 +1,16 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": "app",
+        "noEmit": true,
+        "allowJs": true,
+        "checkJs": true,
+        "target": "es6",
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "lib": ["dom", "es6"],
+        "esModuleInterop": true
+    },
+    "include": ["app/**/*", "typed.d.ts"],
+    "exclude": ["app/fonts/**/*"]
+}
