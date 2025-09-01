@@ -14,19 +14,18 @@ class HourlySaver extends events.EventEmitter {
     filename(backup_folder, file) {
         if (backup_folder == undefined) return;
         const parsed_file = path.parse(file);
+
         const date = new Date();
+
         const year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-        let hour = date.getHours();
-        let min = date.getMinutes();
-        let sec = date.getSeconds();
-        month = month < 10 ? "0" + month : month;
-        day = day < 10 ? "0" + day : day;
-        hour = hour < 10 ? "0" + hour : hour;
-        min = min < 10 ? "0" + min : min;
-        sec = sec < 10 ? "0" + sec : sec;
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const hour = date.getHours().toString().padStart(2, "0");
+        const min = date.getMinutes().toString().padStart(2, "0");
+        const sec = date.getSeconds().toString().padStart(2, "0");
+
         const timestamp = year + "-" + month + "-" + day + "T" + hour + min + sec;
+
         return path.join(backup_folder, `${parsed_file.name} - ${timestamp}${parsed_file.ext}`);
     }
 
