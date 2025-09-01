@@ -8,7 +8,7 @@ function fromBinaryText(bytes) {
     const fileBytes = bytes.subarray(0, sauce.filesize);
 
     let columns = sauce.columns;
-    if (columns == undefined) {
+    if (columns == null) {
         columns = 80;
     }
     const rows = Math.ceil(sauce.filesize / columns / 2);

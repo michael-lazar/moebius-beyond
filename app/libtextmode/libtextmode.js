@@ -1458,6 +1458,14 @@ function get_data_url(canvases) {
     return join_canvases(canvases).toDataURL("image/png");
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} sx
+ * @param {number} sy
+ * @param {number} dx
+ * @param {number} dy
+ * @returns {App.Blocks}
+ */
 function get_blocks(tmdata, sx, sy, dx, dy) {
     dx = Math.min(tmdata.columns - 1, dx);
     dy = Math.min(tmdata.rows - 1, dy);

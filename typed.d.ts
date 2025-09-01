@@ -6,6 +6,12 @@ declare global {
             dx: number;
             dy: number;
         };
+
+        type Blocks = {
+            columns: number;
+            rows: number;
+            data: any[];
+        };
     }
 
     interface HTMLElement {

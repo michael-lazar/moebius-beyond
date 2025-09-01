@@ -9,8 +9,8 @@ function bytes_to_blocks({ columns, rows, bytes }) {
 class Sauce {
     /**
      * @param {Object} params
-     * @param {number} [params.columns]
-     * @param {number} [params.rows]
+     * @param {number|null} [params.columns]
+     * @param {number|null} [params.rows]
      * @param {string} [params.title]
      * @param {string} [params.author]
      * @param {string} [params.group]
@@ -22,8 +22,8 @@ class Sauce {
      * @param {string} [params.comments]
      */
     constructor({
-        columns,
-        rows,
+        columns = null,
+        rows = null,
         title = "",
         author = "",
         group = "",
@@ -191,6 +191,10 @@ function bytes_to_utf8(bytes, offset, size) {
     return bytes.subarray(offset, offset + size).toString("utf8");
 }
 
+/**
+ * @param {Buffer} bytes
+ * @returns {Sauce}
+ */
 function get_sauce(bytes) {
     if (bytes.length >= 128) {
         const sauce_bytes = bytes.slice(-128);
@@ -232,7 +236,7 @@ function get_sauce(bytes) {
             let font_name = bytes_to_utf8(sauce_bytes, 106, 22).replace(/\0/g, "");
             if (font_name == "") font_name = "Default";
             if (filesize == 0) {
-                filesize = bytes.length = 128;
+                filesize = bytes.length - 128;
                 if (number_of_comments) filesize -= number_of_comments * 64 + 5;
             }
             return new Sauce({
@@ -250,9 +254,7 @@ function get_sauce(bytes) {
             });
         }
     }
-    const sauce = new Sauce();
-    sauce.filesize = bytes.length;
-    return sauce;
+    return new Sauce({ filesize: bytes.length });
 }
 
 class TextModeData {
