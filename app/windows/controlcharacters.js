@@ -7,7 +7,7 @@ function ok() {
     let method = save_method;
     let destroy_when_done = save_destroy_when_done;
     let ignore_controlcharacters = true;
-    remote.getCurrentWindow().getParentWindow().send("process_save", {
+    remote.getCurrentWindow().getParentWindow().webContents.send("process_save", {
         method,
         destroy_when_done,
         ignore_controlcharacters,

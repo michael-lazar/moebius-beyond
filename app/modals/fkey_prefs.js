@@ -12,7 +12,7 @@ function send(channel, opts) {
 }
 
 function send_parent(channel, opts) {
-    remote.getCurrentWindow().getParentWindow().send(channel, opts);
+    remote.getCurrentWindow().getParentWindow().webContents.send(channel, opts);
 }
 
 function key_down(event) {
