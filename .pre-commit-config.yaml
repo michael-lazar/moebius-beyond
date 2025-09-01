@@ -13,8 +13,8 @@ repos:
             language: system
             files: \.(js|json|md|yaml|yml)$
             pass_filenames: true
-#          - id: tsc
-#            name: tsc
-#            entry: npx tsc --noEmit
-#            language: system
-#            pass_filenames: false
+          - id: tsc
+            name: tsc
+            entry: npx tsc --noEmit
+            language: system
+            pass_filenames: false
