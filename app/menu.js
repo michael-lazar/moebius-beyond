@@ -2151,7 +2151,7 @@ const moebius_menu = {
             label: "Preferences",
             id: "preferences",
             accelerator: "CmdorCtrl+,",
-            click(item) {
+            click() {
                 event.emit("preferences");
             },
         },
@@ -2196,21 +2196,21 @@ const help_menu_items = {
         {
             label: "Cheatsheet",
             id: "show_cheatsheet",
-            click(item) {
+            click() {
                 event.emit("show_cheatsheet");
             },
         },
         {
             label: "Show Numpad Mappings",
             id: "show_numpad_mappings",
-            click(item) {
+            click() {
                 event.emit("show_numpad_mappings");
             },
         },
         {
             label: "Acknowledgements",
             id: "show_acknowledgements",
-            click(item) {
+            click() {
                 event.emit("show_acknowledgements");
             },
         },
@@ -2218,7 +2218,7 @@ const help_menu_items = {
         {
             label: "Enable Function Keys on MacOS",
             id: "enable_function_keys",
-            click(item) {
+            click() {
                 electron.shell.openExternal(
                     "file:///System/Library/PreferencePanes/Keyboard.prefPane/"
                 );
@@ -2228,14 +2228,14 @@ const help_menu_items = {
         {
             label: "ANSI Art Tutorials at 16Colors",
             id: "changelog",
-            click(item) {
+            click() {
                 electron.shell.openExternal("https://16colo.rs/tags/content/tutorial");
             },
         },
         {
             label: "Tutorial for Moebius XBIN editor",
             id: "xbin_tutorial",
-            click(item) {
+            click() {
                 electron.shell.openExternal(
                     "https://blog.glyphdrawing.club/moebius-ansi-and-ascii-art-editor-with-custom-font-support/"
                 );
@@ -2245,7 +2245,7 @@ const help_menu_items = {
         {
             label: "New Releases",
             id: "show_released",
-            click(item) {
+            click() {
                 electron.shell.openExternal(
                     "https://github.com/michael-lazar/moebius-beyond/releases"
                 );
@@ -2254,7 +2254,7 @@ const help_menu_items = {
         {
             label: "Report an Issue",
             id: "show_issues",
-            click(item) {
+            click() {
                 electron.shell.openExternal(
                     "https://github.com/michael-lazar/moebius-beyond/issues"
                 );
@@ -2264,6 +2264,7 @@ const help_menu_items = {
 };
 
 const application = electron.Menu.buildFromTemplate([
+    // @ts-ignore
     moebius_menu,
     {
         label: "File",
@@ -2272,7 +2273,7 @@ const application = electron.Menu.buildFromTemplate([
                 label: "New",
                 id: "new_document",
                 accelerator: "Cmd+N",
-                click(item) {
+                click() {
                     event.emit("open_new_document");
                 },
             },
@@ -2281,7 +2282,7 @@ const application = electron.Menu.buildFromTemplate([
                 label: "Open\u2026",
                 id: "open",
                 accelerator: "Cmd+O",
-                click(item) {
+                click() {
                     event.emit("open");
                 },
             },
@@ -2293,8 +2294,11 @@ const application = electron.Menu.buildFromTemplate([
             { role: "close" },
         ],
     },
+    // @ts-ignore
     bare_edit,
+    // @ts-ignore
     window_menu_items,
+    // @ts-ignore
     help_menu_items,
 ]);
 
@@ -2306,14 +2310,14 @@ function file_menu_template(win) {
                 label: "New",
                 id: "new_document",
                 accelerator: "CmdorCtrl+N",
-                click(item) {
+                click() {
                     event.emit("open_new_document");
                 },
             },
             {
                 label: "Duplicate as New Document",
                 id: "duplicate",
-                click(item) {
+                click() {
                     win.send("duplicate");
                 },
             },
@@ -2322,7 +2326,7 @@ function file_menu_template(win) {
                 label: "Open\u2026",
                 id: "open",
                 accelerator: "CmdorCtrl+O",
-                click(item) {
+                click() {
                     event.emit("open", win);
                 },
             },
@@ -2330,7 +2334,7 @@ function file_menu_template(win) {
                 label: "Open in Current Window\u2026",
                 id: "open_in_current_window",
                 accelerator: "CmdorCtrl+Shift+O",
-                click(item) {
+                click() {
                     event.emit("open_in_current_window", win);
                 },
             },
@@ -2345,7 +2349,7 @@ function file_menu_template(win) {
                       { type: "separator" },
                       {
                           label: "Settings",
-                          click(item) {
+                          click() {
                               event.emit("preferences");
                           },
                       },
@@ -2354,7 +2358,7 @@ function file_menu_template(win) {
             {
                 label: "Revert to Last Save",
                 id: "revert_to_last_save",
-                click(item) {
+                click() {
                     win.send("revert_to_last_save");
                 },
                 enabled: false,
@@ -2362,7 +2366,7 @@ function file_menu_template(win) {
             {
                 label: "Show File in Folder",
                 id: "show_file_in_folder",
-                click(item) {
+                click() {
                     win.send("show_file_in_folder");
                 },
                 enabled: false,
@@ -2372,7 +2376,7 @@ function file_menu_template(win) {
                 label: "Edit Sauce Info\u2026",
                 id: "edit_sauce_info",
                 accelerator: "CmdorCtrl+I",
-                click(item) {
+                click() {
                     win.send("get_sauce_info");
                 },
             },
@@ -2381,7 +2385,7 @@ function file_menu_template(win) {
                 label: "Save",
                 id: "save",
                 accelerator: "CmdorCtrl+S",
-                click(item) {
+                click() {
                     win.send("save");
                 },
             },
@@ -2389,14 +2393,14 @@ function file_menu_template(win) {
                 label: "Save As\u2026",
                 id: "save_as",
                 accelerator: "CmdorCtrl+Shift+S",
-                click(item) {
+                click() {
                     win.send("save_as");
                 },
             },
             {
                 label: "Save Without Sauce Info\u2026",
                 id: "save_without_sauce",
-                click(item) {
+                click() {
                     win.send("save_without_sauce");
                 },
             },
@@ -2404,14 +2408,14 @@ function file_menu_template(win) {
             {
                 label: "Share Online (.ans)",
                 id: "share_online",
-                click(item) {
+                click() {
                     win.send("share_online");
                 },
             },
             {
                 label: "Share Online (.xb)",
                 id: "share_online_xbin",
-                click(item) {
+                click() {
                     win.send("share_online_xbin");
                 },
             },
@@ -2420,7 +2424,7 @@ function file_menu_template(win) {
                 label: "Export As PNG\u2026",
                 id: "export_as_png",
                 accelerator: "CmdorCtrl+Shift+E",
-                click(item) {
+                click() {
                     win.send("export_as_png");
                 },
             },
@@ -2428,7 +2432,7 @@ function file_menu_template(win) {
                 label: "Export As Animated PNG\u2026",
                 id: "export_as_apng",
                 accelerator: "CmdorCtrl+Shift+A",
-                click(item) {
+                click() {
                     win.send("export_as_apng");
                 },
             },
@@ -2437,7 +2441,7 @@ function file_menu_template(win) {
                 label: "Export As UTF-8\u2026",
                 id: "export_as_utf8",
                 accelerator: "CmdorCtrl+Shift+U",
-                click(item) {
+                click() {
                     win.send("export_as_utf8");
                 },
             },
@@ -2455,7 +2459,7 @@ function edit_menu_template(win) {
                 label: "Undo",
                 id: "undo",
                 accelerator: darwin ? "CmdorCtrl+Z" : "",
-                click(item) {
+                click() {
                     win.send("undo");
                 },
                 enabled: false,
@@ -2464,7 +2468,7 @@ function edit_menu_template(win) {
                 label: "Redo",
                 id: "redo",
                 accelerator: darwin ? "CmdorCtrl+Shift+Z" : "",
-                click(item) {
+                click() {
                     win.send("redo");
                 },
                 enabled: false,
@@ -2506,7 +2510,7 @@ function edit_menu_template(win) {
                 label: "Cut",
                 id: "cut",
                 accelerator: "CmdorCtrl+X",
-                click(item) {
+                click() {
                     win.send("cut");
                 },
                 enabled: false,
@@ -2515,7 +2519,7 @@ function edit_menu_template(win) {
                 label: "Copy",
                 id: "copy",
                 accelerator: "CmdorCtrl+C",
-                click(item) {
+                click() {
                     win.send("copy");
                 },
                 enabled: false,
@@ -2524,7 +2528,7 @@ function edit_menu_template(win) {
                 label: "Paste",
                 id: "paste",
                 accelerator: "CmdorCtrl+V",
-                click(item) {
+                click() {
                     win.send("paste");
                 },
                 enabled: true,
@@ -2533,7 +2537,7 @@ function edit_menu_template(win) {
                 label: "Paste As Selection",
                 id: "paste_as_selection",
                 accelerator: "CmdorCtrl+Alt+V",
-                click(item) {
+                click() {
                     win.send("paste_as_selection");
                 },
                 enabled: true,
@@ -2543,7 +2547,7 @@ function edit_menu_template(win) {
                 label: "Left Justify Line",
                 id: "left_justify_line",
                 accelerator: "Alt+L",
-                click(item) {
+                click() {
                     win.send("left_justify_line");
                 },
                 enabled: true,
@@ -2552,7 +2556,7 @@ function edit_menu_template(win) {
                 label: "Right Justify Line",
                 id: "right_justify_line",
                 accelerator: "Alt+R",
-                click(item) {
+                click() {
                     win.send("right_justify_line");
                 },
                 enabled: true,
@@ -2561,7 +2565,7 @@ function edit_menu_template(win) {
                 label: "Center Line",
                 id: "center_line",
                 accelerator: "Alt+C",
-                click(item) {
+                click() {
                     win.send("center_line");
                 },
                 enabled: true,
@@ -2571,7 +2575,7 @@ function edit_menu_template(win) {
                 label: "Insert Row",
                 id: "insert_row",
                 accelerator: "Alt+Shift+Up",
-                click(item) {
+                click() {
                     win.send("insert_row");
                 },
                 enabled: true,
@@ -2580,7 +2584,7 @@ function edit_menu_template(win) {
                 label: "Delete Row",
                 id: "delete_row",
                 accelerator: "Alt+Shift+Down",
-                click(item) {
+                click() {
                     win.send("delete_row");
                 },
                 enabled: true,
@@ -2590,7 +2594,7 @@ function edit_menu_template(win) {
                 label: "Insert Column",
                 id: "insert_column",
                 accelerator: "Alt+Shift+Right",
-                click(item) {
+                click() {
                     win.send("insert_column");
                 },
                 enabled: true,
@@ -2599,7 +2603,7 @@ function edit_menu_template(win) {
                 label: "Delete Column",
                 id: "delete_column",
                 accelerator: "Alt+Shift+Left",
-                click(item) {
+                click() {
                     win.send("delete_column");
                 },
                 enabled: true,
@@ -2609,7 +2613,7 @@ function edit_menu_template(win) {
                 label: "Erase Row",
                 id: "erase_line",
                 accelerator: "Alt+E",
-                click(item) {
+                click() {
                     win.send("erase_line");
                 },
                 enabled: true,
@@ -2618,7 +2622,7 @@ function edit_menu_template(win) {
                 label: "Erase to Start of Row",
                 id: "erase_to_start_of_line",
                 accelerator: "Alt+Home",
-                click(item) {
+                click() {
                     win.send("erase_to_start_of_line");
                 },
                 enabled: true,
@@ -2627,7 +2631,7 @@ function edit_menu_template(win) {
                 label: "Erase to End of Row",
                 id: "erase_to_end_of_line",
                 accelerator: "Alt+End",
-                click(item) {
+                click() {
                     win.send("erase_to_end_of_line");
                 },
                 enabled: true,
@@ -2637,7 +2641,7 @@ function edit_menu_template(win) {
                 label: "Erase Column",
                 id: "erase_column",
                 accelerator: "Alt+Shift+E",
-                click(item) {
+                click() {
                     win.send("erase_column");
                 },
                 enabled: true,
@@ -2646,7 +2650,7 @@ function edit_menu_template(win) {
                 label: "Erase to Start of Column",
                 id: "erase_to_start_of_column",
                 accelerator: "Alt+PageUp",
-                click(item) {
+                click() {
                     win.send("erase_to_start_of_column");
                 },
                 enabled: true,
@@ -2655,7 +2659,7 @@ function edit_menu_template(win) {
                 label: "Erase to End of Column",
                 id: "erase_to_end_of_column",
                 accelerator: "Alt+PageDown",
-                click(item) {
+                click() {
                     win.send("erase_to_end_of_column");
                 },
                 enabled: true,
@@ -2665,7 +2669,7 @@ function edit_menu_template(win) {
                 label: "Scroll Canvas Up",
                 id: "scroll_canvas_up",
                 accelerator: "Ctrl+Alt+Up",
-                click(item) {
+                click() {
                     win.send("scroll_canvas_up");
                 },
                 enabled: true,
@@ -2674,7 +2678,7 @@ function edit_menu_template(win) {
                 label: "Scroll Canvas Down",
                 id: "scroll_canvas_down",
                 accelerator: "Ctrl+Alt+Down",
-                click(item) {
+                click() {
                     win.send("scroll_canvas_down");
                 },
                 enabled: true,
@@ -2683,7 +2687,7 @@ function edit_menu_template(win) {
                 label: "Scroll Canvas Right",
                 id: "scroll_canvas_right",
                 accelerator: "Ctrl+Alt+Right",
-                click(item) {
+                click() {
                     win.send("scroll_canvas_right");
                 },
                 enabled: true,
@@ -2692,7 +2696,7 @@ function edit_menu_template(win) {
                 label: "Scroll Canvas Left",
                 id: "scroll_canvas_left",
                 accelerator: "Ctrl+Alt+Left",
-                click(item) {
+                click() {
                     win.send("scroll_canvas_left");
                 },
                 enabled: true,
@@ -2702,7 +2706,7 @@ function edit_menu_template(win) {
                 label: "Set Canvas Size\u2026",
                 id: "set_canvas_size",
                 accelerator: "CmdorCtrl+Alt+C",
-                click(item) {
+                click() {
                     win.send("get_canvas_size");
                 },
                 enabled: true,
@@ -2719,14 +2723,14 @@ function selection_menu_template(win) {
                 label: "Select All",
                 id: "select_all",
                 accelerator: "CmdorCtrl+A",
-                click(item) {
+                click() {
                     win.send("select_all");
                 },
             },
             {
                 label: "Deselect",
                 id: "deselect",
-                click(item) {
+                click() {
                     win.send("deselect");
                 },
                 enabled: false,
@@ -2735,14 +2739,14 @@ function selection_menu_template(win) {
             {
                 label: "Import\u2026",
                 id: "import_selection",
-                click(item) {
+                click() {
                     win.send("import_selection");
                 },
             },
             {
                 label: "Export\u2026",
                 id: "export_selection",
-                click(item) {
+                click() {
                     win.send("export_selection");
                 },
                 enabled: false,
@@ -2752,7 +2756,7 @@ function selection_menu_template(win) {
                 label: "Start Selection",
                 id: "start_selection",
                 accelerator: "Alt+B",
-                click(item) {
+                click() {
                     win.send("start_selection");
                 },
                 enabled: false,
@@ -2762,7 +2766,7 @@ function selection_menu_template(win) {
                 label: "Move Block",
                 id: "move_block",
                 accelerator: "M",
-                click(item) {
+                click() {
                     win.send("move_block");
                 },
                 enabled: false,
@@ -2771,7 +2775,7 @@ function selection_menu_template(win) {
                 label: "Copy Block",
                 id: "copy_block",
                 accelerator: "C",
-                click(item) {
+                click() {
                     win.send("copy_block");
                 },
                 enabled: false,
@@ -2781,7 +2785,7 @@ function selection_menu_template(win) {
                 label: "Fill",
                 id: "fill",
                 accelerator: "F",
-                click(item) {
+                click() {
                     win.send("fill");
                 },
                 enabled: false,
@@ -2790,7 +2794,7 @@ function selection_menu_template(win) {
                 label: "Erase",
                 id: "erase",
                 accelerator: "E",
-                click(item) {
+                click() {
                     win.send("erase");
                 },
                 enabled: false,
@@ -2799,7 +2803,7 @@ function selection_menu_template(win) {
                 label: "Stamp",
                 id: "stamp",
                 accelerator: "S",
-                click(item) {
+                click() {
                     win.send("stamp");
                 },
                 enabled: false,
@@ -2808,7 +2812,7 @@ function selection_menu_template(win) {
                 label: "Place",
                 id: "place",
                 accelerator: "Enter",
-                click(item) {
+                click() {
                     win.send("place");
                 },
                 enabled: false,
@@ -2817,7 +2821,7 @@ function selection_menu_template(win) {
                 label: "Rotate",
                 id: "rotate",
                 accelerator: "R",
-                click(item) {
+                click() {
                     win.send("rotate");
                 },
                 enabled: false,
@@ -2826,7 +2830,7 @@ function selection_menu_template(win) {
                 label: "Flip X",
                 id: "flip_x",
                 accelerator: "X",
-                click(item) {
+                click() {
                     win.send("flip_x");
                 },
                 enabled: false,
@@ -2835,7 +2839,7 @@ function selection_menu_template(win) {
                 label: "Flip Y",
                 id: "flip_y",
                 accelerator: "Y",
-                click(item) {
+                click() {
                     win.send("flip_y");
                 },
                 enabled: false,
@@ -2844,7 +2848,7 @@ function selection_menu_template(win) {
                 label: "Center",
                 id: "center",
                 accelerator: "=",
-                click(item) {
+                click() {
                     win.send("center");
                 },
                 enabled: false,
@@ -2888,7 +2892,7 @@ function selection_menu_template(win) {
                 label: "Crop",
                 id: "crop",
                 accelerator: "CmdorCtrl+K",
-                click(item) {
+                click() {
                     win.send("crop");
                 },
                 enabled: false,
@@ -2902,7 +2906,7 @@ function lospec_palette_menu_items(win) {
         return {
             label: lospec_palette_name,
             id: lospec_palette_name,
-            click(item) {
+            click() {
                 win.send("change_palette", lospec_palette_name);
             },
             type: "checkbox",
@@ -2919,7 +2923,7 @@ function viler_font_menu_items(win) {
                 return {
                     label: font_name,
                     id: font_name,
-                    click(item) {
+                    click() {
                         win.send("change_font", font_name);
                     },
                     type: "checkbox",
@@ -2938,7 +2942,7 @@ function font_menu_items(win) {
                 return {
                     label: `${font_name} (8×${font_list[menu_title][font_name]})`,
                     id: font_name,
-                    click(item) {
+                    click() {
                         win.send("change_font", font_name);
                     },
                     type: "checkbox",
@@ -2957,7 +2961,7 @@ function view_menu_template(win) {
                 label: "Keyboard Mode",
                 id: "change_to_select_mode",
                 accelerator: "K",
-                click(item) {
+                click() {
                     win.send("change_to_select_mode");
                 },
                 enabled: false,
@@ -2966,7 +2970,7 @@ function view_menu_template(win) {
                 label: "Brush Mode",
                 id: "change_to_brush_mode",
                 accelerator: "B",
-                click(item) {
+                click() {
                     win.send("change_to_brush_mode");
                 },
                 enabled: false,
@@ -2975,7 +2979,7 @@ function view_menu_template(win) {
                 label: "Shifter Mode",
                 id: "change_to_shifter_mode",
                 accelerator: "I",
-                click(item) {
+                click() {
                     win.send("change_to_shifter_mode");
                 },
                 enabled: false,
@@ -2984,7 +2988,7 @@ function view_menu_template(win) {
                 label: "Paintbucket Mode",
                 id: "change_to_fill_mode",
                 accelerator: "P",
-                click(item) {
+                click() {
                     win.send("change_to_fill_mode");
                 },
                 enabled: false,
@@ -3035,7 +3039,7 @@ function view_menu_template(win) {
                 label: "Previous Character Set",
                 id: "previous_character_set",
                 accelerator: "Ctrl+,",
-                click(item) {
+                click() {
                     win.send("previous_character_set");
                 },
                 enabled: true,
@@ -3044,7 +3048,7 @@ function view_menu_template(win) {
                 label: "Next Character Set",
                 id: "next_character_set",
                 accelerator: "Ctrl+.",
-                click(item) {
+                click() {
                     win.send("next_character_set");
                 },
                 enabled: true,
@@ -3053,7 +3057,7 @@ function view_menu_template(win) {
                 label: "Default Character Set",
                 id: "default_character_set",
                 accelerator: "Ctrl+/",
-                click(item) {
+                click() {
                     win.send("default_character_set");
                 },
                 enabled: true,
@@ -3063,7 +3067,7 @@ function view_menu_template(win) {
                 label: "Increase Brush Size",
                 id: "increase_brush_size",
                 accelerator: "Alt+=",
-                click(item) {
+                click() {
                     win.send("increase_brush_size");
                 },
                 enabled: false,
@@ -3072,7 +3076,7 @@ function view_menu_template(win) {
                 label: "Decrease Brush Size",
                 id: "decrease_brush_size",
                 accelerator: "Alt+-",
-                click(item) {
+                click() {
                     win.send("decrease_brush_size");
                 },
                 enabled: false,
@@ -3081,7 +3085,7 @@ function view_menu_template(win) {
                 label: "Reset Brush Size",
                 id: "reset_brush_size",
                 accelerator: "Alt+0",
-                click(item) {
+                click() {
                     win.send("reset_brush_size");
                 },
                 enabled: false,
@@ -3102,7 +3106,7 @@ function view_menu_template(win) {
                 label: "Actual Size",
                 id: "actual_size",
                 accelerator: "CmdorCtrl+Alt+0",
-                click(item) {
+                click() {
                     win.send("actual_size");
                 },
                 type: "checkbox",
@@ -3114,63 +3118,63 @@ function view_menu_template(win) {
                     {
                         label: "25%",
                         id: "canvas_zoom_25",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 0.25);
                         },
                     },
                     {
                         label: "50%",
                         id: "canvas_zoom_50",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 0.5);
                         },
                     },
                     {
                         label: "75%",
                         id: "canvas_zoom_75",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 0.75);
                         },
                     },
                     {
                         label: "100%",
                         id: "canvas_zoom_100",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 1.0);
                         },
                     },
                     {
                         label: "150%",
                         id: "canvas_zoom_150",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 1.5);
                         },
                     },
                     {
                         label: "200%",
                         id: "canvas_zoom_200",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 2.0);
                         },
                     },
                     {
                         label: "300%",
                         id: "canvas_zoom_300",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 3.0);
                         },
                     },
                     {
                         label: "400%",
                         id: "canvas_zoom_400",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 4.0);
                         },
                     },
                     {
                         label: "500%",
                         id: "canvas_zoom_500",
-                        click(item) {
+                        click() {
                             win.send("set_canvas_zoom", 5.0);
                         },
                     },
@@ -3180,7 +3184,7 @@ function view_menu_template(win) {
                 label: "Zoom In",
                 id: "zoom_in",
                 accelerator: "CmdorCtrl+=",
-                click(item) {
+                click() {
                     win.send("zoom_in");
                 },
             },
@@ -3188,7 +3192,7 @@ function view_menu_template(win) {
                 label: "Zoom Out",
                 id: "zoom_out",
                 accelerator: "CmdorCtrl+-",
-                click(item) {
+                click() {
                     win.send("zoom_out");
                 },
             },
@@ -3196,7 +3200,7 @@ function view_menu_template(win) {
             {
                 label: "View character palette at 200%",
                 id: "charlist_zoom_toggle",
-                click(item) {
+                click() {
                     win.send("charlist_zoom_toggle");
                 },
                 type: "checkbox",
@@ -3316,7 +3320,7 @@ function view_menu_template(win) {
             {
                 label: "Open Reference In Window\u2026",
                 id: "open_reference_window",
-                click(item) {
+                click() {
                     event.emit("open_reference_window", win);
                 },
             },
@@ -3324,7 +3328,7 @@ function view_menu_template(win) {
                 label: "Open Reference Image\u2026",
                 id: "open_reference_image",
                 accelerator: "CmdorCtrl+Shift+O",
-                click(item) {
+                click() {
                     win.send("open_reference_image");
                 },
             },
@@ -3342,7 +3346,7 @@ function view_menu_template(win) {
             {
                 label: "Clear",
                 id: "clear_reference_image",
-                click(item) {
+                click() {
                     win.send("clear_reference_image");
                 },
                 enabled: false,
@@ -3376,28 +3380,28 @@ function font_menu_template(win) {
             {
                 label: "Load Custom Font\u2026",
                 id: "loadcustomfont",
-                click(item) {
+                click() {
                     win.send("load_custom_font");
                 },
             },
             {
                 label: "Reset to default font\u2026",
                 id: "resetxbinfont",
-                click(item) {
+                click() {
                     win.send("change_font", "IBM VGA");
                 },
             },
             {
                 label: "Export font\u2026",
                 id: "export_font",
-                click(item) {
+                click() {
                     win.send("export_font");
                 },
             },
             {
                 label: "Import font from image (GIF/PNG)\u2026",
                 id: "import_font",
-                click(item) {
+                click() {
                     win.send("import_font");
                 },
             },
@@ -3417,7 +3421,7 @@ function colors_menu_template(win) {
             {
                 label: "Reset to Default Palette",
                 id: "reset_palette",
-                click(item) {
+                click() {
                     win.send("change_palette", null);
                 },
             },
@@ -3426,7 +3430,7 @@ function colors_menu_template(win) {
                 label: "Select Attribute",
                 id: "select_attribute",
                 accelerator: "Alt+A",
-                click(item) {
+                click() {
                     win.send("select_attribute");
                 },
             },
@@ -3435,7 +3439,7 @@ function colors_menu_template(win) {
                 label: "Previous Foreground Color",
                 id: "previous_foreground_color",
                 accelerator: "Ctrl+Up",
-                click(item) {
+                click() {
                     win.send("previous_foreground_color");
                 },
             },
@@ -3443,7 +3447,7 @@ function colors_menu_template(win) {
                 label: "Next Foreground Color",
                 id: "next_foreground_color",
                 accelerator: "Ctrl+Down",
-                click(item) {
+                click() {
                     win.send("next_foreground_color");
                 },
             },
@@ -3452,7 +3456,7 @@ function colors_menu_template(win) {
                 label: "Previous Background Color",
                 id: "previous_background_colour",
                 accelerator: "Ctrl+Left",
-                click(item) {
+                click() {
                     win.send("previous_background_color");
                 },
             },
@@ -3460,7 +3464,7 @@ function colors_menu_template(win) {
                 label: "Next Background Color",
                 id: "next_background_color",
                 accelerator: "Ctrl+Right",
-                click(item) {
+                click() {
                     win.send("next_background_color");
                 },
             },
@@ -3469,7 +3473,7 @@ function colors_menu_template(win) {
                 label: "Use Attribute Under Cursor",
                 id: "use_attribute_under_cursor",
                 accelerator: "Alt+U",
-                click(item) {
+                click() {
                     win.send("use_attribute_under_cursor");
                 },
             },
@@ -3477,7 +3481,7 @@ function colors_menu_template(win) {
                 label: "Default Color",
                 id: "default_color",
                 accelerator: "CmdorCtrl+D",
-                click(item) {
+                click() {
                     win.send("default_color");
                 },
             },
@@ -3485,7 +3489,7 @@ function colors_menu_template(win) {
                 label: "Switch Foreground / Background",
                 id: "switch_foreground_background",
                 accelerator: "Alt+X",
-                click(item) {
+                click() {
                     win.send("switch_foreground_background");
                 },
             },
@@ -3504,7 +3508,7 @@ function colors_menu_template(win) {
             {
                 label: "Remove iCE Colors as New Document",
                 id: "remove_ice_colors",
-                click(item) {
+                click() {
                     win.send("remove_ice_colors");
                 },
             },
@@ -3519,7 +3523,7 @@ function debug_menu_template(win) {
             {
                 label: "Open Dev Tools",
                 id: "open_dev_tools",
-                click(item) {
+                click() {
                     win.openDevTools({ mode: "detach" });
                 },
             },
@@ -3908,10 +3912,15 @@ class MenuEvent extends events.EventEmitter {
 
     get modal_menu() {
         return electron.Menu.buildFromTemplate([
+            // @ts-ignore
             moebius_menu,
+            // @ts-ignore
             bare_file,
+            // @ts-ignore
             bare_edit,
+            // @ts-ignore
             window_menu_items,
+            // @ts-ignore
             help_menu_items,
         ]);
     }
@@ -3919,13 +3928,19 @@ class MenuEvent extends events.EventEmitter {
     document_menu(win, debug) {
         const menu = darwin
             ? electron.Menu.buildFromTemplate([
+                  // @ts-ignore
                   moebius_menu,
+                  // @ts-ignore
                   ...create_menu_template(win, debug),
+                  // @ts-ignore
                   window_menu_items,
+                  // @ts-ignore
                   help_menu_items,
               ])
             : electron.Menu.buildFromTemplate([
+                  // @ts-ignore
                   ...create_menu_template(win, debug),
+                  // @ts-ignore
                   help_menu_items,
               ]);
         menus[win.id] = menu;
@@ -3936,19 +3951,19 @@ class MenuEvent extends events.EventEmitter {
         return electron.Menu.buildFromTemplate([
             {
                 label: "New Document",
-                click(item) {
+                click() {
                     event.emit("open_new_document");
                 },
             },
             {
                 label: "Open\u2026",
-                click(item) {
+                click() {
                     event.emit("open");
                 },
             },
             {
                 label: "Preferences",
-                click(item) {
+                click() {
                     event.emit("preferences");
                 },
             },
