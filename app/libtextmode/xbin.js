@@ -56,7 +56,7 @@ function fromXBin(bytes) {
     const sauce = get_sauce(bytes);
     const fileBytes = bytes.subarray(0, sauce.filesize);
 
-    if ((bytes_to_utf8(fileBytes, 0, 4) != "XBIN") | (fileBytes[4] != 0x1a)) {
+    if (bytes_to_utf8(fileBytes, 0, 4) != "XBIN" || fileBytes[4] != 0x1a) {
         throw "Error whilst attempting to load XBin file: Unexpected header.";
     }
     const columns = (fileBytes[6] << 8) + fileBytes[5];

@@ -26,7 +26,7 @@ function get_var(name) {
     return getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
 }
 
-function open_reference_image({ file } = {}) {
+function open_reference_image({ file } = { file: undefined }) {
     if (!file) {
         const files = open_box({
             filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }],

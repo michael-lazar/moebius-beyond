@@ -527,6 +527,9 @@ class TextModeDoc extends events.EventEmitter {
     get title() {
         return this._tmdata.title;
     }
+    get date() {
+        return this._tmdata.date;
+    }
     get author() {
         return this._tmdata.author;
     }
@@ -1151,7 +1154,7 @@ class TextModeDoc extends events.EventEmitter {
         this.start_rendering().then(() => this.emit("change_font", this.font_name));
     }
 
-    async load_custom_font({ file } = {}) {
+    async load_custom_font({ file } = { file: undefined }) {
         if (!file) {
             const files = open_box({
                 filters: [
