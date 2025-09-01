@@ -1150,6 +1150,7 @@ class TextModeDoc extends events.EventEmitter {
         const bit_array = await libtextmode.processImageDataTo1bit(data);
         const chunkedBitArray = await libtextmode.rearrangeBitArray(bit_array, height);
         this._tmdata.font_name = path.parse(filename).name;
+        // @ts-ignore
         this._tmdata.font_bytes = Buffer.from(chunkedBitArray, "hex");
         this.start_rendering().then(() => this.emit("change_font", this.font_name));
     }
