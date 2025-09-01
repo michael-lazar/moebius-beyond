@@ -1338,7 +1338,7 @@ class Toolbar extends events.EventEmitter {
                     this.change_mode(this.modes.COLORIZE);
                 });
                 this.change_mode(this.modes.HALF_BLOCK);
-                $("reference_open").addEventListener("click", open_reference_image);
+                $("reference_open").addEventListener("click", () => open_reference_image());
                 $("reference_show").addEventListener("click", show_reference_image);
                 $("reference_hide").addEventListener("click", hide_reference_image);
                 $("reference_reset").addEventListener("click", reset_reference_image);

@@ -1,8 +1,8 @@
 # Project Context
 
 - This is a legacy electron codebase that has been forked several times.
-- There is some functional testing with playright.
-- There is type checking using using JSDoc and tsc.
+- There is some functional testing with playright, use "npm test".
+- There is type checking for js files using JSDoc, see typed.d.ts and use "npm run typecheck".
 - When adding tests, operate at the highest level possible and avoid mocking.
 - There is linting and formatting with eslint and prettier.
 - Manual smoke testing will be used to verify behavior and fixes.

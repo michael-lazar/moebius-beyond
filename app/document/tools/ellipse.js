@@ -120,19 +120,6 @@ function draw_clear_block_ellipse(sx, sy, dx, dy) {
     for (const coord of coords) doc.change_data(coord.x, coord.y, 32, 7, 0);
 }
 
-function draw_full_block_ellipse(sx, sy, dx, dy, col) {
-    const coords = ellipse_coords(sx, sy, dx, dy);
-    if (!coords) return;
-    for (const coord of coords) doc.change_data(coord.x, coord.y, 219, col, 0);
-}
-
-function draw_f1_block_ellipse(sx, sy, dx, dy, col) {
-    const coords = ellipse_coords(sx, sy, dx, dy);
-    if (!coords) return;
-    const code = toolbar.fkeys[toolbar.fkey_index][0];
-    for (const coord of coords) doc.change_data(coord.x, coord.y, code, col, 0);
-}
-
 function draw_shaded_block_ellipse(sx, sy, dx, dy, fg, bg, reduce) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
@@ -253,24 +240,6 @@ mouse.on("up", (x, y, half_y, button) => {
         draw_clear_block_ellipse(mouse.start.x, mouse.start.y, x, y);
     } else {
         switch (toolbar.mode) {
-            case toolbar.modes.FULL_BLOCK:
-                draw_full_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    button == mouse.buttons.LEFT ? fg : bg
-                );
-                break;
-            case toolbar.modes.F1_BLOCK:
-                draw_f1_block_ellipse(
-                    mouse.start.x,
-                    mouse.start.y,
-                    x,
-                    y,
-                    button == mouse.buttons.LEFT ? fg : bg
-                );
-                break;
             case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
                 draw_shaded_block_ellipse(mouse.start.x, mouse.start.y, x, y, fg, bg, reduce);
