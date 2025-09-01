@@ -969,7 +969,8 @@ class Toolbar extends events.EventEmitter {
         canvas.addEventListener(
             "mousedown",
             (event) => {
-                const rect = event.target.getBoundingClientRect();
+                const target = /** @type {HTMLElement} */ (event.target);
+                const rect = target.getBoundingClientRect();
                 this.charlist_x = event.clientX - rect.left;
                 this.charlist_y = event.clientY - rect.top;
                 this.char_index =

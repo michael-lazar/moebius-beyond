@@ -296,9 +296,9 @@ function fromAnsi(bytes) {
     const palette_hashmap = {};
 
     for (let index in palette) {
-        index = parseInt(index, 10);
-        const rgb = palette[index];
-        palette_hashmap[Object.values(rgb).join("|")] = index;
+        const numIndex = parseInt(index, 10);
+        const rgb = palette[numIndex];
+        palette_hashmap[Object.values(rgb).join("|")] = numIndex;
     }
 
     const resolve_palette = (rgb) => {

@@ -32,6 +32,10 @@ class UndoHistory extends events.EventEmitter {
         this.reset_redos();
     }
 
+    /**
+     * @param {number} [type]
+     * @param {any} [data]
+     */
     start_chunk(type = undo_types.INDIVIDUAL, data = []) {
         this.reset_redos();
         this.undo_buffer.push({ type, data });
