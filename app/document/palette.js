@@ -53,27 +53,32 @@ class PaletteChooser extends EventEmitter {
 
     bind_events() {
         this.swatch_container_el.addEventListener("mousedown", (e) => {
-            if (!e.target.dataset.id) return;
+            const target = /** @type {HTMLElement} */ (e.target);
+            if (!target.dataset.id) return;
 
             clearTimeout(this.click_timer);
             this.click_timer = setTimeout(() => {
                 if (e.button === 2 || e.ctrlKey) {
-                    this.bg_internal = e.target.dataset.id;
+                    this.bg_internal = target.dataset.id;
                 } else {
-                    this.fg = e.target.dataset.id;
+                    this.fg = target.dataset.id;
                 }
             }, 175);
         });
 
         this.swatch_container_el.addEventListener("dblclick", (e) => {
+            const target = /** @type {HTMLElement} */ (e.target);
             clearTimeout(this.click_timer);
 
-            this.color_picker_spawner = e.target;
-            this.color_picker_el.value = rgb_to_hex(doc.palette[e.target.dataset.id]);
+            this.color_picker_spawner = target;
+            this.color_picker_el.value = rgb_to_hex(doc.palette[target.dataset.id]);
             this.color_picker_el.showPicker();
         });
 
-        this.color_picker_el.addEventListener("change", (e) => this.color_picked(e.target.value));
+        this.color_picker_el.addEventListener("change", (e) => {
+            const target = /** @type {HTMLInputElement} */ (e.target);
+            this.color_picked(target.value);
+        });
     }
 
     color_picked(hex) {
