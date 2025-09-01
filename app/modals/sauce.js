@@ -77,7 +77,7 @@ function comments_input(event) {
     document.getElementById("number_of_bytes").innerText = Buffer.from(
         comments.value,
         "utf-8"
-    ).length;
+    ).length.toString();
 }
 
 document.addEventListener(

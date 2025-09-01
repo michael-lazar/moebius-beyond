@@ -315,11 +315,11 @@ class StatusBar {
     }
 
     hide_cursor_position() {
-        $("cursor_position").style.opacity = 0;
+        $("cursor_position").style.opacity = "0";
     }
 
     show_cursor_position() {
-        $("cursor_position").style.opacity = 1;
+        $("cursor_position").style.opacity = "1";
     }
 
     constructor() {

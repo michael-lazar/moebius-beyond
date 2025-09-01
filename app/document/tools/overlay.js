@@ -6,7 +6,7 @@ class Overlay {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         document.getElementById("editing_layer").appendChild(this.canvas);
-        this.canvas.style.opacity = 0.6;
+        this.canvas.style.opacity = "0.6";
         if (border) this.canvas.classList.add("border");
     }
 

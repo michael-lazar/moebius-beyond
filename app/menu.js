@@ -2334,18 +2334,22 @@ function file_menu_template(win) {
                     event.emit("open_in_current_window", win);
                 },
             },
-            darwin
-                ? {
-                      role: "recentDocuments",
-                      submenu: [{ role: "clearRecentDocuments" }],
-                  }
-                : ({ type: "separator" },
-                  {
-                      label: "Settings",
-                      click(item) {
-                          event.emit("preferences");
+            ...(darwin
+                ? [
+                      {
+                          role: "recentDocuments",
+                          submenu: [{ role: "clearRecentDocuments" }],
                       },
-                  }),
+                  ]
+                : [
+                      { type: "separator" },
+                      {
+                          label: "Settings",
+                          click(item) {
+                              event.emit("preferences");
+                          },
+                      },
+                  ]),
             { type: "separator" },
             {
                 label: "Revert to Last Save",
