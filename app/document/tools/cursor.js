@@ -262,7 +262,7 @@ class Cursor {
     }
 
     start_selection_mode() {
-        this.selection = { sx: this.x, sy: this.y };
+        this.selection = { sx: this.x, sy: this.y, dx: 0, dy: 0 };
         this.canvas.classList.add("selection");
         this.mode = modes.SELECTION;
         this.draw();
@@ -651,6 +651,7 @@ class Cursor {
         this.y = 0;
         this.hidden = true;
         this.flashing = false;
+        /** @type {App.Selection} */
         this.selection = { sx: 0, sy: 0, dx: 0, dy: 0 };
         this.scroll_document_with_cursor = false;
         this.canvas_zoom = 1.0;

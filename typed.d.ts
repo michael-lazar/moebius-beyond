@@ -1,15 +1,13 @@
-declare namespace App {
-    type Position = {
-        x: number;
-        y: number;
-    };
-    type Size = {
-        width: number;
-        height: number;
-    };
-}
-
 declare global {
+    namespace App {
+        type Selection = {
+            sx: number;
+            sy: number;
+            dx: number;
+            dy: number;
+        };
+    }
+
     interface HTMLElement {
         [key: string]: any;
     }
