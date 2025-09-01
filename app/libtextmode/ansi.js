@@ -565,9 +565,7 @@ function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 
 function encode_as_utf8ansi(doc, bit_depth) {
     let output = [27, 91, 48, 109];
 
-    let palette_map = build_ansi_palette(doc.palette, bit_depth, {
-        utf8: true,
-    });
+    let palette_map = build_ansi_palette(doc.palette, bit_depth);
     let current_sgr = {};
     let current_fg = 7;
     let current_bg = 0;

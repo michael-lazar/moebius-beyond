@@ -1310,7 +1310,7 @@ class Toolbar extends events.EventEmitter {
                     (event) => this.increase_brush_size(),
                     true
                 );
-                $("brush_size_num").innerText = this.brush_size;
+                $("brush_size_num").innerText = String(this.brush_size);
                 $("half_block").addEventListener("mousedown", (event) =>
                     this.change_mode(this.modes.HALF_BLOCK)
                 );

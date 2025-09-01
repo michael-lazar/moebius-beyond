@@ -297,8 +297,8 @@ function closest_index_in(palette, rgb) {
     let index = 0;
     let closest = Infinity;
 
-    for (let i in palette) {
-        const distance = rgb_distance(rgb, palette[i]);
+    for (let [i, color] of palette.entries()) {
+        const distance = rgb_distance(rgb, color);
         if (distance > closest) continue;
 
         closest = distance;
@@ -4359,9 +4359,8 @@ module.exports = {
     },
 
     base_palette_index({ r, g, b }) {
-        for (let i in palette_4bit) {
-            if (r === palette_4bit[i].r && g === palette_4bit[i].g && b === palette_4bit[i].b)
-                return i;
+        for (let [i, color] of palette_4bit.entries()) {
+            if (r === color.r && g === color.g && b === color.b) return i;
         }
         return -1;
     },
