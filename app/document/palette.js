@@ -123,26 +123,43 @@ class PaletteChooser extends EventEmitter {
         document.getElementById(level).style.backgroundColor = rgb_to_hex(doc.palette[this[level]]);
     }
 
+    /**
+     * @param {string|number} value
+     */
     set fg(value) {
-        this.emit("set_fg", (this.fg_index = parseInt(value, 10)));
+        this.fg_index = typeof value === "number" ? value : parseInt(value, 10);
+        this.emit("set_fg");
         this.update_selected("fg");
     }
 
+    /**
+     * @returns {number}
+     */
     get fg() {
         return this.fg_index;
     }
 
+    /**
+     * @param {string|number} value
+     */
     set bg(value) {
-        this.emit("set_bg", (this.bg_index = parseInt(value, 10)));
+        this.bg_index = typeof value === "number" ? value : parseInt(value, 10);
+        this.emit("set_bg");
         this.update_selected("bg");
     }
 
-    set bg_internal(value) {
-        this.bg = value;
-    }
-
+    /**
+     * @returns {number}
+     */
     get bg() {
         return this.bg_index;
+    }
+
+    /**
+     * @param {string|number} value
+     */
+    set bg_internal(value) {
+        this.bg = typeof value === "number" ? value : parseInt(value, 10);
     }
 
     previous_foreground_color() {
