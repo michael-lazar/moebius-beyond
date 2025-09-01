@@ -296,12 +296,12 @@ doc.on("render", () => rescale_guide());
 doc.on("render", () => rescale_drawinggrid());
 
 class StatusBar {
-    status_bar_info(columns, rows, code = "") {
+    status_bar_info(columns, rows) {
         set_text("columns", `${columns}`);
         set_text("rows", `${rows}`);
         set_text("columns_s", columns > 1 ? "s" : "");
         set_text("rows_s", rows > 1 ? "s" : "");
-        set_text("ascii_value", code.code);
+        set_text("ascii_value", "");
     }
 
     use_canvas_size_for_status_bar() {
