@@ -1,5 +1,5 @@
 const electron = require("electron");
-const events = new require("events");
+const events = require("events");
 const darwin = process.platform == "darwin";
 const menus = [];
 const font_names = [];

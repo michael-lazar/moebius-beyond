@@ -663,10 +663,8 @@ document.addEventListener(
             "mousedown",
             (event) => {
                 // Don't start dragging if clicking on buttons
-                if (
-                    event.target.id === "charlist_zoom_button" ||
-                    event.target.id === "charlist_reset_button"
-                )
+                const target = /** @type {HTMLElement} */ (event.target);
+                if (target.id === "charlist_zoom_button" || target.id === "charlist_reset_button")
                     return;
 
                 isDragging = true;
