@@ -453,6 +453,7 @@ class TextModeDoc extends events.EventEmitter {
         this._render = null;
         this.init = false;
         this.mirror_mode = false;
+        this.edited = false;
 
         this.undo_history = new UndoHistory(this);
         this.undo_history.on("resize", () => this.start_rendering());
