@@ -13,6 +13,11 @@ const fs = require("fs");
 const upng = require("upng-js");
 const { getSync } = require("@andreekeberg/imagedata");
 
+/**
+ * @param {Buffer} bytes
+ * @param {string} file
+ * @returns {TextModeData}
+ */
 function read_bytes(bytes, file) {
     switch (path.extname(file).toLowerCase()) {
         case ".mbd":
@@ -27,6 +32,10 @@ function read_bytes(bytes, file) {
     }
 }
 
+/**
+ * @param {string} file
+ * @returns {Promise<TextModeData>}
+ */
 async function read_file(file) {
     return new Promise((resolve) => {
         fs.readFile(file, (err, bytes) => {
@@ -36,10 +45,17 @@ async function read_file(file) {
     });
 }
 
+/**
+ * @returns {Promise<number>}
+ */
 async function next_frame() {
     return new Promise((resolve) => window.requestAnimationFrame(resolve));
 }
 
+/**
+ * @param {{file: string, ctx: CanvasRenderingContext2D}} options
+ * @returns {Promise<void>}
+ */
 async function animate({ file, ctx }) {
     const tmdata = await read_file(file);
     const font = new Font(tmdata.palette);
@@ -61,7 +77,14 @@ async function animate({ file, ctx }) {
     }
 }
 
-function write_file(tmdata, file, { utf8 = false, save_without_sauce = false } = {}) {
+/**
+ * @param {TextModeData} tmdata
+ * @param {Font} font
+ * @param {string} file
+ * @param {{utf8?: boolean, save_without_sauce?: boolean}} options
+ * @returns {void}
+ */
+function write_file(tmdata, font, file, { utf8 = false, save_without_sauce = false } = {}) {
     let bytes;
     switch (path.extname(file).toLowerCase()) {
         case ".mbd":
@@ -71,7 +94,7 @@ function write_file(tmdata, file, { utf8 = false, save_without_sauce = false } =
             bytes = encode_as_bin(tmdata, save_without_sauce);
             break;
         case ".xb":
-            bytes = encode_as_xbin(tmdata, save_without_sauce);
+            bytes = encode_as_xbin(tmdata, font, save_without_sauce);
             break;
         case ".ans":
         default:

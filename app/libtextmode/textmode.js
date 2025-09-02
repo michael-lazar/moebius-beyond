@@ -69,6 +69,11 @@ function current_date() {
 const data_type_types = { CHARACTER: 1, BIN: 5, XBIN: 6 };
 const file_type_types = { NONE: 0, ANS_FILETYPE: 1 };
 
+/**
+ * @param {string} rawcomments
+ * @param {Uint8Array} sauce_bytes
+ * @returns {Uint8Array}
+ */
 function add_comments_bytes(rawcomments, sauce_bytes) {
     var comments = "";
     var commentlines = rawcomments.split("\n");
@@ -92,6 +97,10 @@ function add_comments_bytes(rawcomments, sauce_bytes) {
     return merged_bytes;
 }
 
+/**
+ * @param {string} rawcomments
+ * @returns {number}
+ */
 function comments_length(rawcomments) {
     if (rawcomments.length == 0) {
         return 0;
@@ -119,12 +128,17 @@ function pad(text, length) {
     return out_bytes;
 }
 
-function add_sauce_bytes({ doc, data_type, file_type, bytes: file_bytes }) {
+/**
+ * @param {{tmdata: TextModeData, data_type: number, file_type: number, bytes: Uint8Array}} params
+ * @returns {Uint8Array}
+ */
+function add_sauce_bytes({ tmdata, data_type, file_type, bytes: file_bytes }) {
+    /** @type {Uint8Array} */
     let bytes = new Uint8Array(128);
     add_text(bytes, 0, "SAUCE00", 7);
-    bytes.set(pad(doc.title, 35), 7);
-    bytes.set(pad(doc.author, 20), 42);
-    bytes.set(pad(doc.group, 20), 62);
+    bytes.set(pad(tmdata.title, 35), 7);
+    bytes.set(pad(tmdata.author, 20), 42);
+    bytes.set(pad(tmdata.group, 20), 62);
     add_text(bytes, 82, current_date(), 8);
     bytes[90] = file_bytes.length & 0xff;
     bytes[91] = (file_bytes.length >> 8) & 0xff;
@@ -132,55 +146,67 @@ function add_sauce_bytes({ doc, data_type, file_type, bytes: file_bytes }) {
     bytes[93] = file_bytes.length >> 24;
     bytes[94] = data_type;
     if (data_type == data_type_types.BIN) {
-        bytes[95] = doc.columns / 2;
+        bytes[95] = tmdata.columns / 2;
     } else {
         bytes[95] = file_type;
-        bytes[96] = doc.columns & 0xff;
-        bytes[97] = doc.columns >> 8;
-        bytes[98] = doc.rows & 0xff;
-        bytes[99] = doc.rows >> 8;
+        bytes[96] = tmdata.columns & 0xff;
+        bytes[97] = tmdata.columns >> 8;
+        bytes[98] = tmdata.rows & 0xff;
+        bytes[99] = tmdata.rows >> 8;
     }
-    bytes[104] = comments_length(doc.comments);
+    bytes[104] = comments_length(tmdata.comments);
     if (data_type != data_type_types.XBIN) {
-        if (doc.ice_colors) {
+        if (tmdata.ice_colors) {
             bytes[105] = 1;
         }
-        if (doc.use_9px_font) {
+        if (tmdata.use_9px_font) {
             bytes[105] += 1 << 2;
         } else {
             bytes[105] += 1 << 1;
         }
-        if (doc.font_name) add_text(bytes, 106, doc.font_name, doc.font_name.length);
+        if (tmdata.font_name) add_text(bytes, 106, tmdata.font_name, tmdata.font_name.length);
     }
-    if (doc.comments.length) bytes = add_comments_bytes(doc.comments, bytes);
-    const merged_bytes = new Int8Array(file_bytes.length + 1 + bytes.length);
+    if (tmdata.comments.length) bytes = add_comments_bytes(tmdata.comments, bytes);
+    const merged_bytes = new Uint8Array(file_bytes.length + 1 + bytes.length);
     merged_bytes.set(file_bytes, 0);
     merged_bytes[file_bytes.length] = 26;
     merged_bytes.set(bytes, file_bytes.length + 1);
     return merged_bytes;
 }
 
-function add_sauce_for_ans({ doc, bytes }) {
+/**
+ * @param {{tmdata: TextModeData, bytes: Uint8Array}} params
+ * @returns {Uint8Array}
+ */
+function add_sauce_for_ans({ tmdata, bytes }) {
     return add_sauce_bytes({
-        doc,
+        tmdata,
         data_type: data_type_types.CHARACTER,
         file_type: file_type_types.ANS_FILETYPE,
         bytes,
     });
 }
 
-function add_sauce_for_bin({ doc, bytes }) {
+/**
+ * @param {{tmdata: TextModeData, bytes: Uint8Array}} params
+ * @returns {Uint8Array}
+ */
+function add_sauce_for_bin({ tmdata, bytes }) {
     return add_sauce_bytes({
-        doc,
+        tmdata,
         data_type: data_type_types.BIN,
         file_type: file_type_types.NONE,
         bytes,
     });
 }
 
-function add_sauce_for_xbin({ doc, bytes }) {
+/**
+ * @param {{tmdata: TextModeData, bytes: Uint8Array}} params
+ * @returns {Uint8Array}
+ */
+function add_sauce_for_xbin({ tmdata, bytes }) {
     return add_sauce_bytes({
-        doc,
+        tmdata,
         data_type: data_type_types.XBIN,
         file_type: file_type_types.NONE,
         bytes,

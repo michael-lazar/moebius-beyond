@@ -1005,18 +1005,18 @@ class TextModeDoc extends events.EventEmitter {
 
     async save(save_without_sauce) {
         if (!this.file) return;
-        await libtextmode.write_file(this, this.file, { save_without_sauce });
+        libtextmode.write_file(this._tmdata, this._render.font, this.file, { save_without_sauce });
         send("set_file", { file: this.file });
     }
 
     async export_selection(sx, sy, dx, dy, file) {
         const blocks = this.get_blocks(sx, sy, dx, dy);
         const tmdata = libtextmode.new_tmdata({ ...blocks });
-        await libtextmode.write_file(tmdata, file);
+        libtextmode.write_file(tmdata, this._render.font, file);
     }
 
     async share_online() {
-        const bytes = libtextmode.encode_as_ansi(this, false);
+        const bytes = libtextmode.encode_as_ansi(this._tmdata, false);
         const filename = this.file ? path.basename(this.file) : "unknown" + "." + "ans";
         const req = await fetch(
             `https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=ans&retention=${retention}&filename=${filename}`,
@@ -1037,7 +1037,7 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async share_online_xbin() {
-        const bytes = libtextmode.encode_as_xbin(this);
+        const bytes = libtextmode.encode_as_xbin(this._tmdata, this._render.font, false);
         const filename = this.file ? path.basename(this.file) : "unknown" + "." + "xb";
         const req = await fetch(
             `https://api.16colo.rs/v1/paste?key=${SIXTEEN_COLORS_API_KEY}&extension=xb&retention=${retention}&filename=${filename}`,
@@ -1054,11 +1054,11 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async save_backup(file) {
-        await libtextmode.write_file(this, file);
+        libtextmode.write_file(this._tmdata, this._render.font, file);
     }
 
     async export_as_utf8(file) {
-        await libtextmode.write_file(this, file, { utf8: true });
+        libtextmode.write_file(this._tmdata, this._render.font, file, { utf8: true });
     }
 
     export_as_png(file) {

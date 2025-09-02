@@ -4,7 +4,11 @@ const zlib = require("zlib");
 
 const dev = !remote.app.isPackaged;
 
-function encode_as_mbd(doc) {
+/**
+ * @param {TextModeData} tmdata
+ * @returns {Buffer}
+ */
+function encode_as_mbd(tmdata) {
     const now = new Date().toISOString();
 
     const appVersion = dev ? process.env.npm_package_version : remote.app.getVersion();
@@ -19,25 +23,27 @@ function encode_as_mbd(doc) {
             applicationVersion: appVersion,
         },
         document: {
-            columns: doc.columns,
-            rows: doc.rows,
-            title: doc.title.trim(),
-            author: doc.author.trim(),
-            group: doc.group.trim(),
-            date: doc.date,
-            comments: doc.comments,
-            filesize: doc.filesize,
-            palette: doc.palette.map((color) => ({
+            columns: tmdata.columns,
+            rows: tmdata.rows,
+            title: tmdata.title.trim(),
+            author: tmdata.author.trim(),
+            group: tmdata.group.trim(),
+            date: tmdata.date,
+            comments: tmdata.comments,
+            filesize: tmdata.filesize,
+            palette: tmdata.palette.map((color) => ({
                 r: color.r,
                 g: color.g,
                 b: color.b,
             })),
-            font_name: doc.font_name,
-            font_bytes: doc.font_bytes ? Buffer.from(doc.font_bytes).toString("base64") : null,
-            font_height: doc.font_height,
-            use_9px_font: doc.use_9px_font,
-            ice_colors: doc.ice_colors,
-            data: doc.data.map((block) => ({
+            font_name: tmdata.font_name,
+            font_bytes: tmdata.font_bytes
+                ? Buffer.from(tmdata.font_bytes).toString("base64")
+                : null,
+            font_height: tmdata.font_height,
+            use_9px_font: tmdata.use_9px_font,
+            ice_colors: tmdata.ice_colors,
+            data: tmdata.data.map((block) => ({
                 code: block.code,
                 fg: block.fg,
                 bg: block.bg,
@@ -49,6 +55,10 @@ function encode_as_mbd(doc) {
     return zlib.gzipSync(Buffer.from(jsonString, "utf8"));
 }
 
+/**
+ * @param {Buffer} bytes
+ * @returns {TextModeData}
+ */
 function fromMBD(bytes) {
     const decompressed = zlib.gunzipSync(bytes);
     const json_string = decompressed.toString("utf8");

@@ -280,6 +280,10 @@ const sgr_types = {
 };
 const true_color_type = { BACKGROUND: 0, FOREGROUND: 1 };
 
+/**
+ * @param {Buffer} bytes
+ * @returns {TextModeData}
+ */
 function fromAnsi(bytes) {
     const { get_sauce } = require("./textmode");
     const sauce = get_sauce(bytes);
@@ -472,12 +476,18 @@ function build_ansi_palette(palette, bit_depth) {
     }
 }
 
-function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 } = {}) {
-    if (utf8) return encode_as_utf8ansi(doc, bit_depth);
+/**
+ * @param {TextModeData} tmdata
+ * @param {boolean} save_without_sauce
+ * @param {{utf8?: boolean, bit_depth?: number}} options
+ * @returns {Uint8Array}
+ */
+function encode_as_ansi(tmdata, save_without_sauce, { utf8 = false, bit_depth = 24 } = {}) {
+    if (utf8) return encode_as_utf8ansi(tmdata, bit_depth);
 
     let output = [27, 91, 48, 109];
 
-    let palette_map = build_ansi_palette(doc.palette, false);
+    let palette_map = build_ansi_palette(tmdata.palette, false);
     let current_bold = false;
     let current_blink = false;
     let current_fg = 7;
@@ -488,8 +498,8 @@ function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 
         for (let entry of sgr_tc) output.push(27, 91, ...entry, 116);
     };
 
-    for (let i = 0; i < doc.data.length; i++) {
-        let { code, fg, bg } = doc.data[i];
+    for (let i = 0; i < tmdata.data.length; i++) {
+        let { code, fg, bg } = tmdata.data[i];
 
         code = sanitized_ansi_code(code);
         fg = palette_map[fg];
@@ -559,13 +569,18 @@ function encode_as_ansi(doc, save_without_sauce, { utf8 = false, bit_depth = 24 
     }
 
     const bytes = new Uint8Array(output);
-    return save_without_sauce ? bytes : add_sauce_for_ans({ doc, bytes });
+    return save_without_sauce ? bytes : add_sauce_for_ans({ tmdata, bytes });
 }
 
-function encode_as_utf8ansi(doc, bit_depth) {
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} bit_depth
+ * @returns {Uint8Array}
+ */
+function encode_as_utf8ansi(tmdata, bit_depth) {
     let output = [27, 91, 48, 109];
 
-    let palette_map = build_ansi_palette(doc.palette, bit_depth);
+    let palette_map = build_ansi_palette(tmdata.palette, bit_depth);
     let current_sgr = {};
     let current_fg = 7;
     let current_bg = 0;
@@ -577,8 +592,8 @@ function encode_as_utf8ansi(doc, bit_depth) {
         }
     };
 
-    for (let i = 0; i < doc.data.length; i++) {
-        let { code, fg, bg } = doc.data[i];
+    for (let i = 0; i < tmdata.data.length; i++) {
+        let { code, fg, bg } = tmdata.data[i];
 
         if (fg !== current_fg) {
             sgr({ clear: null, fg: `[38;${palette_map[fg]}m` });
@@ -593,7 +608,7 @@ function encode_as_utf8ansi(doc, bit_depth) {
             current_bg = bg;
         }
 
-        if (i && i % doc.columns === 0) {
+        if (i && i % tmdata.columns === 0) {
             output.push(...to_bytes("[0m\r\n"));
             for (let bytes of Object.values(current_sgr)) output.push(27, ...bytes);
             current_sgr = {};

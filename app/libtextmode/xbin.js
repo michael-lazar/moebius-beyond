@@ -7,6 +7,7 @@ const repeating = {
     BOTH_CHARACTERS_AND_ATTRIBUTES: 3,
 };
 const { encode_as_bin } = require("./binary_text");
+const { Font } = require("./font");
 
 function uncompress({ bytes, columns, rows }) {
     const data = new Array(columns * rows);
@@ -51,6 +52,10 @@ function uncompress({ bytes, columns, rows }) {
     return data;
 }
 
+/**
+ * @param {Buffer} bytes
+ * @returns {TextModeData}
+ */
 function fromXBin(bytes) {
     const { get_sauce } = require("./textmode");
     const sauce = get_sauce(bytes);
@@ -124,55 +129,57 @@ function fromXBin(bytes) {
     });
 }
 
-function encode_as_xbin(doc, save_without_sauce) {
-    let bin_bytes = encode_as_bin(doc, true, true);
+/**
+ * @param {TextModeData} tmdata
+ * @param {Font} font
+ * @param {boolean} save_without_sauce
+ * @returns {Uint8Array}
+ */
+function encode_as_xbin(tmdata, font, save_without_sauce) {
+    let bin_bytes = encode_as_bin(tmdata, true, true);
     let header = [
         88,
         66,
         73,
         78,
         26,
-        doc.columns & 255,
-        doc.columns >> 8,
-        doc.rows & 255,
-        doc.rows >> 8,
-        doc.font_height,
+        tmdata.columns & 255,
+        tmdata.columns >> 8,
+        tmdata.rows & 255,
+        tmdata.rows >> 8,
+        tmdata.font_height,
         0,
     ];
-    if (doc.palette) {
+    if (tmdata.palette) {
         header[10] += 1;
         const palette_bytes = [];
-        for (const rgb of doc.palette) {
+        for (const rgb of tmdata.palette) {
             palette_bytes.push(...rgb_to_xbin(rgb));
         }
         header = header.concat(palette_bytes);
     }
-    //if using custom font loaded to program
-    if (doc.font != null) {
-        header[10] += 1 << 1;
-        const font_bytes = [];
-        for (const value of doc.font.bitmask) {
-            font_bytes.push(value);
-        }
-        header = header.concat(font_bytes);
+
+    // Extract the font bytes from the Font. Note that
+    // we can't grab them from tmdata.font_bytes becase
+    // that only gets set if we load from an xbin. In
+    // other contexts, for example if we open a new document
+    // and select a custom font from the menu, doc.font_bytes
+    // will be still be null.
+    header[10] += 1 << 1;
+    const font_bytes = [];
+    for (const value of font.bitmask) {
+        font_bytes.push(value);
     }
-    //else use font from xbin file
-    else {
-        header[10] += 1 << 1;
-        const font_bytes = [];
-        for (const value of doc.font_bytes) {
-            font_bytes.push(value);
-        }
-        header = header.concat(font_bytes);
-    }
-    if (doc.ice_colors) {
+    header = header.concat(font_bytes);
+
+    if (tmdata.ice_colors) {
         header[10] += 1 << 3;
     }
     let bytes = new Uint8Array(header.length + bin_bytes.length);
     bytes.set(header, 0);
     bytes.set(bin_bytes, header.length);
     if (!save_without_sauce) {
-        return add_sauce_for_xbin({ doc, bytes });
+        return add_sauce_for_xbin({ tmdata, bytes });
     }
     return bytes;
 }
