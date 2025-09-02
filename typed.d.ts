@@ -15,6 +15,7 @@ declare global {
             columns: number;
             rows: number;
             data: any[];
+            transparent?: boolean;
         };
 
         type Render = {

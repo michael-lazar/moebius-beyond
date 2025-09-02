@@ -103,6 +103,12 @@ function write_file(tmdata, font, file, { utf8 = false, save_without_sauce = fal
     fs.writeFileSync(file, bytes, "binary");
 }
 
+/**
+ * @param {number} width
+ * @param {number} height
+ * @param {number} maximum_height
+ * @returns {{canvases: HTMLCanvasElement[], ctxs: CanvasRenderingContext2D[]}}
+ */
 function create_canvases(width, height, maximum_height) {
     const number_of_canvases = Math.floor(height / maximum_height);
     const canvases = [];
@@ -121,6 +127,10 @@ function create_canvases(width, height, maximum_height) {
     return { canvases, ctxs };
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @returns {Promise<{canvas: HTMLCanvasElement, font: Font}>}
+ */
 async function render(tmdata) {
     const font = new Font(tmdata.palette);
     await font.load({
@@ -142,6 +152,11 @@ async function render(tmdata) {
     return { canvas, font };
 }
 
+/**
+ * @param {App.Blocks} blocks
+ * @param {Font} font
+ * @returns {HTMLCanvasElement}
+ */
 function render_blocks(blocks, font) {
     const { canvas, ctx } = create_canvas(blocks.columns * font.width, blocks.rows * font.height);
     for (let y = 0, py = 0, i = 0; y < blocks.rows; y++, py += font.height) {
@@ -154,6 +169,11 @@ function render_blocks(blocks, font) {
     return canvas;
 }
 
+/**
+ * @param {App.Blocks} under_blocks
+ * @param {App.Blocks} over_blocks
+ * @returns {App.Blocks}
+ */
 function merge_blocks(under_blocks, over_blocks) {
     const merged_blocks = {
         columns: Math.max(under_blocks.columns, over_blocks.columns),
@@ -184,6 +204,10 @@ function merge_blocks(under_blocks, over_blocks) {
     return merged_blocks;
 }
 
+/**
+ * @param {HTMLCanvasElement[]} sources
+ * @returns {{canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D}[]}
+ */
 function copy_canvases(sources) {
     return sources.map((source) => {
         const { canvas, ctx } = create_canvas(source.width, source.height);
@@ -192,6 +216,11 @@ function copy_canvases(sources) {
     });
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} maximum_rows
+ * @returns {Promise<App.Render>}
+ */
 async function render_split(tmdata, maximum_rows = 100) {
     const font = new Font(tmdata.palette);
     await font.load({
