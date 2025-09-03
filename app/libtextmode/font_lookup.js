@@ -1,3 +1,7 @@
+/**
+ * @param {string} font_name
+ * @returns {string}
+ */
 function lookup_url(font_name) {
     switch (font_name) {
         case "TOPAZ 437":

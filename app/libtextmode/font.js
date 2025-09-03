@@ -2,6 +2,12 @@ const { white, bright_white, palette_4bit, rgb_to_hex } = require("./palette");
 const { create_canvas, clone_canvas } = require("./canvas");
 const { lookup_url } = require("./font_lookup");
 
+/**
+ * @param {Uint8Array} bitmask
+ * @param {number} height
+ * @param {number} length
+ * @returns {HTMLCanvasElement}
+ */
 function generate_font_canvas(bitmask, height, length) {
     const { canvas, ctx, image_data } = create_canvas(8 * length, height);
     const rgba = new Uint8Array([255, 255, 255, 255]);
@@ -22,6 +28,11 @@ function generate_font_canvas(bitmask, height, length) {
     return canvas;
 }
 
+/**
+ * @param {HTMLCanvasElement} canvas
+ * @param {number} length
+ * @returns {HTMLCanvasElement}
+ */
 function add_ninth_bit_to_canvas(canvas, length) {
     const { canvas: new_canvas, ctx } = create_canvas(9 * length, canvas.height);
     for (let char = 0; char < length; char++) {
@@ -43,6 +54,11 @@ function add_ninth_bit_to_canvas(canvas, length) {
     return new_canvas;
 }
 
+/**
+ * @param {HTMLCanvasElement} source_canvas
+ * @param {App.Color} rgb
+ * @returns {HTMLCanvasElement}
+ */
 function coloured_glyphs(source_canvas, rgb) {
     const { canvas, ctx } = clone_canvas(source_canvas);
 
@@ -53,7 +69,15 @@ function coloured_glyphs(source_canvas, rgb) {
     return canvas;
 }
 
+/** @type {{[key: string]: HTMLCanvasElement}} */
 let cached_backgrounds = {};
+
+/**
+ * @param {number} font_width
+ * @param {number} height
+ * @param {App.Color} rgb
+ * @returns {HTMLCanvasElement}
+ */
 function coloured_background(font_width, height, rgb) {
     const hex = rgb_to_hex(rgb);
     const key = hex;
@@ -67,7 +91,17 @@ function coloured_background(font_width, height, rgb) {
     return canvas;
 }
 
+/** @type {{[key: string]: HTMLCanvasElement}} */
 let cached_glyphs = {};
+
+/**
+ * @param {HTMLCanvasElement} source_canvas
+ * @param {number} code
+ * @param {App.Color} rgb
+ * @param {number} font_width
+ * @param {number} height
+ * @returns {HTMLCanvasElement}
+ */
 function create_coloured_glyph(source_canvas, code, rgb, font_width, height) {
     const hex = rgb_to_hex(rgb);
     const key = [hex, code].join("|");

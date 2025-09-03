@@ -1,3 +1,7 @@
+/**
+ * @param {number} cp437
+ * @returns {string}
+ */
 function cp437_to_unicode(cp437) {
     switch (cp437) {
         case 1:
@@ -326,10 +330,18 @@ function cp437_to_unicode(cp437) {
     }
 }
 
+/**
+ * @param {number} cp437
+ * @returns {Buffer}
+ */
 function cp437_to_unicode_bytes(cp437) {
     return Buffer.from(cp437_to_unicode(cp437));
 }
 
+/**
+ * @param {number} unicode
+ * @returns {number}
+ */
 function unicode_to_cp437(unicode) {
     switch (unicode) {
         case 0x263a:

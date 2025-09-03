@@ -1,3 +1,8 @@
+/**
+ * @param {number} width
+ * @param {number} height
+ * @returns {{canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, image_data: ImageData}}
+ */
 function create_canvas(width, height) {
     const canvas = document.createElement("canvas");
     canvas.width = width;
@@ -7,6 +12,10 @@ function create_canvas(width, height) {
     return { canvas, ctx, image_data };
 }
 
+/**
+ * @param {HTMLCanvasElement[]} canvases
+ * @returns {HTMLCanvasElement}
+ */
 function join_canvases(canvases) {
     let height = 0;
     for (const canvas of canvases) {
@@ -20,6 +29,10 @@ function join_canvases(canvases) {
     return canvas;
 }
 
+/**
+ * @param {HTMLCanvasElement} original_canvas
+ * @returns {{canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, image_data: ImageData}}
+ */
 function clone_canvas(original_canvas) {
     const { width, height } = original_canvas;
     const original_data = original_canvas
