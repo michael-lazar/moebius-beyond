@@ -85,6 +85,43 @@ function create_coloured_glyph(source_canvas, code, rgb, font_width, height) {
 }
 
 class Font {
+    /** @type {App.Color[]} */
+    palette;
+    /** @type {string} */
+    name;
+    /** @type {number} */
+    height;
+    /** @type {Uint8Array} */
+    bitmask;
+    /** @type {number} */
+    width;
+    /** @type {number} */
+    length;
+    /** @type {boolean} */
+    use_9px_font;
+    /** @type {HTMLCanvasElement} */
+    canvas;
+    /** @type {HTMLCanvasElement[]} */
+    glyphs;
+    /** @type {HTMLCanvasElement[]} */
+    backgrounds;
+    /** @type {HTMLCanvasElement} */
+    cursor;
+
+    /**
+     * @param {App.Color[]} [palette]
+     */
+    constructor(palette = [...palette_4bit]) {
+        this.palette = palette;
+    }
+
+    /**
+     * @param {object} options
+     * @param {string} [options.name]
+     * @param {Uint8Array} [options.bytes]
+     * @param {boolean} [options.use_9px_font]
+     * @returns {Promise<void>}
+     */
     async load({ name = "IBM VGA", bytes, use_9px_font = false }) {
         if (bytes) {
             //If we load XBIN, we check the font from the XBIN file so we don't need to load a font
@@ -124,11 +161,23 @@ class Font {
         this.cursor = coloured_background(this.width, 2, bright_white);
     }
 
+    /**
+     * @param {number} index
+     * @param {App.Color} rgb
+     * @returns {void}
+     */
     replace_cache_at(index, rgb) {
         this.backgrounds[index] = coloured_background(this.width, this.height, rgb);
         this.glyphs[index] = coloured_glyphs(this.canvas, rgb);
     }
 
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {App.Block} block
+     * @param {number} x
+     * @param {number} y
+     * @returns {void}
+     */
     draw(ctx, block, x, y) {
         ctx.drawImage(this.get_background_for(block.bg), x, y, this.width, this.height);
         ctx.drawImage(
@@ -144,6 +193,13 @@ class Font {
         );
     }
 
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {App.Block} block
+     * @param {number} x
+     * @param {number} y
+     * @returns {void}
+     */
     draw_raw(ctx, block, x, y) {
         const canvas = create_coloured_glyph(
             this.canvas,
@@ -155,31 +211,52 @@ class Font {
         ctx.drawImage(canvas, x, y);
     }
 
+    /**
+     * @param {number} i
+     * @returns {App.Color}
+     */
     get_rgb(i) {
         return this.palette[i];
     }
 
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} bg
+     * @param {number} x
+     * @param {number} y
+     * @returns {void}
+     */
     draw_bg(ctx, bg, x, y) {
         ctx.drawImage(this.backgrounds[bg], x, y);
     }
 
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} x
+     * @param {number} y
+     * @returns {void}
+     */
     draw_cursor(ctx, x, y) {
         ctx.drawImage(this.cursor, x, y);
     }
 
+    /**
+     * @param {number} index
+     * @returns {HTMLCanvasElement}
+     */
     get_glyphs_for(index) {
         return (this.glyphs[index] =
             this.glyphs[index] || coloured_glyphs(this.canvas, this.get_rgb(index)));
     }
 
+    /**
+     * @param {number} index
+     * @returns {HTMLCanvasElement}
+     */
     get_background_for(index) {
         return (this.backgrounds[index] =
             this.backgrounds[index] ||
             coloured_background(this.width, this.height, this.get_rgb(index)));
-    }
-
-    constructor(palette = [...palette_4bit]) {
-        this.palette = palette;
     }
 }
 

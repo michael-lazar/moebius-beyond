@@ -1,9 +1,5 @@
 declare global {
     namespace App {
-        type Font = {
-            [key: string]: any;
-        };
-
         type Selection = {
             sx: number;
             sy: number;
@@ -14,8 +10,14 @@ declare global {
         type Blocks = {
             columns: number;
             rows: number;
-            data: any[];
+            data: any[]; // TODO
             transparent?: boolean;
+        };
+
+        type Block = {
+            code: number;
+            bg: number;
+            fg: number;
         };
 
         type Render = {
@@ -28,7 +30,13 @@ declare global {
             blink_off_collection: HTMLCanvasElement[];
             preview_collection: HTMLCanvasElement[];
             maximum_rows: number;
-            font: App.Font;
+            font: any; // TODO
+        };
+
+        type Color = {
+            r: number;
+            g: number;
+            b: number;
         };
     }
 
