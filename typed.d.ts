@@ -20,8 +20,6 @@ declare global {
             fg: number;
         };
 
-        type Data = Block[];
-
         type Render = {
             columns: number;
             rows: number;
@@ -41,10 +39,24 @@ declare global {
             b: number;
         };
 
-        type Palette = Color[];
+        type UndoItem = {
+            type: number;
+            data: any;
+        };
+
+        type UndoBlockItem = Block & {
+            x: number;
+            y: number;
+            cursor: {
+                prev_x: number;
+                prev_y: number;
+                post_x: number;
+                post_y: number;
+            };
+        };
 
         type Font = {
-            palette: Palette;
+            palette: Color[];
             name: string;
             height: number;
             bitmask: Uint8Array;

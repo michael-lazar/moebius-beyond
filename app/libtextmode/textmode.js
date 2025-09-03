@@ -3,7 +3,7 @@
  * @param {number} params.columns
  * @param {number} params.rows
  * @param {Uint8Array} params.bytes
- * @returns {App.Data}
+ * @returns {App.Block[]}
  */
 function bytes_to_blocks({ columns, rows, bytes }) {
     const data = new Array(columns * rows);
@@ -321,8 +321,8 @@ class TextModeData {
      * @param {Uint8Array} [params.font_bytes]
      * @param {number} [params.font_height]
      * @param {string} [params.comments]
-     * @param {App.Data} [params.data]
-     * @param {App.Palette} [params.palette]
+     * @param {App.Block[]} [params.data]
+     * @param {App.Color[]} [params.palette]
      */
     constructor({
         columns,

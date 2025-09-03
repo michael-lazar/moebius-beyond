@@ -1,5 +1,5 @@
 // This is the standard 4bit palette in bin (binary text) order.
-/** @type {App.Palette} */
+/** @type {App.Color[]} */
 const palette_4bit = [
     // standard 3-4bit colors
     { r: 0x00, g: 0x00, b: 0x00 }, // black
@@ -41,7 +41,7 @@ const palette_4bit_ansi_mapping = {
 
 // This is the standard 8bit palette, also with the first portion being in
 // bin (binary text) order to simplify consistency in conversion.
-/** @type {App.Palette} */
+/** @type {App.Color[]} */
 const palette_8bit = [
     // 0-15: standard 4bit palette
     ...palette_4bit,
@@ -305,7 +305,7 @@ function rgb_distance(rgb1, rgb2) {
 }
 
 /**
- * @param {App.Palette} palette
+ * @param {App.Color[]} palette
  * @param {App.Color} rgb
  * @returns {number}
  */

@@ -1076,8 +1076,8 @@ function rotate(blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} insert_y
- * @param {App.Data} [blocks]
- * @returns {App.Data}
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
  */
 function insert_row(tmdata, insert_y, blocks) {
     const removed_blocks = new Array(tmdata.columns);
@@ -1099,8 +1099,8 @@ function insert_row(tmdata, insert_y, blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} delete_y
- * @param {App.Data} [blocks]
- * @returns {App.Data}
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
  */
 function delete_row(tmdata, delete_y, blocks) {
     const removed_blocks = new Array(tmdata.columns);
@@ -1122,8 +1122,8 @@ function delete_row(tmdata, delete_y, blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} insert_x
- * @param {App.Data} [blocks]
- * @returns {App.Data}
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
  */
 function insert_column(tmdata, insert_x, blocks) {
     const removed_blocks = new Array(tmdata.rows);
@@ -1145,8 +1145,8 @@ function insert_column(tmdata, insert_x, blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} delete_x
- * @param {App.Data} [blocks]
- * @returns {App.Data}
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
  */
 function delete_column(tmdata, delete_x, blocks) {
     const removed_blocks = new Array(tmdata.rows);
@@ -1592,12 +1592,12 @@ function render_scroll_canvas_right(tmdata, render) {
  * @param {string} [options.author]
  * @param {string} [options.group]
  * @param {string} [options.date]
- * @param {App.Palette} [options.palette]
+ * @param {App.Color[]} [options.palette]
  * @param {string} [options.font_name]
  * @param {boolean} [options.ice_colors]
  * @param {boolean} [options.use_9px_font]
  * @param {string} [options.comments]
- * @param {App.Data} [options.data]
+ * @param {App.Block[]} [options.data]
  * @param {Uint8Array} [options.font_bytes]
  * @returns {TextModeData}
  */

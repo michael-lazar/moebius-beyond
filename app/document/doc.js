@@ -2,9 +2,14 @@ const libtextmode = require("../libtextmode/libtextmode");
 const { on, send, send_sync, open_box } = require("../senders");
 const events = require("events");
 const path = require("path");
+const { TextModeData } = require("../libtextmode/textmode");
+
 const SIXTEEN_COLORS_API_KEY = "mirebitqv2ualog65ifv2p1a5076soh9";
 let retention = "8035200";
 
+/**
+ * @enum {number}
+ */
 const undo_types = {
     INDIVIDUAL: 0,
     RESIZE: 1,
@@ -23,11 +28,33 @@ on("retention", (event, value) => {
 });
 
 class UndoHistory extends events.EventEmitter {
+    /**
+     * @param {TextModeDoc} doc
+     */
+    constructor(doc) {
+        super();
+
+        this.doc = doc;
+        /** @type {App.UndoItem[]} */
+        this.undo_buffer = [];
+        /** @type {App.UndoItem[]} */
+        this.redo_buffer = [];
+
+        on("undo", (event) => this.undo());
+        on("redo", (event) => this.redo());
+    }
+
+    /**
+     * @returns {void}
+     */
     reset_redos() {
         this.redo_buffer = [];
         send("disable_redo");
     }
 
+    /**
+     * @returns {void}
+     */
     reset_undos() {
         this.undo_buffer = [];
         send("disable_undo");
@@ -45,10 +72,17 @@ class UndoHistory extends events.EventEmitter {
         send("document_changed");
     }
 
+    /**
+     * @returns {void}
+     */
     push_resize() {
         this.start_chunk(undo_types.RESIZE, libtextmode.get_all_blocks(this.tmdata));
     }
 
+    /**
+     * @param {App.UndoBlockItem[]} undos
+     * @returns {void}
+     */
     undo_individual(undos) {
         const redos = [];
         for (let undo_i = undos.length - 1; undo_i >= 0; undo_i--) {
@@ -73,6 +107,10 @@ class UndoHistory extends events.EventEmitter {
         this.redo_buffer.push({ type: undo_types.INDIVIDUAL, data: redos });
     }
 
+    /**
+     * @param {App.UndoBlockItem[]} redos
+     * @returns {void}
+     */
     redo_individual(redos) {
         const undos = [];
         for (let redo_i = redos.length - 1; redo_i >= 0; redo_i--) {
@@ -97,6 +135,10 @@ class UndoHistory extends events.EventEmitter {
         this.undo_buffer.push({ type: undo_types.INDIVIDUAL, data: undos });
     }
 
+    /**
+     * @param {App.Blocks} blocks
+     * @returns {void}
+     */
     copy_blocks(blocks) {
         this.tmdata.columns = blocks.columns;
         this.tmdata.rows = blocks.rows;
@@ -105,6 +147,10 @@ class UndoHistory extends events.EventEmitter {
             this.tmdata.data[i] = Object.assign(blocks.data[i]);
     }
 
+    /**
+     * @param {App.Blocks} blocks
+     * @returns {void}
+     */
     undo_resize(blocks) {
         this.redo_buffer.push({
             type: undo_types.RESIZE,
@@ -114,6 +160,10 @@ class UndoHistory extends events.EventEmitter {
         this.emit("resize");
     }
 
+    /**
+     * @param {App.Blocks} blocks
+     * @returns {void}
+     */
     redo_resize(blocks) {
         this.undo_buffer.push({
             type: undo_types.RESIZE,
@@ -123,38 +173,74 @@ class UndoHistory extends events.EventEmitter {
         this.emit("resize");
     }
 
+    /**
+     * @param {number} y
+     * @param {App.Block[]} blocks
+     * @returns {void}
+     */
     push_insert_row(y, blocks) {
         this.start_chunk(undo_types.INSERT_ROW, { y, blocks });
     }
 
+    /**
+     * @param {number} y
+     * @param {App.Block[]} blocks
+     * @returns {void}
+     */
     push_delete_row(y, blocks) {
         this.start_chunk(undo_types.DELETE_ROW, { y, blocks });
     }
 
+    /**
+     * @param {number} x
+     * @param {App.Block[]} blocks
+     * @returns {void}
+     */
     push_insert_column(x, blocks) {
         this.start_chunk(undo_types.INSERT_COLUMN, { x, blocks });
     }
 
+    /**
+     * @param {number} x
+     * @param {App.Block[]} blocks
+     * @returns {void}
+     */
     push_delete_column(x, blocks) {
         this.start_chunk(undo_types.DELETE_COLUMN, { x, blocks });
     }
 
+    /**
+     * @returns {void}
+     */
     push_scroll_canvas_up() {
         this.start_chunk(undo_types.SCROLL_CANVAS_UP);
     }
 
+    /**
+     * @returns {void}
+     */
     push_scroll_canvas_down() {
         this.start_chunk(undo_types.SCROLL_CANVAS_DOWN);
     }
 
+    /**
+     * @returns {void}
+     */
     push_scroll_canvas_left() {
         this.start_chunk(undo_types.SCROLL_CANVAS_LEFT);
     }
 
+    /**
+     * @returns {void}
+     */
     push_scroll_canvas_right() {
         this.start_chunk(undo_types.SCROLL_CANVAS_RIGHT);
     }
 
+    /**
+     * @param {{y: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     undo_insert_row(data) {
         this.redo_buffer.push({
             type: undo_types.DELETE_ROW,
@@ -166,6 +252,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_delete_row(this.tmdata, data.y, this.render);
     }
 
+    /**
+     * @param {{y: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     undo_delete_row(data) {
         this.redo_buffer.push({
             type: undo_types.INSERT_ROW,
@@ -177,6 +267,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_insert_row(this.tmdata, data.y, this.render);
     }
 
+    /**
+     * @param {{x: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     undo_insert_column(data) {
         this.redo_buffer.push({
             type: undo_types.DELETE_COLUMN,
@@ -188,6 +282,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_delete_column(this.tmdata, data.x, this.render);
     }
 
+    /**
+     * @param {{x: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     undo_delete_column(data) {
         this.redo_buffer.push({
             type: undo_types.INSERT_COLUMN,
@@ -199,6 +297,9 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_insert_column(this.tmdata, data.x, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     undo_scroll_canvas_up() {
         libtextmode.scroll_canvas_down(this.tmdata);
         this.redo_buffer.push({
@@ -208,12 +309,18 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_scroll_canvas_down(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     undo_scroll_canvas_down() {
         libtextmode.scroll_canvas_up(this.tmdata);
         this.redo_buffer.push({ type: undo_types.SCROLL_CANVAS_UP, data: [] });
         libtextmode.render_scroll_canvas_up(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     undo_scroll_canvas_left() {
         libtextmode.scroll_canvas_right(this.tmdata);
         this.redo_buffer.push({
@@ -223,6 +330,9 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_scroll_canvas_right(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     undo_scroll_canvas_right() {
         libtextmode.scroll_canvas_left(this.tmdata);
         this.redo_buffer.push({
@@ -232,6 +342,9 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_scroll_canvas_left(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     redo_scroll_canvas_up() {
         libtextmode.scroll_canvas_down(this.tmdata);
         this.undo_buffer.push({
@@ -241,12 +354,18 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_scroll_canvas_down(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     redo_scroll_canvas_down() {
         libtextmode.scroll_canvas_up(this.tmdata);
         this.undo_buffer.push({ type: undo_types.SCROLL_CANVAS_UP, data: [] });
         libtextmode.render_scroll_canvas_up(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     redo_scroll_canvas_left() {
         libtextmode.scroll_canvas_right(this.tmdata);
         this.undo_buffer.push({
@@ -256,6 +375,9 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_scroll_canvas_right(this.tmdata, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     redo_scroll_canvas_right() {
         libtextmode.scroll_canvas_left(this.tmdata);
         this.undo_buffer.push({
@@ -265,6 +387,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_scroll_canvas_left(this.tmdata, this.render);
     }
 
+    /**
+     * @param {{y: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     redo_insert_row(data) {
         this.undo_buffer.push({
             type: undo_types.DELETE_ROW,
@@ -276,6 +402,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_delete_row(this.tmdata, data.y, this.render);
     }
 
+    /**
+     * @param {{y: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     redo_delete_row(data) {
         this.undo_buffer.push({
             type: undo_types.INSERT_ROW,
@@ -287,6 +417,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_insert_row(this.tmdata, data.y, this.render);
     }
 
+    /**
+     * @param {{x: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     redo_insert_column(data) {
         this.undo_buffer.push({
             type: undo_types.DELETE_COLUMN,
@@ -298,6 +432,10 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_delete_column(this.tmdata, data.x, this.render);
     }
 
+    /**
+     * @param {{x: number, blocks: App.Block[]}} data
+     * @returns {void}
+     */
     redo_delete_column(data) {
         this.undo_buffer.push({
             type: undo_types.INSERT_COLUMN,
@@ -309,6 +447,9 @@ class UndoHistory extends events.EventEmitter {
         libtextmode.render_insert_column(this.tmdata, data.x, this.render);
     }
 
+    /**
+     * @returns {void}
+     */
     undo() {
         if (this.undo_buffer.length) {
             const undo = this.undo_buffer.pop();
@@ -349,6 +490,9 @@ class UndoHistory extends events.EventEmitter {
         }
     }
 
+    /**
+     * @returns {void}
+     */
     redo() {
         if (this.redo_buffer.length) {
             const redo = this.redo_buffer.pop();
@@ -389,6 +533,13 @@ class UndoHistory extends events.EventEmitter {
         }
     }
 
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {App.Block} block
+     * @param {any} [cursor]
+     * @returns {void}
+     */
     push(x, y, block, cursor) {
         if (cursor) {
             this.undo_buffer[this.undo_buffer.length - 1].data.push({
@@ -406,25 +557,18 @@ class UndoHistory extends events.EventEmitter {
         }
     }
 
+    /**
+     * @returns {App.Render}
+     */
     get render() {
         return this.doc._render;
     }
 
+    /**
+     * @returns {TextModeData}
+     */
     get tmdata() {
         return this.doc._tmdata;
-    }
-
-    /**
-     * @param {TextModeDoc} doc
-     */
-    constructor(doc) {
-        super();
-        this.doc = doc;
-
-        on("undo", (event) => this.undo());
-        on("redo", (event) => this.redo());
-        this.undo_buffer = [];
-        this.redo_buffer = [];
     }
 }
 
