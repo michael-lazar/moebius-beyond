@@ -3,7 +3,8 @@ const { EventEmitter } = require("events");
 const doc = require("./doc");
 const keyboard = require("./input/keyboard");
 const senders = require("../senders");
-const { rgb_to_hex, hex_to_rbg, lospec_palette, palette_4bit } = require("../libtextmode/palette");
+const { rgb_to_hex, hex_to_rbg, palette_4bit } = require("../libtextmode/palette");
+const { lospec_palette } = require("../libtextmode/lospec_palette");
 
 class PaletteChooser extends EventEmitter {
     select_attribute() {
