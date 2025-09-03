@@ -203,7 +203,9 @@ function mouse_up(x, y, half_y, button, single_point, shift_key) {
     last_xy = { x, y, half_y };
 }
 
-on("chunked_undo", (event, value) => (chunked_undo = value));
+on("chunked_undo", (event, value) => {
+    chunked_undo = value;
+});
 
 document.addEventListener(
     "keydown",

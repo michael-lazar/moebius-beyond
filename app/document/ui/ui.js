@@ -619,12 +619,16 @@ document.addEventListener(
     (event) => {
         $("use_9px_font_toggle").addEventListener(
             "mousedown",
-            (event) => (doc.use_9px_font = !doc.use_9px_font),
+            (event) => {
+                doc.use_9px_font = !doc.use_9px_font;
+            },
             true
         );
         $("ice_colors_toggle").addEventListener(
             "mousedown",
-            (event) => (doc.ice_colors = !doc.ice_colors),
+            (event) => {
+                doc.ice_colors = !doc.ice_colors;
+            },
             true
         );
         $("dimensions").addEventListener(

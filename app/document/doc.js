@@ -18,7 +18,9 @@ const undo_types = {
     SCROLL_CANVAS_RIGHT: 9,
 };
 
-on("retention", (event, value) => (retention = value));
+on("retention", (event, value) => {
+    retention = value;
+});
 
 class UndoHistory extends events.EventEmitter {
     reset_redos() {
@@ -458,11 +460,17 @@ class TextModeDoc extends events.EventEmitter {
         this.undo_history = new UndoHistory(this);
         this.undo_history.on("resize", () => this.start_rendering());
 
-        on("ice_colors", (event, value) => (this.ice_colors = value));
-        on("use_9px_font", (event, value) => (this.use_9px_font = value));
+        on("ice_colors", (event, value) => {
+            this.ice_colors = value;
+        });
+        on("use_9px_font", (event, value) => {
+            this.use_9px_font = value;
+        });
         on("load_custom_font", (event) => this.load_custom_font());
         on("import_font", (event) => this.import_font());
-        on("change_font", (event, font_name) => (this.font_name = font_name));
+        on("change_font", (event, font_name) => {
+            this.font_name = font_name;
+        });
         on("change_palette", (event, lospec_palette_name) =>
             this.set_lospec_palette(lospec_palette_name)
         );
@@ -484,7 +492,9 @@ class TextModeDoc extends events.EventEmitter {
         on("set_sauce_info", (event, { title, author, group, comments }) =>
             this.set_sauce(title, author, group, comments)
         );
-        on("mirror_mode", (event, value) => (this.mirror_mode = value));
+        on("mirror_mode", (event, value) => {
+            this.mirror_mode = value;
+        });
     }
 
     async new_document(options = {}) {

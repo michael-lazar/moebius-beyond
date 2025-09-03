@@ -22,7 +22,9 @@ class PaletteChooser extends EventEmitter {
 
         doc.on("new_document", () => this.new_document());
         doc.on("update_swatches", () => this.update_swatches());
-        doc.on("set_bg", (index) => (this.bg = index));
+        doc.on("set_bg", (index) => {
+            this.bg = index;
+        });
         doc.on("change_palette", (lospec_palette_name) => this.change_palette(lospec_palette_name));
 
         keyboard.on("previous_foreground_color", () => this.previous_foreground_color());
@@ -38,8 +40,12 @@ class PaletteChooser extends EventEmitter {
         senders.on("next_background_color", () => this.next_background_color());
         senders.on("default_color", () => this.default_color());
         senders.on("switch_foreground_background", () => this.switch_foreground_background());
-        senders.on("set_fg", (e, new_fg) => (this.fg = new_fg));
-        senders.on("set_bg", (e, new_bg) => (this.bg = new_bg));
+        senders.on("set_fg", (e, new_fg) => {
+            this.fg = new_fg;
+        });
+        senders.on("set_bg", (e, new_bg) => {
+            this.bg = new_bg;
+        });
     }
 
     new_document() {

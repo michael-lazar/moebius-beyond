@@ -348,9 +348,15 @@ class KeyboardEvent extends events.EventEmitter {
         this.use_numpad = false;
         this.insert_mode = false;
         this.overwrite_mode = false;
-        on("use_numpad", (event, value) => (this.use_numpad = value));
-        on("insert_mode", (event, value) => (this.insert_mode = value));
-        on("overwrite_mode", (event, value) => (this.overwrite_mode = value));
+        on("use_numpad", (event, value) => {
+            this.use_numpad = value;
+        });
+        on("insert_mode", (event, value) => {
+            this.insert_mode = value;
+        });
+        on("overwrite_mode", (event, value) => {
+            this.overwrite_mode = value;
+        });
         on("f_key", (event, value) => this.emit("f_key", value));
         document.addEventListener(
             "DOMContentLoaded",
@@ -362,6 +368,8 @@ class KeyboardEvent extends events.EventEmitter {
     }
 }
 
-on("use_shift", (event, value) => (use_shift = value));
+on("use_shift", (event, value) => {
+    use_shift = value;
+});
 
 module.exports = new KeyboardEvent();

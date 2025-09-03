@@ -660,10 +660,9 @@ class Cursor {
         on("fill", (event) => this.fill());
         on("copy_block", (event) => this.start_operation_mode(false));
         on("move_block", (event) => this.start_operation_mode(true));
-        on(
-            "scroll_document_with_cursor",
-            (event, value) => (this.scroll_document_with_cursor = value)
-        );
+        on("scroll_document_with_cursor", (event, value) => {
+            this.scroll_document_with_cursor = value;
+        });
         on("use_attribute_under_cursor", (event) => this.attribute_under_cursor());
         on("rotate", (event) => this.rotate());
         on("flip_x", (event) => this.flip_x());

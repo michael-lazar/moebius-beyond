@@ -41,6 +41,7 @@ module.exports = [
             "no-undef": "error",
             "no-console": "off",
             semi: ["error", "always"],
+            "no-return-assign": ["error", "always"],
         },
     },
     {

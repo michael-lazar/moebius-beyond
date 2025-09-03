@@ -63,7 +63,8 @@ function coloured_background(font_width, height, rgb) {
     ctx.fillStyle = hex;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    return (cached_backgrounds[key] = canvas);
+    cached_backgrounds[key] = canvas;
+    return canvas;
 }
 
 let cached_glyphs = {};
@@ -81,7 +82,8 @@ function create_coloured_glyph(source_canvas, code, rgb, font_width, height) {
     ctx.fillStyle = hex;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    return (cached_glyphs[key] = canvas);
+    cached_glyphs[key] = canvas;
+    return canvas;
 }
 
 class Font {
@@ -245,8 +247,10 @@ class Font {
      * @returns {HTMLCanvasElement}
      */
     get_glyphs_for(index) {
-        return (this.glyphs[index] =
-            this.glyphs[index] || coloured_glyphs(this.canvas, this.get_rgb(index)));
+        if (!this.glyphs[index]) {
+            this.glyphs[index] = coloured_glyphs(this.canvas, this.get_rgb(index));
+        }
+        return this.glyphs[index];
     }
 
     /**
@@ -254,9 +258,14 @@ class Font {
      * @returns {HTMLCanvasElement}
      */
     get_background_for(index) {
-        return (this.backgrounds[index] =
-            this.backgrounds[index] ||
-            coloured_background(this.width, this.height, this.get_rgb(index)));
+        if (!this.backgrounds[index]) {
+            this.backgrounds[index] = coloured_background(
+                this.width,
+                this.height,
+                this.get_rgb(index)
+            );
+        }
+        return this.backgrounds[index];
     }
 }
 

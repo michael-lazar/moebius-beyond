@@ -187,5 +187,7 @@ on("export_as_utf8", (event) => export_as_utf8());
 on("export_as_png", (event) => export_as_png());
 on("export_as_apng", (event) => export_as_apng());
 on("remove_ice_colors", (event) => doc.remove_ice_colors());
-on("backup_folder", (event, folder) => (backup_folder = folder));
+on("backup_folder", (event, folder) => {
+    backup_folder = folder;
+});
 on("use_backup", (event, value) => use_backup(value));
