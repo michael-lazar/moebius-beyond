@@ -10,7 +10,7 @@ declare global {
         type Blocks = {
             columns: number;
             rows: number;
-            data: any[]; // TODO
+            data: Block[];
             transparent?: boolean;
         };
 
