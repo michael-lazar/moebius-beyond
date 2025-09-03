@@ -8,7 +8,6 @@ const { palette_4bit } = require("./palette");
 const path = require("path");
 const { open_box } = require("../senders");
 const { TextModeData } = require("./textmode");
-const { cp437_to_unicode, cp437_to_unicode_bytes, unicode_to_cp437 } = require("./encodings");
 const fs = require("fs");
 const upng = require("upng-js");
 const { getSync } = require("@andreekeberg/imagedata");
@@ -1863,9 +1862,6 @@ module.exports = {
     render_insert_row,
     render_delete_row,
     new_tmdata,
-    cp437_to_unicode,
-    cp437_to_unicode_bytes,
-    unicode_to_cp437,
     render_blocks,
     merge_blocks,
     flip_code_x,

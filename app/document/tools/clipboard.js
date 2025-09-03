@@ -1,5 +1,5 @@
 const electron = require("electron");
-const libtextmode = require("../../libtextmode/libtextmode");
+const { cp437_to_unicode } = require("../../libtextmode/encodings");
 const doc = require("../doc");
 const palette = require("../palette");
 
@@ -8,7 +8,7 @@ function copy(blocks) {
     for (let y = 0, i = 0; y < blocks.rows; y++) {
         text.push("");
         for (let x = 0; x < blocks.columns; x++, i++) {
-            text[text.length - 1] += libtextmode.cp437_to_unicode(blocks.data[i].code);
+            text[text.length - 1] += cp437_to_unicode(blocks.data[i].code);
         }
     }
     electron.clipboard.write({

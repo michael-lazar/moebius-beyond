@@ -2,7 +2,7 @@ const events = require("events");
 const { on } = require("../../senders");
 const darwin = process.platform == "darwin";
 const doc = require("../doc");
-const libtextmode = require("../../libtextmode/libtextmode");
+const { unicode_to_cp437 } = require("../../libtextmode/encodings");
 let use_shift = true;
 
 class KeyboardEvent extends events.EventEmitter {
@@ -325,7 +325,7 @@ class KeyboardEvent extends events.EventEmitter {
                 return;
         }
         if (event.key.length == 1) {
-            const code = libtextmode.unicode_to_cp437(event.key.charCodeAt(0));
+            const code = unicode_to_cp437(event.key.charCodeAt(0));
             if (code == 32) event.preventDefault();
             if (code) this.emit("key_typed", code);
         }
