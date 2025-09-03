@@ -112,7 +112,7 @@ class PaletteChooser extends EventEmitter {
         doc.palette.map((rgb, i) => {
             const div = document.createElement("div");
             div.style.backgroundColor = rgb_to_hex(rgb);
-            div.dataset.id = i;
+            div.dataset.id = i.toString();
             container.appendChild(div);
         });
 

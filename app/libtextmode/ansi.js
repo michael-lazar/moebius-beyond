@@ -509,18 +509,6 @@ function encode_as_ansi(tmdata, save_without_sauce, { utf8 = false, bit_depth = 
         let sgr_tc = [];
         let bold = false;
         let blink = false;
-        let fg_tc = Array.isArray(fg);
-        let bg_tc = Array.isArray(bg);
-
-        if (fg_tc) {
-            sgr_tc.push([49, 59, ...fg]);
-            current_fg = fg;
-        }
-
-        if (bg_tc) {
-            sgr_tc.push([48, 59, ...bg]);
-            current_bg = bg;
-        }
 
         if (fg > 7 && fg < 16) {
             bold = true;
@@ -532,7 +520,7 @@ function encode_as_ansi(tmdata, save_without_sauce, { utf8 = false, bit_depth = 
             bg = bg - 8;
         }
 
-        if ((!fg_tc && current_bold && !bold) || (!bg_tc && current_blink && !blink)) {
+        if ((current_bold && !bold) || (current_blink && !blink)) {
             sgr.push(0);
             current_fg = 7;
             current_bg = 0;
@@ -540,18 +528,14 @@ function encode_as_ansi(tmdata, save_without_sauce, { utf8 = false, bit_depth = 
             current_blink = false;
         }
 
-        if (!fg_tc) {
-            if (bold && !current_bold) {
-                sgr.push(1);
-                current_bold = true;
-            }
+        if (bold && !current_bold) {
+            sgr.push(1);
+            current_bold = true;
         }
 
-        if (!bg_tc) {
-            if (blink && !current_blink) {
-                sgr.push(5);
-                current_blink = true;
-            }
+        if (blink && !current_blink) {
+            sgr.push(5);
+            current_blink = true;
         }
 
         if (fg !== current_fg) {

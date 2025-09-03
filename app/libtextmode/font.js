@@ -87,7 +87,7 @@ function create_coloured_glyph(source_canvas, code, rgb, font_width, height) {
 }
 
 class Font {
-    /** @type {App.Color[]} */
+    /** @type {App.Palette} */
     palette;
     /** @type {string} */
     name;
@@ -111,7 +111,7 @@ class Font {
     cursor;
 
     /**
-     * @param {App.Color[]} [palette]
+     * @param {App.Palette} [palette]
      */
     constructor(palette = [...palette_4bit]) {
         this.palette = palette;

@@ -1,3 +1,10 @@
+/**
+ * @param {object} params
+ * @param {number} params.columns
+ * @param {number} params.rows
+ * @param {Uint8Array} params.bytes
+ * @returns {App.Data}
+ */
 function bytes_to_blocks({ columns, rows, bytes }) {
     const data = new Array(columns * rows);
     for (let i = 0, j = 0; i < data.length; i++, j++) {
@@ -48,6 +55,13 @@ class Sauce {
     }
 }
 
+/**
+ * @param {Uint8Array} bytes
+ * @param {number} pos
+ * @param {string} text
+ * @param {number} max_length
+ * @returns {void}
+ */
 function add_text(bytes, pos, text, max_length) {
     for (let i = 0; i < max_length; i += 1) {
         if (i < text.length) {
@@ -58,6 +72,9 @@ function add_text(bytes, pos, text, max_length) {
     }
 }
 
+/**
+ * @returns {string}
+ */
 function current_date() {
     const date = new Date();
     const year = date.getFullYear().toString(10);
@@ -120,6 +137,11 @@ function comments_length(rawcomments) {
     }
 }
 
+/**
+ * @param {string} text
+ * @param {number} length
+ * @returns {Uint8Array}
+ */
 function pad(text, length) {
     const text_bytes = Buffer.from(text, "utf-8");
     const out_bytes = new Uint8Array(length);
@@ -284,22 +306,56 @@ function get_sauce(bytes) {
 }
 
 class TextModeData {
-    constructor(options = {}) {
-        this.columns = options.columns;
-        this.rows = options.rows;
-        this.title = options.title || "";
-        this.author = options.author || "";
-        this.group = options.group || "";
-        this.date = options.date || current_date();
-        this.filesize = options.filesize || 0;
-        this.ice_colors = options.ice_colors || false;
-        this.use_9px_font = options.use_9px_font || false;
-        this.font_name = options.font_name || "Default";
-        this.font_bytes = options.font_bytes || null;
-        this.font_height = options.font_height || null;
-        this.comments = options.comments || "";
-        this.data = options.data || [];
-        this.palette = options.palette || [];
+    /**
+     * @param {Object} params
+     * @param {number} [params.columns]
+     * @param {number} [params.rows]
+     * @param {string} [params.title]
+     * @param {string} [params.author]
+     * @param {string} [params.group]
+     * @param {string} [params.date]
+     * @param {number} [params.filesize]
+     * @param {boolean} [params.ice_colors]
+     * @param {boolean} [params.use_9px_font]
+     * @param {string} [params.font_name]
+     * @param {Uint8Array} [params.font_bytes]
+     * @param {number} [params.font_height]
+     * @param {string} [params.comments]
+     * @param {App.Data} [params.data]
+     * @param {App.Palette} [params.palette]
+     */
+    constructor({
+        columns,
+        rows,
+        title = "",
+        author = "",
+        group = "",
+        date = current_date(),
+        filesize = 0,
+        ice_colors = false,
+        use_9px_font = false,
+        font_name = "Default",
+        font_bytes = null,
+        font_height = null,
+        comments = "",
+        data = [],
+        palette = [],
+    } = {}) {
+        this.columns = columns;
+        this.rows = rows;
+        this.title = title;
+        this.author = author;
+        this.group = group;
+        this.date = date;
+        this.filesize = filesize;
+        this.ice_colors = ice_colors;
+        this.use_9px_font = use_9px_font;
+        this.font_name = font_name;
+        this.font_bytes = font_bytes;
+        this.font_height = font_height;
+        this.comments = comments;
+        this.data = data;
+        this.palette = palette;
     }
 }
 

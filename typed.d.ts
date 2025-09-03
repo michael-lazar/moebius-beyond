@@ -20,6 +20,8 @@ declare global {
             fg: number;
         };
 
+        type Data = Block[];
+
         type Render = {
             columns: number;
             rows: number;
@@ -39,8 +41,10 @@ declare global {
             b: number;
         };
 
+        type Palette = Color[];
+
         type Font = {
-            palette: Color[];
+            palette: Palette;
             name: string;
             height: number;
             bitmask: Uint8Array;

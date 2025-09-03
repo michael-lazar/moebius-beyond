@@ -1076,8 +1076,8 @@ function rotate(blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} insert_y
- * @param {App.Block[]} [blocks]
- * @returns {App.Block[]}
+ * @param {App.Data} [blocks]
+ * @returns {App.Data}
  */
 function insert_row(tmdata, insert_y, blocks) {
     const removed_blocks = new Array(tmdata.columns);
@@ -1099,8 +1099,8 @@ function insert_row(tmdata, insert_y, blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} delete_y
- * @param {App.Block[]} [blocks]
- * @returns {App.Block[]}
+ * @param {App.Data} [blocks]
+ * @returns {App.Data}
  */
 function delete_row(tmdata, delete_y, blocks) {
     const removed_blocks = new Array(tmdata.columns);
@@ -1122,8 +1122,8 @@ function delete_row(tmdata, delete_y, blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} insert_x
- * @param {App.Block[]} [blocks]
- * @returns {App.Block[]}
+ * @param {App.Data} [blocks]
+ * @returns {App.Data}
  */
 function insert_column(tmdata, insert_x, blocks) {
     const removed_blocks = new Array(tmdata.rows);
@@ -1145,8 +1145,8 @@ function insert_column(tmdata, insert_x, blocks) {
 /**
  * @param {TextModeData} tmdata
  * @param {number} delete_x
- * @param {App.Block[]} [blocks]
- * @returns {App.Block[]}
+ * @param {App.Data} [blocks]
+ * @returns {App.Data}
  */
 function delete_column(tmdata, delete_x, blocks) {
     const removed_blocks = new Array(tmdata.rows);
@@ -1584,6 +1584,23 @@ function render_scroll_canvas_right(tmdata, render) {
     for (let y = 0; y < tmdata.rows; y++) render_at(render, 0, y, tmdata.data[y * tmdata.columns]);
 }
 
+/**
+ * @param {object} [options]
+ * @param {number} [options.columns]
+ * @param {number} [options.rows]
+ * @param {string} [options.title]
+ * @param {string} [options.author]
+ * @param {string} [options.group]
+ * @param {string} [options.date]
+ * @param {App.Palette} [options.palette]
+ * @param {string} [options.font_name]
+ * @param {boolean} [options.ice_colors]
+ * @param {boolean} [options.use_9px_font]
+ * @param {string} [options.comments]
+ * @param {App.Data} [options.data]
+ * @param {Uint8Array} [options.font_bytes]
+ * @returns {TextModeData}
+ */
 function new_tmdata({
     columns = 80,
     rows = 100,
