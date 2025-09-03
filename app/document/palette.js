@@ -7,14 +7,6 @@ const { rgb_to_hex, hex_to_rbg, palette_4bit } = require("../libtextmode/palette
 const { lospec_palette } = require("../libtextmode/lospec_palette");
 
 class PaletteChooser extends EventEmitter {
-    select_attribute() {
-        senders.send_sync("select_attribute", {
-            fg: this.fg,
-            bg: this.bg,
-            palette: doc.palette,
-        });
-    }
-
     constructor() {
         super();
 
@@ -49,6 +41,20 @@ class PaletteChooser extends EventEmitter {
         });
     }
 
+    /**
+     * @returns {void}
+     */
+    select_attribute() {
+        senders.send_sync("select_attribute", {
+            fg: this.fg,
+            bg: this.bg,
+            palette: doc.palette,
+        });
+    }
+
+    /**
+     * @returns {void}
+     */
     new_document() {
         this.color_picker_el = document.getElementById("color_picker");
         this.swatch_container_el = document.getElementById("swatches");
@@ -58,6 +64,9 @@ class PaletteChooser extends EventEmitter {
         this.default_color();
     }
 
+    /**
+     * @returns {void}
+     */
     bind_events() {
         this.swatch_container_el.addEventListener("mousedown", (e) => {
             const target = /** @type {HTMLElement} */ (e.target);
@@ -88,6 +97,10 @@ class PaletteChooser extends EventEmitter {
         });
     }
 
+    /**
+     * @param {string} hex
+     * @returns {void}
+     */
     color_picked(hex) {
         if (!hex || this.color_picker_spawner.style.backgroundColor === hex) return;
 
@@ -103,6 +116,9 @@ class PaletteChooser extends EventEmitter {
         }, 150);
     }
 
+    /**
+     * @returns {void}
+     */
     update_swatches() {
         this.swatch_container_el.innerHTML = "";
 
@@ -121,6 +137,10 @@ class PaletteChooser extends EventEmitter {
         this.update_selected("fg");
     }
 
+    /**
+     * @param {string} level
+     * @returns {void}
+     */
     update_selected(level) {
         const class_name = `selected_${level}`;
         let selected_el = this.swatch_container_el.querySelector(`.selected_${level}`);
@@ -174,22 +194,38 @@ class PaletteChooser extends EventEmitter {
         this.bg = typeof value === "number" ? value : parseInt(value, 10);
     }
 
+    /**
+     * @returns {void}
+     */
     previous_foreground_color() {
         this.fg = this.fg === 0 ? 15 : this.fg - 1;
     }
 
+    /**
+     * @returns {void}
+     */
     next_foreground_color() {
         this.fg = this.fg === 15 ? 0 : this.fg + 1;
     }
 
+    /**
+     * @returns {void}
+     */
     previous_background_color() {
         this.bg_internal = this.bg === 0 ? 15 : this.bg - 1;
     }
 
+    /**
+     * @returns {void}
+     */
     next_background_color() {
         this.bg_internal = this.bg === 15 ? 0 : this.bg + 1;
     }
 
+    /**
+     * @param {string | null} lospec_palette_name
+     * @returns {Promise<void>}
+     */
     async change_palette(lospec_palette_name) {
         senders.send("update_menu_checkboxes", { lospec_palette_name });
         if (lospec_palette_name === null) {
@@ -200,6 +236,9 @@ class PaletteChooser extends EventEmitter {
         this.update_swatches();
     }
 
+    /**
+     * @returns {Promise<void>}
+     */
     async load_default_palette() {
         for (let i = 0; i < 16; i++) {
             doc.update_palette(i, palette_4bit[i]);
@@ -209,6 +248,10 @@ class PaletteChooser extends EventEmitter {
         this.fg = this.fg; // eslint-disable-line
     }
 
+    /**
+     * @param {string} palette_name
+     * @returns {Promise<void>}
+     */
     async load_lospec_palette(palette_name) {
         const loaded_palette = lospec_palette(palette_name);
         for (let i = 0; i < 16; i++) {
@@ -219,25 +262,37 @@ class PaletteChooser extends EventEmitter {
         this.fg = this.fg; // eslint-disable-line
     }
 
+    /**
+     * @returns {void}
+     */
     default_color() {
         this.fg = 7;
         this.bg_internal = 0;
     }
 
+    /**
+     * @returns {void}
+     */
     switch_foreground_background() {
         const fg_index = this.fg;
         this.fg = this.bg;
         this.bg_internal = fg_index;
     }
 
+    /**
+     * @param {number} index
+     * @returns {void}
+     */
     toggle_fg(index) {
-        // TODO: ??
         if (this.fg === index || (this.fg >= 8 && this.fg !== index + 8)) index += 8;
         this.fg = index;
     }
 
+    /**
+     * @param {number} index
+     * @returns {void}
+     */
     toggle_bg(index) {
-        // TODO: ??
         if (this.bg === index || (this.bg >= 8 && this.bg !== index + 8)) index += 8;
         this.bg_internal = index;
     }
