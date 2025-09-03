@@ -30,13 +30,40 @@ declare global {
             blink_off_collection: HTMLCanvasElement[];
             preview_collection: HTMLCanvasElement[];
             maximum_rows: number;
-            font: any; // TODO
+            font: Font;
         };
 
         type Color = {
             r: number;
             g: number;
             b: number;
+        };
+
+        type Font = {
+            palette: Color[];
+            name: string;
+            height: number;
+            bitmask: Uint8Array;
+            width: number;
+            length: number;
+            use_9px_font: boolean;
+            canvas: HTMLCanvasElement;
+            glyphs: HTMLCanvasElement[];
+            backgrounds: HTMLCanvasElement[];
+            cursor: HTMLCanvasElement;
+            load(options: {
+                name?: string;
+                bytes?: Uint8Array;
+                use_9px_font?: boolean;
+            }): Promise<void>;
+            replace_cache_at(index: number, rgb: Color): void;
+            draw(ctx: CanvasRenderingContext2D, block: Block, x: number, y: number): void;
+            draw_raw(ctx: CanvasRenderingContext2D, block: Block, x: number, y: number): void;
+            get_rgb(i: number): Color;
+            draw_bg(ctx: CanvasRenderingContext2D, bg: number, x: number, y: number): void;
+            draw_cursor(ctx: CanvasRenderingContext2D, x: number, y: number): void;
+            get_glyphs_for(index: number): HTMLCanvasElement;
+            get_background_for(index: number): HTMLCanvasElement;
         };
     }
 
