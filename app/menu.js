@@ -2227,7 +2227,7 @@ const help_menu_items = {
         },
         {
             label: "ANSI Art Tutorials at 16Colors",
-            id: "changelog",
+            id: "ansi_tutorial",
             click() {
                 electron.shell.openExternal("https://16colo.rs/tags/content/tutorial");
             },

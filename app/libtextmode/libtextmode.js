@@ -128,31 +128,6 @@ function create_canvases(width, height, maximum_height) {
 }
 
 /**
- * @param {TextModeData} tmdata
- * @returns {Promise<{canvas: HTMLCanvasElement, font: Font}>}
- */
-async function render(tmdata) {
-    const font = new Font(tmdata.palette);
-    await font.load({
-        name: tmdata.font_name,
-        bytes: tmdata.font_bytes,
-        use_9px_font: tmdata.use_9px_font,
-    });
-    const { canvas, ctx } = create_canvas(font.width * tmdata.columns, font.height * tmdata.rows);
-    for (let y = 0, py = 0, i = 0; y < tmdata.rows; y++, py += font.height) {
-        for (let x = 0, px = 0; x < tmdata.columns; x++, px += font.width, i++) {
-            const block = tmdata.data[i];
-            if (!tmdata.ice_colors && block.bg > 7 && block.bg < 16) {
-                font.draw(ctx, { fg: block.fg, bg: block.bg - 8, code: block.code }, px, py);
-            } else {
-                font.draw(ctx, block, px, py);
-            }
-        }
-    }
-    return { canvas, font };
-}
-
-/**
  * @param {App.Blocks} blocks
  * @param {Font} font
  * @returns {HTMLCanvasElement}
@@ -1881,7 +1856,6 @@ module.exports = {
     processImageDataTo1bit,
     write_file,
     animate,
-    render,
     render_split,
     render_at,
     render_insert_column,
