@@ -1043,7 +1043,7 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     async export_font(file) {
-        await libtextmode.export_font(this, this.render, file);
+        await libtextmode.export_font(this._tmdata, this._render.font, file);
     }
 
     async share_online_xbin() {
@@ -1072,7 +1072,7 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     export_as_png(file) {
-        libtextmode.export_as_png(this, this.render, file);
+        libtextmode.export_as_png(this._tmdata, this.render, file);
     }
 
     export_as_apng(file) {

@@ -1229,6 +1229,11 @@ function scroll_canvas_right(tmdata) {
     }
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_scroll_canvas_up(tmdata, render) {
     for (let i = 0; i < render.ice_color_collection.length; i++) {
         render.ice_color_collection[i]
@@ -1342,6 +1347,11 @@ function render_scroll_canvas_up(tmdata, render) {
         render_at(render, x, tmdata.rows - 1, tmdata.data[(tmdata.rows - 1) * tmdata.columns + x]);
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_scroll_canvas_down(tmdata, render) {
     for (let i = render.ice_color_collection.length - 1; i >= 0; i--) {
         const ice_color_ctx = render.ice_color_collection[i].getContext("2d");
@@ -1442,6 +1452,11 @@ function render_scroll_canvas_down(tmdata, render) {
     for (let x = 0; x < tmdata.columns; x++) render_at(render, x, 0, tmdata.data[x]);
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_scroll_canvas_left(tmdata, render) {
     for (let i = 0; i < render.ice_color_collection.length; i++) {
         render.ice_color_collection[i]
@@ -1506,6 +1521,11 @@ function render_scroll_canvas_left(tmdata, render) {
         );
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_scroll_canvas_right(tmdata, render) {
     for (let i = 0; i < render.ice_color_collection.length; i++) {
         render.ice_color_collection[i]
@@ -1601,6 +1621,10 @@ function new_tmdata({
     });
 }
 
+/**
+ * @param {HTMLCanvasElement[]} canvases
+ * @returns {string}
+ */
 function get_data_url(canvases) {
     return join_canvases(canvases).toDataURL("image/png");
 }
@@ -1627,20 +1651,31 @@ function get_blocks(tmdata, sx, sy, dx, dy) {
     return blocks;
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @returns {App.Blocks}
+ */
 function get_all_blocks(tmdata) {
     return get_blocks(tmdata, 0, 0, tmdata.columns - 1, tmdata.rows - 1);
 }
 
-function export_font(tmdata, render, file) {
-    let bytes;
-    if (tmdata.font != null) {
-        bytes = tmdata.font.bitmask;
-    } else {
-        bytes = tmdata.font_bytes;
-    }
+/**
+ * @param {TextModeData} tmdata
+ * @param {App.Font} font
+ * @param {string} file
+ * @returns {void}
+ */
+function export_font(tmdata, font, file) {
+    const bytes = font.bitmask;
     fs.writeFileSync(file, Buffer.from(bytes));
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {App.Render} render
+ * @param {string} file
+ * @returns {void}
+ */
 function export_as_png(tmdata, render, file) {
     const base64_string = get_data_url(
         tmdata.ice_colors ? render.ice_color_collection : render.blink_off_collection
@@ -1650,6 +1685,11 @@ function export_as_png(tmdata, render, file) {
     fs.writeFileSync(file, base64_string, "base64");
 }
 
+/**
+ * @param {App.Render} render
+ * @param {string} file
+ * @returns {void}
+ */
 function export_as_apng(render, file) {
     const blink_off = join_canvases(render.blink_off_collection)
         .getContext("2d")
@@ -1667,6 +1707,10 @@ function export_as_apng(render, file) {
     fs.writeFileSync(file, Buffer.from(bytes));
 }
 
+/**
+ * @param {App.Block} block
+ * @returns {App.Block}
+ */
 function remove_ice_color_for_block(block) {
     if (block.fg == block.bg) {
         return { fg: block.bg, bg: 0, code: 219 };
@@ -1700,6 +1744,9 @@ function remove_ice_color_for_block(block) {
     return { fg: block.fg, bg: block.bg - 8, code: block.code };
 }
 
+/**
+ * @returns {Promise<{bytes: Buffer, filename: string} | undefined>}
+ */
 async function importFontFromImage() {
     const file = open_box({
         filters: [
@@ -1718,6 +1765,10 @@ async function importFontFromImage() {
     }
 }
 
+/**
+ * @param {string} file
+ * @returns {Promise<{bytes: Buffer, filename: string}>}
+ */
 async function load_custom_font(file) {
     return new Promise((resolve) => {
         fs.readFile(file, (err, bytes) => {
@@ -1727,10 +1778,18 @@ async function load_custom_font(file) {
     });
 }
 
+/**
+ * @param {Buffer} content
+ * @returns {Promise<ImageData>}
+ */
 async function getImageData(content) {
     return getSync(content);
 }
 
+/**
+ * @param {Uint8ClampedArray} data
+ * @returns {Promise<number[]>}
+ */
 async function processImageDataTo1bit(data) {
     let bit_array = [];
     for (var i = 0, n = 0; (n = data.length), i < n; i += 4) {
@@ -1744,6 +1803,11 @@ async function processImageDataTo1bit(data) {
     return bit_array;
 }
 
+/**
+ * @param {number[]} bit_array
+ * @param {number} height
+ * @returns {Promise<string>}
+ */
 async function rearrangeBitArray(bit_array, height) {
     const cellHeight = height / 16;
     let rearrangedBitArray = [];
@@ -1764,11 +1828,21 @@ async function rearrangeBitArray(bit_array, height) {
     return splitToBulks(splitToHexBulks(rearrangedBitArray, 16), 8);
 }
 
+/**
+ * @param {string} num
+ * @param {number} size
+ * @returns {string}
+ */
 function pad(num, size) {
     var s = "000000000" + num;
     return s.substr(s.length - size);
 }
 
+/**
+ * @param {number[]} arr
+ * @param {number} bulkSize
+ * @returns {string[]}
+ */
 function splitToHexBulks(arr, bulkSize) {
     const bulks = [];
     for (let i = 0; i < Math.ceil(arr.length / bulkSize); i++) {
@@ -1779,8 +1853,13 @@ function splitToHexBulks(arr, bulkSize) {
     return bulks;
 }
 
+/**
+ * @param {string[]} arr
+ * @param {number} bulkSize
+ * @returns {string}
+ */
 function splitToBulks(arr, bulkSize) {
-    let bulks = [];
+    let bulks = "";
     for (let i = 0; i < Math.ceil(arr.length / bulkSize); i++) {
         bulks += arr.slice(i * bulkSize, (i + 1) * bulkSize).join("");
     }
