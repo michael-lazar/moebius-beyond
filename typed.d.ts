@@ -11,7 +11,6 @@ declare global {
             columns: number;
             rows: number;
             data: Block[];
-            transparent?: boolean;
         };
 
         type Block = {

@@ -108,7 +108,7 @@ on("import_selection", async (event) => {
     if (file) {
         if (!enabled) tools.start(tools.modes.SELECT);
         const blocks = await libtextmode.read_file(file[0]);
-        cursor.set_operation_mode(blocks);
+        cursor.set_operation_mode(blocks, false);
     }
 });
 

@@ -129,15 +129,15 @@ function create_canvases(width, height, maximum_height) {
 /**
  * @param {App.Blocks} blocks
  * @param {Font} font
+ * @param {boolean} transparent
  * @returns {HTMLCanvasElement}
  */
-function render_blocks(blocks, font) {
+function render_blocks(blocks, font, transparent) {
     const { canvas, ctx } = create_canvas(blocks.columns * font.width, blocks.rows * font.height);
     for (let y = 0, py = 0, i = 0; y < blocks.rows; y++, py += font.height) {
         for (let x = 0, px = 0; x < blocks.columns; x++, px += font.width, i++) {
             const block = blocks.data[i];
-            if (!blocks.transparent || block.code != 32 || block.bg != 0)
-                font.draw(ctx, block, px, py);
+            if (!transparent || block.code != 32 || block.bg != 0) font.draw(ctx, block, px, py);
         }
     }
     return canvas;
@@ -156,7 +156,6 @@ function merge_blocks(under_blocks, over_blocks) {
             Math.max(under_blocks.rows, over_blocks.rows) *
                 Math.max(under_blocks.columns, over_blocks.columns)
         ),
-        transparent: false,
     };
     for (let y = 0, i = 0; y < merged_blocks.rows; y++) {
         for (let x = 0; x < merged_blocks.columns; x++, i++) {

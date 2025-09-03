@@ -1244,16 +1244,17 @@ class TextModeDoc extends events.EventEmitter {
      * @param {number} dx
      * @param {number} dy
      * @param {boolean} [single_undo]
+     * @param {boolean} [transparent]
      * @returns {void}
      */
-    place(blocks, dx, dy, single_undo) {
+    place(blocks, dx, dy, single_undo, transparent) {
         const mid_point = Math.floor(this.columns / 2);
         const dont_mirror = dx < mid_point && dx + blocks.columns > mid_point;
         if (!single_undo) this.undo_history.start_chunk();
         for (let y = 0; y + dy < this.rows && y < blocks.rows; y++) {
             for (let x = 0; x + dx < this.columns && x < blocks.columns; x++) {
                 const block = blocks.data[y * blocks.columns + x];
-                if (!blocks.transparent || block.code != 32 || block.bg != 0)
+                if (!transparent || block.code != 32 || block.bg != 0)
                     this.change_data(
                         dx + x,
                         dy + y,
