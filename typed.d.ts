@@ -44,15 +44,17 @@ declare global {
             data: any;
         };
 
+        type UndoCursor = {
+            prev_x: number;
+            prev_y: number;
+            post_x: number;
+            post_y: number;
+        };
+
         type UndoBlockItem = Block & {
             x: number;
             y: number;
-            cursor: {
-                prev_x: number;
-                prev_y: number;
-                post_x: number;
-                post_y: number;
-            };
+            cursor: UndoCursor;
         };
 
         type Font = {
@@ -80,6 +82,37 @@ declare global {
             draw_cursor(ctx: CanvasRenderingContext2D, x: number, y: number): void;
             get_glyphs_for(index: number): HTMLCanvasElement;
             get_background_for(index: number): HTMLCanvasElement;
+        };
+
+        type TextModeDataOptions = {
+            columns?: number;
+            rows?: number;
+            title?: string;
+            author?: string;
+            group?: string;
+            date?: string;
+            palette?: Color[];
+            font_name?: string;
+            ice_colors?: boolean;
+            use_9px_font?: boolean;
+            comments?: string;
+            data?: Block[];
+            font_bytes?: Uint8Array;
+        };
+
+        type HalfBlock = {
+            x: number;
+            y: number;
+            text_y: number;
+            is_blocky: boolean;
+            is_vertically_blocky: boolean;
+            upper_block_color: number;
+            lower_block_color: number;
+            left_block_color: number;
+            right_block_color: number;
+            is_top: boolean;
+            fg: number;
+            bg: number;
         };
     }
 

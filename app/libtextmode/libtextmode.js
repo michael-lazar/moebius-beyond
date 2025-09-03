@@ -1585,20 +1585,7 @@ function render_scroll_canvas_right(tmdata, render) {
 }
 
 /**
- * @param {object} [options]
- * @param {number} [options.columns]
- * @param {number} [options.rows]
- * @param {string} [options.title]
- * @param {string} [options.author]
- * @param {string} [options.group]
- * @param {string} [options.date]
- * @param {App.Color[]} [options.palette]
- * @param {string} [options.font_name]
- * @param {boolean} [options.ice_colors]
- * @param {boolean} [options.use_9px_font]
- * @param {string} [options.comments]
- * @param {App.Block[]} [options.data]
- * @param {Uint8Array} [options.font_bytes]
+ * @param {App.TextModeDataOptions} [options={}]
  * @returns {TextModeData}
  */
 function new_tmdata({
