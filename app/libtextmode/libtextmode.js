@@ -276,6 +276,13 @@ async function render_split(tmdata, maximum_rows = 100) {
     };
 }
 
+/**
+ * @param {App.Render} render
+ * @param {number} x
+ * @param {number} y
+ * @param {App.Block} block
+ * @returns {void}
+ */
 function render_at(render, x, y, block) {
     const i = Math.floor(y / render.maximum_rows);
     const px = x * render.font.width;
@@ -296,6 +303,12 @@ function render_at(render, x, y, block) {
     }
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} x
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_insert_column(tmdata, x, render) {
     const sx = x * render.font.width;
     const width = render.width - x * render.font.width - render.font.width;
@@ -358,6 +371,12 @@ function render_insert_column(tmdata, x, render) {
         render_at(render, x, y, tmdata.data[y * tmdata.columns + x]);
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} x
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_delete_column(tmdata, x, render) {
     const sx = x * render.font.width + render.font.width;
     const width = render.width - x * render.font.width - render.font.width;
@@ -425,6 +444,12 @@ function render_delete_column(tmdata, x, render) {
         );
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} y
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_insert_row(tmdata, y, render) {
     const canvas_row = Math.floor(y / render.maximum_rows);
     for (let i = render.ice_color_collection.length - 1; i > canvas_row; i--) {
@@ -579,6 +604,12 @@ function render_insert_row(tmdata, y, render) {
         render_at(render, x, y, tmdata.data[y * tmdata.columns + x]);
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} y
+ * @param {App.Render} render
+ * @returns {void}
+ */
 function render_delete_row(tmdata, y, render) {
     const canvas_row = Math.floor(y / render.maximum_rows);
     if ((y % render.maximum_rows) + 1 < render.maximum_rows) {
@@ -803,6 +834,10 @@ function render_delete_row(tmdata, y, render) {
         render_at(render, x, tmdata.rows - 1, tmdata.data[(tmdata.rows - 1) * tmdata.columns + x]);
 }
 
+/**
+ * @param {number} code
+ * @returns {number}
+ */
 function flip_code_x(code) {
     switch (code) {
         case 40:
@@ -894,6 +929,10 @@ function flip_code_x(code) {
     }
 }
 
+/**
+ * @param {App.Blocks} blocks
+ * @returns {App.Blocks}
+ */
 function flip_x(blocks) {
     const new_data = Array(blocks.data.length);
     for (let y = 0, i = 0; y < blocks.rows; y++) {
@@ -908,6 +947,10 @@ function flip_x(blocks) {
     return blocks;
 }
 
+/**
+ * @param {number} code
+ * @returns {number}
+ */
 function flip_code_y(code) {
     switch (code) {
         case 183:
@@ -967,6 +1010,10 @@ function flip_code_y(code) {
     }
 }
 
+/**
+ * @param {App.Blocks} blocks
+ * @returns {App.Blocks}
+ */
 function flip_y(blocks) {
     const new_data = Array(blocks.data.length);
     for (let y = 0, i = 0; y < blocks.rows; y++) {
@@ -981,6 +1028,10 @@ function flip_y(blocks) {
     return blocks;
 }
 
+/**
+ * @param {number} code
+ * @returns {number}
+ */
 function rotate_code(code) {
     // TODO: more cases; http://www.asciitable.com
     switch (code) {
@@ -999,6 +1050,10 @@ function rotate_code(code) {
     }
 }
 
+/**
+ * @param {App.Blocks} blocks
+ * @returns {App.Blocks}
+ */
 function rotate(blocks) {
     const new_data = Array(blocks.data.length);
     const new_columns = blocks.rows,
@@ -1018,6 +1073,12 @@ function rotate(blocks) {
     return blocks;
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} insert_y
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
+ */
 function insert_row(tmdata, insert_y, blocks) {
     const removed_blocks = new Array(tmdata.columns);
     for (let x = 0; x < tmdata.columns; x++)
@@ -1035,6 +1096,12 @@ function insert_row(tmdata, insert_y, blocks) {
     return removed_blocks;
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} delete_y
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
+ */
 function delete_row(tmdata, delete_y, blocks) {
     const removed_blocks = new Array(tmdata.columns);
     for (let x = 0; x < tmdata.columns; x++)
@@ -1052,6 +1119,12 @@ function delete_row(tmdata, delete_y, blocks) {
     return removed_blocks;
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} insert_x
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
+ */
 function insert_column(tmdata, insert_x, blocks) {
     const removed_blocks = new Array(tmdata.rows);
     for (let y = 0; y < tmdata.rows; y++)
@@ -1069,6 +1142,12 @@ function insert_column(tmdata, insert_x, blocks) {
     return removed_blocks;
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @param {number} delete_x
+ * @param {App.Block[]} [blocks]
+ * @returns {App.Block[]}
+ */
 function delete_column(tmdata, delete_x, blocks) {
     const removed_blocks = new Array(tmdata.rows);
     for (let y = 0; y < tmdata.rows; y++)
@@ -1086,6 +1165,10 @@ function delete_column(tmdata, delete_x, blocks) {
     return removed_blocks;
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @returns {void}
+ */
 function scroll_canvas_up(tmdata) {
     for (let x = 0; x < tmdata.columns; x++) {
         const overwritten_block = Object.assign(tmdata.data[x]);
@@ -1097,6 +1180,10 @@ function scroll_canvas_up(tmdata) {
     }
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @returns {void}
+ */
 function scroll_canvas_down(tmdata) {
     for (let x = 0; x < tmdata.columns; x++) {
         const overwritten_block = Object.assign(
@@ -1110,6 +1197,10 @@ function scroll_canvas_down(tmdata) {
     }
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @returns {void}
+ */
 function scroll_canvas_left(tmdata) {
     for (let y = 0; y < tmdata.rows; y++) {
         const overwritten_block = Object.assign(tmdata.data[y * tmdata.columns]);
@@ -1121,6 +1212,10 @@ function scroll_canvas_left(tmdata) {
     }
 }
 
+/**
+ * @param {TextModeData} tmdata
+ * @returns {void}
+ */
 function scroll_canvas_right(tmdata) {
     for (let y = 0; y < tmdata.rows; y++) {
         const overwritten_block = Object.assign(
