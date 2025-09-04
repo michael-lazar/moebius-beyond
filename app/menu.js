@@ -3862,12 +3862,12 @@ electron.ipcMain.on(
     }
 );
 
+electron.ipcMain.on("check_transparent", (event, { id }) => check(id, "transparent"));
 electron.ipcMain.on("uncheck_transparent", (event, { id }) => uncheck(id, "transparent"));
-electron.ipcMain.on("uncheck_underneath", (event, { id }) => uncheck(id, "underneath"));
 electron.ipcMain.on("check_underneath", (event, { id }) => check(id, "underneath"));
-electron.ipcMain.on("uncheck_over", (event, { id }) => uncheck(id, "over"));
+electron.ipcMain.on("uncheck_underneath", (event, { id }) => uncheck(id, "underneath"));
 electron.ipcMain.on("check_over", (event, { id }) => check(id, "over"));
-
+electron.ipcMain.on("uncheck_over", (event, { id }) => uncheck(id, "over"));
 electron.ipcMain.on("check_smallscale_guide", (event, { id }) => check(id, "smallscale_guide"));
 electron.ipcMain.on("check_square_guide", (event, { id }) => check(id, "square_guide"));
 electron.ipcMain.on("check_instagram_guide", (event, { id }) => check(id, "instagram_guide"));

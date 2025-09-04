@@ -9,6 +9,9 @@ const clipboard = require("./clipboard");
 /** @type {{ EDITING: 0, SELECTION: 1, OPERATION: 2 }} */
 const modes = { EDITING: 0, SELECTION: 1, OPERATION: 2 };
 
+/** @type {{ OVER: 0, UNDER: 1, TRANSPARENT: 2 }} */
+const overlay_modes = { OVER: 0, UNDER: 1, TRANSPARENT: 2 };
+
 class Cursor {
     /** @type {{ EDITING: 0, SELECTION: 1, OPERATION: 2 }} */
     modes;
@@ -36,10 +39,8 @@ class Cursor {
     operation_blocks;
     /** @type {boolean} */
     operation_is_move;
-    /** @type {boolean} */
-    operation_is_transparent;
-    /** @type {boolean} */
-    operation_is_underneath;
+    /** @type {0 | 1 | 2} */
+    overlay_mode;
 
     constructor() {
         this.modes = modes;
@@ -53,12 +54,14 @@ class Cursor {
         this.selection = { sx: 0, sy: 0, dx: 0, dy: 0 };
         this.scroll_document_with_cursor = false;
         this.canvas_zoom = 1.0;
+        this.operation_is_move = false;
+        this.overlay_mode = overlay_modes.OVER;
 
         on("deselect", (event) => this.deselect());
         on("use_flashing_cursor", (event, value) => this.set_flashing(value));
         on("fill", (event) => this.fill());
-        on("copy_block", (event) => this.start_operation_mode(false));
-        on("move_block", (event) => this.start_operation_mode(true));
+        on("copy_block", (event) => this.start_copy());
+        on("move_block", (event) => this.start_move());
         on("scroll_document_with_cursor", (event, value) => this.set_scroll_with_cursor(value));
         on("use_attribute_under_cursor", (event) => this.attribute_under_cursor());
         on("rotate", (event) => this.rotate());
@@ -178,15 +181,13 @@ class Cursor {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 break;
             case modes.OPERATION:
-                if (this.operation_is_underneath) {
-                    const transparent = false;
+                if (this.overlay_mode == overlay_modes.UNDER) {
                     const canvas = libtextmode.render_blocks(
                         libtextmode.merge_blocks(
                             this.operation_blocks,
                             this.get_blocks_in_operation()
                         ),
-                        doc.font,
-                        transparent
+                        doc.font
                     );
                     this.ctx.drawImage(
                         canvas,
@@ -521,11 +522,8 @@ class Cursor {
         this.canvas.height = this.operation_blocks.rows * font.height - 4;
         this.canvas.style.width = `${this.canvas.width}px`;
         this.canvas.style.height = `${this.canvas.height}px`;
-        const canvas = libtextmode.render_blocks(
-            this.operation_blocks,
-            doc.font,
-            this.operation_is_transparent
-        );
+        const transparent = this.overlay_mode == overlay_modes.TRANSPARENT;
+        const canvas = libtextmode.render_blocks(this.operation_blocks, doc.font, transparent);
         this.ctx.drawImage(
             canvas,
             2,
@@ -550,8 +548,7 @@ class Cursor {
         this.mode = modes.OPERATION;
         this.operation_blocks = blocks;
         this.operation_is_move = is_move;
-        this.operation_is_transparent = false;
-        this.operation_is_underneath = false;
+        this.overlay_mode = overlay_modes.OVER;
 
         this.redraw_operation_blocks();
         send("disable_selection_menu_items_except_deselect_and_crop");
@@ -561,13 +558,21 @@ class Cursor {
     }
 
     /**
-     * @param {boolean} is_move
      * @returns {void}
      */
-    start_operation_mode(is_move) {
+    start_copy() {
         const { sx, sy, dx, dy } = this.reorientate_selection();
-        this.set_operation_mode({ ...doc.get_blocks(sx, sy, dx, dy) }, is_move);
-        if (is_move) doc.erase(sx, sy, dx, dy);
+        this.set_operation_mode({ ...doc.get_blocks(sx, sy, dx, dy) }, false);
+        this.move_to(sx, sy);
+    }
+
+    /**
+     * @returns {void}
+     */
+    start_move() {
+        const { sx, sy, dx, dy } = this.reorientate_selection();
+        this.set_operation_mode({ ...doc.get_blocks(sx, sy, dx, dy) }, true);
+        doc.erase(sx, sy, dx, dy);
         this.move_to(sx, sy);
     }
 
@@ -663,16 +668,16 @@ class Cursor {
      */
     transparent(value) {
         if (value) {
-            this.operation_is_underneath = false;
+            this.overlay_mode = overlay_modes.TRANSPARENT;
+            send("check_transparent");
             send("uncheck_underneath");
-            this.redraw_operation_blocks();
             send("uncheck_over");
         } else {
+            this.overlay_mode = overlay_modes.OVER;
+            send("uncheck_transparent");
             send("uncheck_underneath");
             send("check_over");
         }
-
-        this.operation_is_transparent = value;
         this.redraw_operation_blocks();
         this.draw();
     }
@@ -683,15 +688,17 @@ class Cursor {
      */
     over(value) {
         if (value) {
-            this.operation_is_transparent = false;
+            this.overlay_mode = overlay_modes.OVER;
             send("uncheck_transparent");
-            this.operation_is_underneath = false;
             send("uncheck_underneath");
-            this.redraw_operation_blocks();
+            send("check_over");
         } else {
-            this.operation_is_underneath = true;
+            this.overlay_mode = overlay_modes.UNDER;
+            send("uncheck_transparent");
             send("check_underneath");
+            send("uncheck_over");
         }
+        this.redraw_operation_blocks();
         this.draw();
     }
 
@@ -701,15 +708,17 @@ class Cursor {
      */
     underneath(value) {
         if (value) {
-            this.operation_is_transparent = false;
+            this.overlay_mode = overlay_modes.UNDER;
             send("uncheck_transparent");
-            this.operation_is_underneath = true;
+            send("check_underneath");
             send("uncheck_over");
         } else {
-            this.operation_is_underneath = false;
+            this.overlay_mode = overlay_modes.OVER;
+            send("uncheck_transparent");
+            send("uncheck_underneath");
             send("check_over");
-            this.redraw_operation_blocks();
         }
+        this.redraw_operation_blocks();
         this.draw();
     }
 
@@ -956,13 +965,13 @@ class Cursor {
      * @returns {void}
      */
     stamp() {
-        const blocks = this.operation_is_underneath
-            ? libtextmode.merge_blocks(this.operation_blocks, this.get_blocks_in_operation())
-            : this.operation_blocks;
+        const blocks =
+            this.overlay_mode == overlay_modes.UNDER
+                ? libtextmode.merge_blocks(this.operation_blocks, this.get_blocks_in_operation())
+                : this.operation_blocks;
 
         const single_undo = this.operation_is_move;
-        const transparent = this.operation_is_underneath ? false : this.operation_is_transparent;
-
+        const transparent = this.overlay_mode == overlay_modes.TRANSPARENT;
         doc.place(blocks, this.x, this.y, single_undo, transparent);
         this.operation_is_move = false;
     }
@@ -979,7 +988,7 @@ class Cursor {
      * @returns {void}
      */
     crop() {
-        if (this.mode == modes.SELECTION) this.start_operation_mode(false);
+        if (this.mode == modes.SELECTION) this.start_copy();
         doc.crop(this.operation_blocks);
         this.deselect();
     }
@@ -989,7 +998,7 @@ class Cursor {
      */
     copy() {
         if (this.mode == modes.EDITING) return;
-        if (this.mode == modes.SELECTION) this.start_operation_mode(false);
+        if (this.mode == modes.SELECTION) this.start_copy();
         clipboard.copy(this.operation_blocks);
         this.start_editing_mode();
     }

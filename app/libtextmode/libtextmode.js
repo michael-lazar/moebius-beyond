@@ -129,10 +129,10 @@ function create_canvases(width, height, maximum_height) {
 /**
  * @param {App.Blocks} blocks
  * @param {Font} font
- * @param {boolean} transparent
+ * @param {boolean} [transparent]
  * @returns {HTMLCanvasElement}
  */
-function render_blocks(blocks, font, transparent) {
+function render_blocks(blocks, font, transparent = false) {
     const { canvas, ctx } = create_canvas(blocks.columns * font.width, blocks.rows * font.height);
     for (let y = 0, py = 0, i = 0; y < blocks.rows; y++, py += font.height) {
         for (let x = 0, px = 0; x < blocks.columns; x++, px += font.width, i++) {
