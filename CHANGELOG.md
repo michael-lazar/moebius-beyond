@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed the animated border when selecting and dragging content.
+
 ## v3.4.1 (2025-08-29)
 
 ### Fixed
