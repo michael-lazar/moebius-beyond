@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- The canvas is now centered horizontally/vertically in the UI when
+  there is enough space available.
+
 ### Fixed
 
 - Fixed the animated border when selecting and dragging content.

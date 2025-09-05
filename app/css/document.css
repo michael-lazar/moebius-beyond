@@ -338,7 +338,8 @@
 }
 #canvas_container {
     position: relative;
-    margin: 0 auto;
+    margin: 0;
+    transform-origin: top left;
 }
 #canvas_container canvas {
     display: block;

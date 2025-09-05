@@ -448,10 +448,41 @@ function set_canvas_zoom_without_frame_update(factor) {
 
     const container = $("canvas_container");
 
-    // Set continuous zoom using CSS transform
-    container.style.transform = `scale(${canvas_zoom})`;
-    container.style.transformOrigin = "top left";
-    container.style.margin = "0";
+    // Get viewport dimensions
+    const viewport = container.parentElement;
+    const viewportWidth = viewport.clientWidth;
+    const viewportHeight = viewport.clientHeight;
+
+    // Get container's natural dimensions and calculate scaled dimensions
+    const containerWidth = container.clientWidth * canvas_zoom;
+    const containerHeight = container.clientHeight * canvas_zoom;
+
+    // Determine which centering transforms to apply
+    const needsHorizontalCentering = viewportWidth > containerWidth;
+    const needsVerticalCentering = viewportHeight > containerHeight;
+
+    // Build transform string with centering and positioning
+    let transforms = [`scale(${canvas_zoom})`];
+    let positioning = {};
+
+    if (needsHorizontalCentering) {
+        positioning.left = "50%";
+        transforms.push("translateX(-50%)");
+    } else {
+        positioning.left = "0";
+    }
+
+    if (needsVerticalCentering) {
+        positioning.top = "50%";
+        transforms.push("translateY(-50%)");
+    } else {
+        positioning.top = "0";
+    }
+
+    // Apply all styles in one operation
+    container.style.left = positioning.left;
+    container.style.top = positioning.top;
+    container.style.transform = transforms.join(" ");
 
     cursor.set_canvas_zoom(canvas_zoom);
     mouse.set_canvas_zoom(canvas_zoom);
@@ -595,6 +626,7 @@ doc.on("new_document", () => {
     ice_colors(doc.ice_colors);
     use_9px_font(doc.use_9px_font);
     change_font(doc.font_name);
+    actual_size();
 });
 doc.on("ice_colors", (value) => ice_colors(value));
 doc.on("use_9px_font", (value) => use_9px_font(value));
