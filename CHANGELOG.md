@@ -6,6 +6,8 @@
 
 - The canvas is now centered horizontally/vertically in the UI when
   there is enough space available.
+- Removed the "zoom snapping" feature, after trying it out for a
+  while I found it more annoying than helpful.
 
 ### Fixed
 

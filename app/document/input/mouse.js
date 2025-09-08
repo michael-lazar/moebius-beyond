@@ -20,12 +20,7 @@ const zoomConfig = {
     maxZoom: 5.0,
 
     // Zoom delta calculation
-    minStep: 0.02, // Minimum zoom change per wheel event (2%)
-    maxStep: 0.2, // Maximum zoom change per wheel event (20%)
-    sensitivity: 0.01, // How much each pixel of delta affects zoom
-
-    // Zoom snapping - snap to nearest 10% increment after zooming stops
-    snapDelayMs: 300, // Delay before snapping after zoom stops
+    step: 0.05,
 
     // Panning
     panThreshold: 5, // Minimum pixels moved before middle-mouse panning activates
@@ -260,46 +255,10 @@ class MouseListener extends events.EventEmitter {
         };
     }
 
-    // Calculate proportional zoom delta from normalized wheel input
-    calculateZoomDelta(pixelDelta, currentZoom) {
-        const absDelta = Math.abs(pixelDelta);
-
-        // Calculate base zoom change
-        const baseChange = Math.min(
-            Math.max(absDelta * zoomConfig.sensitivity, zoomConfig.minStep),
-            zoomConfig.maxStep
-        );
-
-        // Apply proportional scaling based on current zoom level
-        // Higher zoom levels get larger absolute changes to maintain consistent relative feel
-        const proportionalChange = baseChange * currentZoom;
-
-        return Math.sign(pixelDelta) * proportionalChange;
-    }
-
-    // Snap zoom level to nearest 10% increment
-    snapZoomLevel(zoomLevel) {
-        // Round to nearest 0.1 (10%) within bounds
-        const snapped = Math.round(zoomLevel * 10) / 10;
-        return Math.max(zoomConfig.minZoom, Math.min(zoomConfig.maxZoom, snapped));
-    }
-
-    // Schedule zoom snap after interaction stops
-    scheduleZoomSnap(mouseX, mouseY) {
-        // Clear any existing snap timer
-        if (this.zoomSnapTimer) {
-            clearTimeout(this.zoomSnapTimer);
-        }
-
-        this.zoomSnapTimer = setTimeout(() => {
-            const currentZoom = current_zoom_factor();
-            const snappedZoom = this.snapZoomLevel(currentZoom);
-
-            if (snappedZoom !== currentZoom) {
-                zoom_with_anchor(snappedZoom, mouseX, mouseY);
-            }
-            this.zoomSnapTimer = null;
-        }, zoomConfig.snapDelayMs);
+    // Calculate zoom delta based on pixel delta magnitude
+    calculateZoomDelta(pixelDelta) {
+        if (Math.abs(pixelDelta) === 0) return 0;
+        return Math.sign(pixelDelta) * zoomConfig.step;
     }
 
     handleZoom(event) {
@@ -309,9 +268,9 @@ class MouseListener extends events.EventEmitter {
 
         const normalized = this.normalizeWheel(event);
         const currentZoom = current_zoom_factor();
-        const zoomDelta = this.calculateZoomDelta(normalized.pixelY, currentZoom);
+        const zoomDelta = this.calculateZoomDelta(normalized.pixelY);
 
-        // Calculate new zoom level with bounds (no immediate snapping)
+        // Calculate new zoom level with bounds
         const newZoom = Math.max(
             zoomConfig.minZoom,
             Math.min(zoomConfig.maxZoom, currentZoom - zoomDelta)
@@ -326,9 +285,6 @@ class MouseListener extends events.EventEmitter {
 
             // Apply smooth zoom immediately
             zoom_with_anchor(newZoom, mouseX, mouseY);
-
-            // Schedule snap to 10% increment after interaction stops
-            this.scheduleZoomSnap(mouseX, mouseY);
         }
 
         this.listening_to_wheel = false;
@@ -417,7 +373,6 @@ class MouseListener extends events.EventEmitter {
         this.panning = false;
         this.pan_potential = false;
         this.middle_click_time = 0;
-        this.zoomSnapTimer = null;
         on("set_canvas_zoom", (event, level) => this.set_canvas_zoom(level));
         doc.on("render", () => this.set_dimensions(doc.columns, doc.rows, doc.font));
         document.addEventListener("DOMContentLoaded", (event) => {
