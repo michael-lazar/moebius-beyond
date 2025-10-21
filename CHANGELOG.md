@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v3.5.0 (2025-10-21)
+
+This release includes significant internal code refactoring to lay
+the groundwork for future changes. As such, there is a higher than
+usual risk of regressions across the entire application. Please be
+aware and report any issues you see.
+
 ### Changed
 
 - The canvas is now centered horizontally/vertically in the UI when
