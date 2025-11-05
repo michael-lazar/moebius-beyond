@@ -19,6 +19,7 @@ function prefs({
     unsaved_changes,
     scroll_margin,
     new_document_rows,
+    default_font,
     retention,
     smallscale_guide,
     debug,
@@ -38,6 +39,7 @@ function prefs({
     $("unsaved_changes").checked = unsaved_changes;
     $("scroll_margin").value = scroll_margin;
     $("new_document_rows").value = new_document_rows;
+    $("default_font").value = default_font;
     $("retention").value = retention;
     $("smallscale_guide").checked = smallscale_guide;
     $("debug").checked = debug;
@@ -94,6 +96,10 @@ function scroll_margin() {
 
 function new_document_rows() {
     update("new_document_rows", $("new_document_rows").value);
+}
+
+function default_font() {
+    update("default_font", $("default_font").value);
 }
 
 function smallscale_guide() {
@@ -184,6 +190,8 @@ document.addEventListener(
         $("scroll_margin").addEventListener("keydown", override_submit, true);
         $("new_document_rows").addEventListener("input", (event) => new_document_rows(), true);
         $("new_document_rows").addEventListener("keydown", override_submit, true);
+        $("default_font").addEventListener("input", (event) => default_font(), true);
+        $("default_font").addEventListener("keydown", override_submit, true);
         $("retention").addEventListener("change", retention, true);
         $("smallscale_guide").addEventListener("change", (event) => smallscale_guide(), true);
         $("debug").addEventListener("change", (event) => debug(), true);

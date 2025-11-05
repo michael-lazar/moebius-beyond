@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added a configurable default font preference (defaults to IBM CP 437 when left blank).
+
 ### Fixed
 
 - Fixed reference image dragging to respect the current zoom level.

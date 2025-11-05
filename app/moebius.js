@@ -105,8 +105,12 @@ async function open_new_document() {
     const group = prefs.get("group");
     let rows = Number.parseInt(prefs.get("new_document_rows"));
     rows = rows >= 1 && rows <= 3000 ? rows : 25;
+    let font_name = prefs.get("default_font");
+    if (!font_name || font_name.trim() === "") {
+        font_name = "IBM CP 437";
+    }
 
-    win.send("new_document", { rows, author, group });
+    win.send("new_document", { rows, author, group, font_name });
 }
 
 menu.on("open_new_document", open_new_document);

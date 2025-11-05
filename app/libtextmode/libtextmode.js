@@ -1569,7 +1569,7 @@ function new_tmdata({
     group = "",
     date = "",
     palette = [...palette_4bit],
-    font_name = "IBM VGA",
+    font_name = "IBM CP 437",
     ice_colors = true,
     use_9px_font = false,
     comments = "",

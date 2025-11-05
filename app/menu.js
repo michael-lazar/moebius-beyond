@@ -1,5 +1,6 @@
 const electron = require("electron");
 const events = require("events");
+const prefs = require("./prefs");
 const darwin = process.platform == "darwin";
 const menus = [];
 const font_names = [];
@@ -3388,7 +3389,11 @@ function font_menu_template(win) {
                 label: "Reset to default font\u2026",
                 id: "resetxbinfont",
                 click() {
-                    win.send("change_font", "IBM VGA");
+                    let font_name = prefs.get("default_font");
+                    if (!font_name || font_name.trim() === "") {
+                        font_name = "IBM CP 437";
+                    }
+                    win.send("change_font", font_name);
                 },
             },
             {
