@@ -1,4 +1,4 @@
-const { tools, toolbar } = require("../ui/ui");
+const { tools, toolbar, current_zoom_factor } = require("../ui/ui");
 
 let enabled = false;
 
@@ -67,8 +67,9 @@ function pointer_out(event) {
 
 function pointer_move(event) {
     if (mouse_start_pos) {
-        const y_offset = event.clientY - mouse_start_pos.y;
-        const x_offset = event.clientX - mouse_start_pos.x;
+        const zoom = current_zoom_factor();
+        const y_offset = (event.clientY - mouse_start_pos.y) / zoom;
+        const x_offset = (event.clientX - mouse_start_pos.x) / zoom;
         move_reference(reference_start_pos.y + y_offset, reference_start_pos.x + x_offset);
     }
 }
