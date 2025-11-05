@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed reference image dragging to respect the current zoom level.
+
 ## v3.5.0 (2025-10-21)
 
 This release includes significant internal code refactoring to lay
