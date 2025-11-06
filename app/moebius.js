@@ -187,6 +187,9 @@ async function preferences() {
         height: 690,
     });
     preferences.send("prefs", prefs.get_all());
+    if (options.showDevTools) {
+        preferences.openDevTools({ mode: "detach" });
+    }
 }
 menu.on("preferences", preferences);
 electron.ipcMain.on("preferences", (event) => preferences());
