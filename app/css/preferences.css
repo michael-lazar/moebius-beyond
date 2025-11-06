@@ -6,7 +6,7 @@ body {
 }
 
 form {
-    width: 400px;
+    width: 450px;
     margin: 0px auto;
 }
 
@@ -81,7 +81,7 @@ input[type="checkbox"] {
 
 select {
     line-height: 24px;
-    width: 90px;
+    width: 140px;
     height: 24px;
     outline: none;
 }
@@ -93,14 +93,12 @@ select {
 #backup_folder {
     height: 24px;
     line-height: 24px;
-    float: left;
-    display: block;
-    width: calc(100% - 84px);
     text-align: right;
+    width: 300px;
+    display: inline-block;
 }
 
 button {
-    float: right;
     color: #aaaaaa;
     border-radius: 4px;
     margin-left: 8px;

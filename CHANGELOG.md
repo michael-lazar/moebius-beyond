@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added preference for default font for new documents.
+
 ### Fixed
 
 - Fixed reference image dragging to respect the current zoom level.

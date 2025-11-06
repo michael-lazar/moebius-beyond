@@ -105,8 +105,9 @@ async function open_new_document() {
     const group = prefs.get("group");
     let rows = Number.parseInt(prefs.get("new_document_rows"));
     rows = rows >= 1 && rows <= 3000 ? rows : 25;
+    const font_name = prefs.get("new_document_font");
 
-    win.send("new_document", { rows, author, group });
+    win.send("new_document", { rows, author, group, font_name });
 }
 
 menu.on("open_new_document", open_new_document);
@@ -183,8 +184,8 @@ menu.on("open_in_current_window", (win) => {
 
 async function preferences() {
     const preferences = await window.static("app/html/preferences.html", {
-        width: 480,
-        height: 690,
+        width: 530,
+        height: 725,
     });
     preferences.send("prefs", prefs.get_all());
     if (options.showDevTools) {

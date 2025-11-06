@@ -1,6 +1,7 @@
 const electron = require("electron");
 const remote = require("@electron/remote");
 const { open_box } = require("../senders");
+const { get_all_font_names } = require("../libtextmode/font_lookup");
 let backup_folder_value;
 
 function $(name) {
@@ -19,6 +20,7 @@ function prefs({
     unsaved_changes,
     scroll_margin,
     new_document_rows,
+    new_document_font,
     retention,
     smallscale_guide,
     debug,
@@ -38,6 +40,7 @@ function prefs({
     $("unsaved_changes").checked = unsaved_changes;
     $("scroll_margin").value = scroll_margin;
     $("new_document_rows").value = new_document_rows;
+    $("new_document_font").value = new_document_font;
     $("retention").value = retention;
     $("smallscale_guide").checked = smallscale_guide;
     $("debug").checked = debug;
@@ -94,6 +97,10 @@ function scroll_margin() {
 
 function new_document_rows() {
     update("new_document_rows", $("new_document_rows").value);
+}
+
+function new_document_font() {
+    update("new_document_font", $("new_document_font").value);
 }
 
 function smallscale_guide() {
@@ -169,6 +176,15 @@ function override_submit(event) {
 document.addEventListener(
     "DOMContentLoaded",
     (event) => {
+        const fontSelect = $("new_document_font");
+        const fontNames = get_all_font_names();
+        for (const fontName of fontNames) {
+            const option = document.createElement("option");
+            option.value = fontName;
+            option.textContent = fontName;
+            fontSelect.appendChild(option);
+        }
+
         $("nick").addEventListener("keydown", override_submit, true);
         $("nick").addEventListener("input", (event) => nick(), true);
         $("group").addEventListener("keydown", override_submit, true);
@@ -184,6 +200,7 @@ document.addEventListener(
         $("scroll_margin").addEventListener("keydown", override_submit, true);
         $("new_document_rows").addEventListener("input", (event) => new_document_rows(), true);
         $("new_document_rows").addEventListener("keydown", override_submit, true);
+        $("new_document_font").addEventListener("change", (event) => new_document_font(), true);
         $("retention").addEventListener("change", retention, true);
         $("smallscale_guide").addEventListener("change", (event) => smallscale_guide(), true);
         $("debug").addEventListener("change", (event) => debug(), true);
