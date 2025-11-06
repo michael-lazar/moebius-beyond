@@ -3991,5 +3991,6 @@ class MenuEvent extends events.EventEmitter {
 
 const event = new MenuEvent();
 
+event.get_all_font_names = get_all_font_names;
+
 module.exports = event;
-module.exports.get_all_font_names = get_all_font_names;
