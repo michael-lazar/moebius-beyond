@@ -4,7 +4,7 @@
 
 ### Added
 
-- Added a configurable default font preference (defaults to IBM CP 437 when left blank).
+- Added a configurable default font preference (defaults to IBM VGA when left blank).
 
 ### Fixed
 

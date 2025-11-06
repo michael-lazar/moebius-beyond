@@ -107,7 +107,7 @@ async function open_new_document() {
     rows = rows >= 1 && rows <= 3000 ? rows : 25;
     let font_name = prefs.get("default_font");
     if (!font_name || font_name.trim() === "") {
-        font_name = "IBM CP 437";
+        font_name = "IBM VGA";
     }
 
     win.send("new_document", { rows, author, group, font_name });

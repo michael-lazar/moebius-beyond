@@ -3391,7 +3391,7 @@ function font_menu_template(win) {
                 click() {
                     let font_name = prefs.get("default_font");
                     if (!font_name || font_name.trim() === "") {
-                        font_name = "IBM CP 437";
+                        font_name = "IBM VGA";
                     }
                     win.send("change_font", font_name);
                 },

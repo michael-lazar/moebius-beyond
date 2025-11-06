@@ -158,7 +158,7 @@ class Font {
      * @param {boolean} [options.use_9px_font]
      * @returns {Promise<void>}
      */
-    async load({ name = "IBM CP 437", bytes, use_9px_font = false }) {
+    async load({ name = "IBM VGA", bytes, use_9px_font = false }) {
         if (bytes) {
             //If we load XBIN, we check the font from the XBIN file so we don't need to load a font
             if (this.name) {
