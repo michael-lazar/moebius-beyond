@@ -1,6 +1,7 @@
 const electron = require("electron");
 const remote = require("@electron/remote");
 const { open_box } = require("../senders");
+const menu = require("../menu");
 let backup_folder_value;
 
 function $(name) {
@@ -19,6 +20,7 @@ function prefs({
     unsaved_changes,
     scroll_margin,
     new_document_rows,
+    default_font,
     retention,
     smallscale_guide,
     debug,
@@ -38,6 +40,7 @@ function prefs({
     $("unsaved_changes").checked = unsaved_changes;
     $("scroll_margin").value = scroll_margin;
     $("new_document_rows").value = new_document_rows;
+    $("default_font").value = default_font;
     $("retention").value = retention;
     $("smallscale_guide").checked = smallscale_guide;
     $("debug").checked = debug;
@@ -94,6 +97,10 @@ function scroll_margin() {
 
 function new_document_rows() {
     update("new_document_rows", $("new_document_rows").value);
+}
+
+function default_font() {
+    update("default_font", $("default_font").value);
 }
 
 function smallscale_guide() {
@@ -169,6 +176,14 @@ function override_submit(event) {
 document.addEventListener(
     "DOMContentLoaded",
     (event) => {
+        const font_names = menu.get_all_font_names();
+        const font_select = $("default_font");
+        for (const font_name of font_names) {
+            const option = document.createElement("option");
+            option.value = font_name;
+            option.textContent = font_name;
+            font_select.appendChild(option);
+        }
         $("nick").addEventListener("keydown", override_submit, true);
         $("nick").addEventListener("input", (event) => nick(), true);
         $("group").addEventListener("keydown", override_submit, true);
@@ -184,6 +199,7 @@ document.addEventListener(
         $("scroll_margin").addEventListener("keydown", override_submit, true);
         $("new_document_rows").addEventListener("input", (event) => new_document_rows(), true);
         $("new_document_rows").addEventListener("keydown", override_submit, true);
+        $("default_font").addEventListener("change", default_font, true);
         $("retention").addEventListener("change", retention, true);
         $("smallscale_guide").addEventListener("change", (event) => smallscale_guide(), true);
         $("debug").addEventListener("change", (event) => debug(), true);

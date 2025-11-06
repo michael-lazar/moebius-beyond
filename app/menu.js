@@ -1927,6 +1927,18 @@ const viler_font_list = {
         "9THWAVE (8x14)": 14,
     },
 };
+
+function get_all_font_names() {
+    const fonts = [];
+    for (const category in font_list) {
+        fonts.push(...Object.keys(font_list[category]));
+    }
+    for (const category in viler_font_list) {
+        fonts.push(...Object.keys(viler_font_list[category]));
+    }
+    return fonts.sort();
+}
+
 const lospec_palette_names = [];
 const lospec_palette_list = {
     Isolated16: "Isolated16",
@@ -3980,3 +3992,4 @@ class MenuEvent extends events.EventEmitter {
 const event = new MenuEvent();
 
 module.exports = event;
+module.exports.get_all_font_names = get_all_font_names;

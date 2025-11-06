@@ -86,6 +86,10 @@ select {
     outline: none;
 }
 
+#default_font {
+    width: 250px;
+}
+
 #timestamp_box {
     margin-top: 8px;
 }
