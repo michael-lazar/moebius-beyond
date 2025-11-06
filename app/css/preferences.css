@@ -6,42 +6,32 @@ body {
 }
 
 form {
-    width: 400px;
+    max-width: 800px;
     margin: 0px auto;
+    padding: 20px;
 }
 
 form > div {
-    margin: 2px 0px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 0px;
 }
 
 form > div:first-child {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 label {
-    display: inline-block;
-    width: 300px;
     text-align: right;
-    height: 32px;
-    line-height: 32px;
-}
-
-label.text_box {
-    width: 150px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-label.number_box {
-    width: 300px;
+    white-space: nowrap;
 }
 
 input {
-    vertical-align: top;
-    margin: 4px;
+    margin: 0px;
     height: 16px;
     color: white;
-    display: inline-block;
     border: 1px solid #aaaaaa;
     background: none;
     font-family: var(--system-font), serif;
@@ -51,12 +41,12 @@ input {
 }
 
 input[type="text"] {
-    width: 190px;
+    max-width: 300px;
 }
 
 input[type="number"] {
     text-align: center;
-    width: 25px;
+    width: 50px;
     font-size: 12px;
 }
 
@@ -72,43 +62,41 @@ input[type="number"]:focus {
 }
 
 input[type="checkbox"] {
-    position: relative;
-    top: 4px;
     width: 16px;
     height: 16px;
     line-height: 16px;
+    justify-self: start;
 }
 
 select {
     line-height: 24px;
-    width: 90px;
+    width: 120px;
     height: 24px;
     outline: none;
 }
 
 #timestamp_box {
     margin-top: 8px;
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 #backup_folder {
-    height: 24px;
-    line-height: 24px;
-    float: left;
-    display: block;
-    width: calc(100% - 84px);
+    flex: 1;
     text-align: right;
 }
 
 button {
-    float: right;
     color: #aaaaaa;
     border-radius: 4px;
-    margin-left: 8px;
-    width: 70px;
+    padding: 4px 12px;
     height: 24px;
     background: none;
     border: 1px solid #aaaaaa;
     outline: none;
+    white-space: nowrap;
 }
 
 button:active {
@@ -119,13 +107,13 @@ button:active {
 #reset_fkeys_container {
     position: absolute;
     bottom: 8px;
-    left: calc((100% - 250px) / 2);
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
 }
 
 #reset_fkeys {
-    position: relative;
-    display: block;
-    float: none;
-    margin: 0px auto;
-    width: 250px;
+    padding: 4px 16px;
+    width: auto;
 }
