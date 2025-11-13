@@ -12,9 +12,9 @@ This repo is a fork of the original project. The rough timeline is as follows...
 - **2025** - michael-lazar forks as [Moebius XBIN Ultimate Edition](https://github.com/michael-lazar/moebius-xbin-ultimate) to add more quality of life improvements.
 - **2025** - michael-lazar renames to [Moebius Beyond](https://github.com/michael-lazar/moebius-beyond) to distinguish from the upstream project.
 
-There was an early version of Moebius that ran directly in a web browser. This was _also_ forked, and is maintained over at [moebius-web](https://github.com/xero/moebius-web) by xero.
+There was an early version of Moebius that ran directly in a web browser. This was _also_ forked (and heavily rewritten to add new features including support for tablets/phones), and is actively maintained over at [text0wnz](https://github.com/xero/text0wnz) by xero.
 
-If you're only interested in traditional "scene" ANSI Art, you may prefer the original Moebius. The original project is still maintained (semi-actively) and is the only one that supports the collaborative server feature.
+If you're only interested in traditional "scene" ANSI Art, you may prefer the original Moebius. The original project is still maintained (semi-actively) and supports the collaborative server feature.
 
 ## New features
 
