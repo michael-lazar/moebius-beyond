@@ -4,14 +4,16 @@
 
 ### Added
 
+- Improved the cropping tool to preserve undo/redo history.
 - Added a preference to override the default font for new documents.
+- Added click-and-drag UX for moving selections without keyboard
+  shortcuts.
 
 ### Fixed
 
-- Fixed shift + mouse wheel to only adjust reference image opacity
-  without horizontal scrolling.
+- Fixed shift+mouse wheel to only adjust the reference image opacity
+  without scrolling horizontally.
 - Fixed reference image dragging to respect the current zoom level.
-- Fixed the crop tool to preserve undo/redo history when cropping.
 
 ## v3.5.0 (2025-10-21)
 
