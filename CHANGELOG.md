@@ -4,11 +4,12 @@
 
 ### Added
 
-- Added preference for default font for new documents.
+- Added a preference to override the default font for new documents.
 
 ### Fixed
 
 - Fixed reference image dragging to respect the current zoom level.
+- Fixed the crop tool to preserve undo/redo history when cropping.
 
 ## v3.5.0 (2025-10-21)
 

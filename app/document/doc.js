@@ -1067,20 +1067,22 @@ class TextModeDoc extends events.EventEmitter {
     /**
      * @param {number} columns
      * @param {number} rows
+     * @param {number} [offsetX=0]
+     * @param {number} [offsetY=0]
      * @returns {void}
      */
-    resize(columns, rows) {
+    resize(columns, rows, offsetX = 0, offsetY = 0) {
         this.undo_history.push_resize();
 
-        const min_rows = Math.min(this.rows, rows);
-        const min_columns = Math.min(this.columns, columns);
+        const min_rows = Math.min(this.rows - offsetY, rows);
+        const min_columns = Math.min(this.columns - offsetX, columns);
         const new_data = new Array(columns * rows);
         for (let i = 0; i < new_data.length; i++) {
             new_data[i] = { code: 32, fg: 7, bg: 0 };
         }
         for (let y = 0; y < min_rows; y++) {
             for (let x = 0; x < min_columns; x++) {
-                new_data[y * columns + x] = this.data[y * this.columns + x];
+                new_data[y * columns + x] = this.data[(y + offsetY) * this.columns + (x + offsetX)];
             }
         }
         this._tmdata.data = new_data;
@@ -1548,24 +1550,13 @@ class TextModeDoc extends events.EventEmitter {
     }
 
     /**
-     * @param {App.Blocks} blocks
+     * @param {App.Selection} selection
      * @returns {void}
      */
-    crop(blocks) {
-        this.new_document({
-            title: this.title,
-            author: this.author,
-            group: this.group,
-            date: this.date,
-            palette: this.palette,
-            font_bytes: this.font_bytes,
-            font_name: this.font_name,
-            use_9px_font: this.use_9px_font,
-            ice_colors: this.ice_colors,
-            columns: blocks.columns,
-            rows: blocks.rows,
-            data: blocks.data,
-        });
+    crop(selection) {
+        const columns = selection.dx - selection.sx + 1;
+        const rows = selection.dy - selection.sy + 1;
+        this.resize(columns, rows, selection.sx, selection.sy);
     }
 
     /**

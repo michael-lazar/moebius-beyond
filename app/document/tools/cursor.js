@@ -989,7 +989,13 @@ class Cursor {
      */
     crop() {
         if (this.mode == modes.SELECTION) this.start_copy();
-        doc.crop(this.operation_blocks);
+        const selection = this.reorientate_selection();
+        doc.crop(selection);
+        // Reset cursor to origin to avoid invalid coordinates when calling deselect()
+        this.x = 0;
+        this.y = 0;
+        this.selection.sx = 0;
+        this.selection.sy = 0;
         this.deselect();
     }
 
