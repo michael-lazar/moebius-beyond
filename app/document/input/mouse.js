@@ -294,6 +294,9 @@ class MouseListener extends events.EventEmitter {
     }
 
     handleRefImageOpacity(event) {
+        // Prevent browser's default shift+wheel horizontal scroll behavior
+        event.preventDefault();
+
         if (!this.listening_to_wheel) return;
 
         const normalized = this.normalizeWheel(event);

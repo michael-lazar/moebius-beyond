@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed shift + mouse wheel to only adjust reference image opacity
+  without horizontal scrolling.
 - Fixed reference image dragging to respect the current zoom level.
 - Fixed the crop tool to preserve undo/redo history when cropping.
 
