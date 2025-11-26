@@ -1,9 +1,9 @@
-const electron = require("electron");
 const { on, send, send_sync, open_box } = require("../../senders");
 const doc = require("../doc");
 const palette = require("../palette");
 const keyboard = require("../input/keyboard");
 const events = require("events");
+const { pathToFileURL } = require("url");
 
 let interval, guide_columns, guide_rows, grid_columns;
 
@@ -29,13 +29,13 @@ function get_var(name) {
 function open_reference_image({ file } = { file: undefined }) {
     if (!file) {
         const files = open_box({
-            filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }],
+            filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "webp", "gif", "svg"] }],
         });
         if (files === undefined || files.length === 0) return;
         file = files[0];
     }
 
-    $("reference_image").src = electron.nativeImage.createFromPath(file).toDataURL();
+    $("reference_image").src = pathToFileURL(file).href;
     $("reference_image").classList.remove("closed");
     set_var("reference-control-opacity", 1.0);
 

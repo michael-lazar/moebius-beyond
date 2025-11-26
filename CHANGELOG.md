@@ -8,6 +8,7 @@
 - Added a preference to override the default font for new documents.
 - Added click-and-drag UX for moving selections without keyboard
   shortcuts.
+- Added support for WebP, GIF, and SVG reference images.
 
 ### Fixed
 
