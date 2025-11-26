@@ -5,7 +5,7 @@ const doc = require("../doc");
 const { open_reference_image } = require("../ui/ui");
 
 const document_extensions = [".mbd", ".ans", ".asc", ".diz", ".nfo", ".txt", ".xb", ".bin"];
-const reference_extensions = [".png", ".jpg", ".jpeg"];
+const reference_extensions = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"];
 const font_extensions = [
     ".f06",
     ".f07",

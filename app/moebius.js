@@ -201,7 +201,7 @@ async function open_reference_window(win, files = null) {
             filters: [
                 {
                     name: "Images",
-                    extensions: ["png", "jpg", "jpeg"],
+                    extensions: ["png", "jpg", "jpeg", "webp", "gif", "svg"],
                 },
             ],
             properties: ["openFile", "multiSelections"],
