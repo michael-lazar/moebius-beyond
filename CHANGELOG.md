@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.6.0 (2025-11-28)
+
 ### Added
 
 - Improved the cropping tool to preserve undo/redo history.
