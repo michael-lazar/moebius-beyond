@@ -2,13 +2,10 @@ const electron = require("electron");
 
 let imageElement = null;
 let containerElement = null;
+let zoomSlider = null;
 
-// Zoom state
-let currentScale = 1;
-let fitScale = 1;
-let isAtFitScale = true;
-
-// Pan state
+let baseScale = 1;
+let zoomMultiplier = 1;
 let panX = 0;
 let panY = 0;
 let isDragging = false;
@@ -17,84 +14,99 @@ let dragStartY = 0;
 let dragStartPanX = 0;
 let dragStartPanY = 0;
 
-// Constants
-const ZOOM_STEP = 0.1;
-const MAX_SCALE = 10;
+const MAX_ZOOM_MULTIPLIER = 10;
 
 document.addEventListener("DOMContentLoaded", () => {
     imageElement = document.getElementById("reference-image");
     containerElement = document.getElementById("image-container");
+    zoomSlider = document.getElementById("zoom-slider");
 
-    // Event listeners
     containerElement.addEventListener("mousedown", handleMouseDown);
     containerElement.addEventListener("mousemove", handleMouseMove);
     containerElement.addEventListener("mouseup", handleMouseUp);
     containerElement.addEventListener("mouseleave", handleMouseUp);
+    zoomSlider.addEventListener("input", handleSliderChange);
+    window.addEventListener("resize", handleResize);
 });
 
 electron.ipcRenderer.on("image-path", (event, imagePath) => {
     imageElement.src = imagePath;
     imageElement.onload = () => {
-        calculateFitScale();
-        applyFitScale();
-        updateTransform();
+        calculateBaseScale();
+        resetZoom();
     };
 });
 
-function calculateFitScale() {
+function calculateBaseScale() {
     const containerWidth = containerElement.clientWidth;
-    const containerHeight = containerElement.clientHeight - 40; // Account for toolbar
+    const containerHeight = containerElement.clientHeight;
     const imageWidth = imageElement.naturalWidth;
     const imageHeight = imageElement.naturalHeight;
 
-    // Calculate scale to fit within window
     const scaleX = containerWidth / imageWidth;
     const scaleY = containerHeight / imageHeight;
-    fitScale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
+    baseScale = Math.min(scaleX, scaleY, 1);
 }
 
-function applyFitScale() {
-    currentScale = fitScale;
-    panX = 0;
-    panY = 0;
-    isAtFitScale = true;
-    containerElement.classList.remove("panning");
+function getCurrentScale() {
+    return baseScale * zoomMultiplier;
+}
+
+function constrainPan() {
+    const currentScale = getCurrentScale();
+    const containerWidth = containerElement.clientWidth;
+    const containerHeight = containerElement.clientHeight;
+    const imageWidth = imageElement.naturalWidth * currentScale;
+    const imageHeight = imageElement.naturalHeight * currentScale;
+
+    const maxPanX = Math.max(0, (imageWidth - containerWidth) / 2);
+    const maxPanY = Math.max(0, (imageHeight - containerHeight) / 2);
+
+    panX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+    panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
 }
 
 function updateTransform() {
+    constrainPan();
+    const currentScale = getCurrentScale();
     imageElement.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
 }
 
-function zoomIn() {
-    const newScale = Math.min(MAX_SCALE, currentScale + ZOOM_STEP);
-    if (newScale !== currentScale) {
-        currentScale = newScale;
-        isAtFitScale = false;
-        containerElement.classList.add("panning");
-        updateTransform();
-    }
+function updateSlider() {
+    if (!zoomSlider) return;
+    const sliderValue = ((zoomMultiplier - 1) / (MAX_ZOOM_MULTIPLIER - 1)) * 100;
+    zoomSlider.value = Math.max(0, Math.min(100, sliderValue));
 }
 
-function zoomOut() {
-    const newScale = Math.max(fitScale, currentScale - ZOOM_STEP);
-    if (newScale !== currentScale) {
-        currentScale = newScale;
-        isAtFitScale = Math.abs(currentScale - fitScale) < 0.001;
-        if (isAtFitScale) {
-            containerElement.classList.remove("panning");
-        }
-        updateTransform();
+function handleSliderChange(e) {
+    const sliderValue = parseFloat(e.target.value);
+    zoomMultiplier = 1 + (sliderValue / 100) * (MAX_ZOOM_MULTIPLIER - 1);
+
+    if (zoomMultiplier <= 1.001) {
+        containerElement.classList.remove("panning");
+    } else {
+        containerElement.classList.add("panning");
     }
+
+    updateTransform();
+}
+
+function handleResize() {
+    calculateBaseScale();
+    updateTransform();
 }
 
 function resetZoom() {
-    applyFitScale();
+    zoomMultiplier = 1;
+    panX = 0;
+    panY = 0;
+    containerElement.classList.remove("panning");
+    updateSlider();
     updateTransform();
 }
 
 function handleMouseDown(e) {
-    // Only allow dragging when not at fit scale
-    if (isAtFitScale) return;
+    if (zoomMultiplier <= 1.001) return;
 
     isDragging = true;
     dragStartX = e.clientX;
@@ -116,14 +128,12 @@ function handleMouseMove(e) {
     updateTransform();
 }
 
-function handleMouseUp(e) {
+function handleMouseUp() {
     if (isDragging) {
         isDragging = false;
         containerElement.classList.remove("dragging");
     }
 }
 
-// Expose functions to global scope for button onclick handlers
-window.zoomIn = zoomIn;
-window.zoomOut = zoomOut;
+// @ts-ignore
 window.resetZoom = resetZoom;

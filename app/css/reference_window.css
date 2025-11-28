@@ -43,6 +43,13 @@ body {
     overflow: hidden;
 }
 
+#toolbar::before,
+#toolbar::after {
+    content: '';
+    flex: 1;
+    min-width: 0;
+}
+
 #toolbar button {
     background-color: #292c33;
     color: white;
@@ -60,4 +67,46 @@ body {
 
 #toolbar button:active {
     background-color: #3a3d44;
+}
+
+#toolbar label {
+    color: var(--mid-color);
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+#zoom-slider {
+    width: 150px;
+    height: 4px;
+    background: #3a3d44;
+    outline: none;
+    border-radius: 2px;
+    -webkit-appearance: none;
+}
+
+#zoom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--mid-color);
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+#zoom-slider::-webkit-slider-thumb:hover {
+    background: white;
+}
+
+#zoom-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--mid-color);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+}
+
+#zoom-slider::-moz-range-thumb:hover {
+    background: white;
 }
