@@ -4,6 +4,12 @@ let imageElement = null;
 let containerElement = null;
 let zoomSlider = null;
 let grayscaleButton = null;
+let gridCanvas = null;
+let gridCtx = null;
+let gridToggleButton = null;
+let gridSizeSlider = null;
+let gridVerticalOffsetSlider = null;
+let gridHorizontalOffsetSlider = null;
 
 let baseScale = 1;
 let zoomMultiplier = 1;
@@ -15,6 +21,10 @@ let dragStartY = 0;
 let dragStartPanX = 0;
 let dragStartPanY = 0;
 let isGrayscale = false;
+let isGridVisible = false;
+let gridSize = 100;
+let gridVerticalOffset = 0;
+let gridHorizontalOffset = 0;
 
 const MAX_ZOOM_MULTIPLIER = 10;
 
@@ -23,12 +33,23 @@ document.addEventListener("DOMContentLoaded", () => {
     containerElement = document.getElementById("image-container");
     zoomSlider = document.getElementById("zoom-slider");
     grayscaleButton = document.getElementById("grayscale-button");
+    gridCanvas = document.getElementById("grid-canvas");
+    gridCtx = gridCanvas.getContext("2d");
+    gridToggleButton = document.getElementById("grid-toggle-button");
+    gridSizeSlider = document.getElementById("grid-size-slider");
+    gridVerticalOffsetSlider = document.getElementById("grid-vertical-offset-slider");
+    gridHorizontalOffsetSlider = document.getElementById("grid-horizontal-offset-slider");
+
+    resizeGridCanvas();
 
     containerElement.addEventListener("mousedown", handleMouseDown);
     containerElement.addEventListener("mousemove", handleMouseMove);
     containerElement.addEventListener("mouseup", handleMouseUp);
     containerElement.addEventListener("mouseleave", handleMouseUp);
-    zoomSlider.addEventListener("input", handleSliderChange);
+    zoomSlider.addEventListener("input", handleZoomSliderChange);
+    gridSizeSlider.addEventListener("input", handleGridSizeChange);
+    gridVerticalOffsetSlider.addEventListener("input", handleGridVerticalOffsetChange);
+    gridHorizontalOffsetSlider.addEventListener("input", handleGridHorizontalOffsetChange);
     window.addEventListener("resize", handleResize);
 });
 
@@ -75,20 +96,28 @@ function updateTransform() {
     imageElement.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
 }
 
-function updateSlider() {
+function updateZoomSlider() {
     if (!zoomSlider) return;
     const sliderValue = ((zoomMultiplier - 1) / (MAX_ZOOM_MULTIPLIER - 1)) * 100;
     zoomSlider.value = Math.max(0, Math.min(100, sliderValue));
 }
 
-function handleSliderChange(e) {
+function enablePanning() {
+    containerElement.classList.add("panning");
+}
+
+function disablePanning() {
+    containerElement.classList.remove("panning");
+}
+
+function handleZoomSliderChange(e) {
     const sliderValue = parseFloat(e.target.value);
     zoomMultiplier = 1 + (sliderValue / 100) * (MAX_ZOOM_MULTIPLIER - 1);
 
     if (zoomMultiplier <= 1.001) {
-        containerElement.classList.remove("panning");
+        disablePanning();
     } else {
-        containerElement.classList.add("panning");
+        enablePanning();
     }
 
     updateTransform();
@@ -97,17 +126,121 @@ function handleSliderChange(e) {
 function handleResize() {
     calculateBaseScale();
     updateTransform();
+    resizeGridCanvas();
+    drawGrid();
+}
+
+function resizeGridCanvas() {
+    if (!gridCanvas) return;
+    gridCanvas.width = containerElement.clientWidth;
+    gridCanvas.height = containerElement.clientHeight;
+}
+
+function drawGrid() {
+    if (!gridCanvas || !gridCtx || !isGridVisible) {
+        if (gridCanvas) {
+            gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+        }
+        return;
+    }
+
+    const canvasWidth = gridCanvas.width;
+    const canvasHeight = gridCanvas.height;
+
+    gridCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    const offsetX = (gridHorizontalOffset / 100) * gridSize;
+    const offsetY = (gridVerticalOffset / 100) * gridSize;
+
+    gridCtx.lineWidth = 1;
+
+    for (let x = offsetX; x < canvasWidth; x += gridSize) {
+        gridCtx.strokeStyle = "black";
+        gridCtx.beginPath();
+        gridCtx.moveTo(x, 0);
+        gridCtx.lineTo(x, canvasHeight);
+        gridCtx.stroke();
+
+        gridCtx.strokeStyle = "white";
+        gridCtx.beginPath();
+        gridCtx.moveTo(x + 0.5, 0);
+        gridCtx.lineTo(x + 0.5, canvasHeight);
+        gridCtx.stroke();
+    }
+
+    for (let y = offsetY; y < canvasHeight; y += gridSize) {
+        gridCtx.strokeStyle = "black";
+        gridCtx.beginPath();
+        gridCtx.moveTo(0, y);
+        gridCtx.lineTo(canvasWidth, y);
+        gridCtx.stroke();
+
+        gridCtx.strokeStyle = "white";
+        gridCtx.beginPath();
+        gridCtx.moveTo(0, y + 0.5);
+        gridCtx.lineTo(canvasWidth, y + 0.5);
+        gridCtx.stroke();
+    }
+}
+
+function enableGrid() {
+    gridToggleButton.classList.add("toggled");
+    gridCanvas.style.display = "block";
+    gridSizeSlider.disabled = false;
+    gridVerticalOffsetSlider.disabled = false;
+    gridHorizontalOffsetSlider.disabled = false;
+}
+
+function disableGrid() {
+    gridToggleButton.classList.remove("toggled");
+    gridCanvas.style.display = "none";
+    gridSizeSlider.disabled = true;
+    gridVerticalOffsetSlider.disabled = true;
+    gridHorizontalOffsetSlider.disabled = true;
+}
+
+function toggleGrid() {
+    isGridVisible = !isGridVisible;
+    if (isGridVisible) {
+        enableGrid();
+        drawGrid();
+    } else {
+        disableGrid();
+    }
+}
+
+function enableGrayscale() {
+    imageElement.classList.add("grayscale");
+    grayscaleButton.classList.add("toggled");
+}
+
+function disableGrayscale() {
+    imageElement.classList.remove("grayscale");
+    grayscaleButton.classList.remove("toggled");
 }
 
 function toggleGrayscale() {
     isGrayscale = !isGrayscale;
     if (isGrayscale) {
-        imageElement.classList.add("grayscale");
-        grayscaleButton.classList.add("toggled");
+        enableGrayscale();
     } else {
-        imageElement.classList.remove("grayscale");
-        grayscaleButton.classList.remove("toggled");
+        disableGrayscale();
     }
+}
+
+function handleGridSizeChange(e) {
+    gridSize = parseFloat(e.target.value);
+    drawGrid();
+}
+
+function handleGridVerticalOffsetChange(e) {
+    gridVerticalOffset = parseFloat(e.target.value);
+    drawGrid();
+}
+
+function handleGridHorizontalOffsetChange(e) {
+    gridHorizontalOffset = parseFloat(e.target.value);
+    drawGrid();
 }
 
 function reset() {
@@ -115,10 +248,17 @@ function reset() {
     panX = 0;
     panY = 0;
     isGrayscale = false;
-    containerElement.classList.remove("panning");
-    imageElement.classList.remove("grayscale");
-    grayscaleButton.classList.remove("toggled");
-    updateSlider();
+    isGridVisible = false;
+    gridSize = 100;
+    gridVerticalOffset = 0;
+    gridHorizontalOffset = 0;
+    disablePanning();
+    disableGrayscale();
+    disableGrid();
+    gridSizeSlider.value = "100";
+    gridVerticalOffsetSlider.value = "0";
+    gridHorizontalOffsetSlider.value = "0";
+    updateZoomSlider();
     updateTransform();
 }
 
@@ -156,3 +296,5 @@ function handleMouseUp() {
 window.reset = reset;
 // @ts-ignore
 window.toggleGrayscale = toggleGrayscale;
+// @ts-ignore
+window.toggleGrid = toggleGrid;
