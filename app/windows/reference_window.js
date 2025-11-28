@@ -94,6 +94,7 @@ function updateTransform() {
     constrainPan();
     const currentScale = getCurrentScale();
     imageElement.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
+    drawGrid();
 }
 
 function updateZoomSlider() {
@@ -137,8 +138,8 @@ function resizeGridCanvas() {
 }
 
 function drawGrid() {
-    if (!gridCanvas || !gridCtx || !isGridVisible) {
-        if (gridCanvas) {
+    if (!gridCanvas || !gridCtx || !isGridVisible || !imageElement.naturalWidth) {
+        if (gridCanvas && gridCtx) {
             gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
         }
         return;
@@ -146,41 +147,34 @@ function drawGrid() {
 
     const canvasWidth = gridCanvas.width;
     const canvasHeight = gridCanvas.height;
-
     gridCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    gridCtx.save();
+    gridCtx.globalAlpha = 0.8;
+    gridCtx.strokeStyle = "white";
+    gridCtx.lineWidth = 1 / getCurrentScale();
+
+    gridCtx.translate(canvasWidth / 2 + panX, canvasHeight / 2 + panY);
+    gridCtx.scale(getCurrentScale(), getCurrentScale());
+    gridCtx.translate(-imageElement.naturalWidth / 2, -imageElement.naturalHeight / 2);
 
     const offsetX = (gridHorizontalOffset / 100) * gridSize;
     const offsetY = (gridVerticalOffset / 100) * gridSize;
 
-    gridCtx.lineWidth = 1;
+    gridCtx.beginPath();
 
-    for (let x = offsetX; x < canvasWidth; x += gridSize) {
-        gridCtx.strokeStyle = "black";
-        gridCtx.beginPath();
+    for (let x = offsetX; x < imageElement.naturalWidth; x += gridSize) {
         gridCtx.moveTo(x, 0);
-        gridCtx.lineTo(x, canvasHeight);
-        gridCtx.stroke();
-
-        gridCtx.strokeStyle = "white";
-        gridCtx.beginPath();
-        gridCtx.moveTo(x + 0.5, 0);
-        gridCtx.lineTo(x + 0.5, canvasHeight);
-        gridCtx.stroke();
+        gridCtx.lineTo(x, imageElement.naturalHeight);
     }
 
-    for (let y = offsetY; y < canvasHeight; y += gridSize) {
-        gridCtx.strokeStyle = "black";
-        gridCtx.beginPath();
+    for (let y = offsetY; y < imageElement.naturalHeight; y += gridSize) {
         gridCtx.moveTo(0, y);
-        gridCtx.lineTo(canvasWidth, y);
-        gridCtx.stroke();
-
-        gridCtx.strokeStyle = "white";
-        gridCtx.beginPath();
-        gridCtx.moveTo(0, y + 0.5);
-        gridCtx.lineTo(canvasWidth, y + 0.5);
-        gridCtx.stroke();
+        gridCtx.lineTo(imageElement.naturalWidth, y);
     }
+
+    gridCtx.stroke();
+    gridCtx.restore();
 }
 
 function enableGrid() {

@@ -9,6 +9,8 @@
 - Added click-and-drag UX for moving selections without keyboard
   shortcuts.
 - Added support for WebP, GIF, and SVG reference images.
+- Improved the reference image window to support zooming and drawing
+  grids.
 
 ### Fixed
 
