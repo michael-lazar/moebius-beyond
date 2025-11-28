@@ -12,9 +12,12 @@
             <img id="reference-image" draggable="false" />
         </div>
         <div id="toolbar">
-            <label for="zoom-slider">Zoom</label>
-            <input type="range" id="zoom-slider" min="0" max="100" value="0" />
-            <button onclick="resetZoom()">Reset</button>
+            <div class="toolbar-left">
+                <label for="zoom-slider">Zoom</label>
+                <input type="range" id="zoom-slider" min="0" max="100" value="0" />
+                <button id="grayscale-button" onclick="toggleGrayscale()">B&W</button>
+            </div>
+            <button onclick="reset()">Reset</button>
         </div>
     </body>
 </html>

@@ -215,7 +215,7 @@ async function open_reference_window(win, files = null) {
         const refWin = await new_win("app/html/reference_window.html", {
             width: 480,
             height: 340,
-            minWidth: 240,
+            minWidth: 260,
             minHeight: 200,
             parent: win,
             maximizable: false,

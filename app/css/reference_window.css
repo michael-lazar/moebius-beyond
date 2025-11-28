@@ -32,22 +32,26 @@ body {
     -webkit-user-drag: none;
 }
 
+#reference-image.grayscale {
+    filter: grayscale(100%);
+}
+
 #toolbar {
     height: 40px;
     background-color: #1e1f23;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding: 0 8px;
     gap: 8px;
     border-top: 1px solid #000;
     overflow: hidden;
 }
 
-#toolbar::before,
-#toolbar::after {
-    content: '';
-    flex: 1;
-    min-width: 0;
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 #toolbar button {
@@ -69,6 +73,11 @@ body {
     background-color: #3a3d44;
 }
 
+#toolbar button.toggled {
+    background-color: #3a3d44;
+    border-color: #4a4d54;
+}
+
 #toolbar label {
     color: var(--mid-color);
     font-size: 11px;
@@ -76,7 +85,7 @@ body {
 }
 
 #zoom-slider {
-    width: 150px;
+    width: 75px;
     height: 4px;
     background: #3a3d44;
     outline: none;

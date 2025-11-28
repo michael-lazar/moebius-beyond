@@ -3,6 +3,7 @@ const electron = require("electron");
 let imageElement = null;
 let containerElement = null;
 let zoomSlider = null;
+let grayscaleButton = null;
 
 let baseScale = 1;
 let zoomMultiplier = 1;
@@ -13,6 +14,7 @@ let dragStartX = 0;
 let dragStartY = 0;
 let dragStartPanX = 0;
 let dragStartPanY = 0;
+let isGrayscale = false;
 
 const MAX_ZOOM_MULTIPLIER = 10;
 
@@ -20,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     imageElement = document.getElementById("reference-image");
     containerElement = document.getElementById("image-container");
     zoomSlider = document.getElementById("zoom-slider");
+    grayscaleButton = document.getElementById("grayscale-button");
 
     containerElement.addEventListener("mousedown", handleMouseDown);
     containerElement.addEventListener("mousemove", handleMouseMove);
@@ -33,7 +36,7 @@ electron.ipcRenderer.on("image-path", (event, imagePath) => {
     imageElement.src = imagePath;
     imageElement.onload = () => {
         calculateBaseScale();
-        resetZoom();
+        reset();
     };
 });
 
@@ -96,11 +99,25 @@ function handleResize() {
     updateTransform();
 }
 
-function resetZoom() {
+function toggleGrayscale() {
+    isGrayscale = !isGrayscale;
+    if (isGrayscale) {
+        imageElement.classList.add("grayscale");
+        grayscaleButton.classList.add("toggled");
+    } else {
+        imageElement.classList.remove("grayscale");
+        grayscaleButton.classList.remove("toggled");
+    }
+}
+
+function reset() {
     zoomMultiplier = 1;
     panX = 0;
     panY = 0;
+    isGrayscale = false;
     containerElement.classList.remove("panning");
+    imageElement.classList.remove("grayscale");
+    grayscaleButton.classList.remove("toggled");
     updateSlider();
     updateTransform();
 }
@@ -136,4 +153,6 @@ function handleMouseUp() {
 }
 
 // @ts-ignore
-window.resetZoom = resetZoom;
+window.reset = reset;
+// @ts-ignore
+window.toggleGrayscale = toggleGrayscale;
