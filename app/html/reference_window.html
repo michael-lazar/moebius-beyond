@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Reference Image</title>
+        <link rel="stylesheet" href="../css/global.css" />
+        <link rel="stylesheet" href="../css/reference_window.css" />
+        <script src="../windows/reference_window.js"></script>
+    </head>
+    <body>
+        <div id="image-container">
+            <img id="reference-image" draggable="false" />
+            <canvas id="grid-canvas"></canvas>
+        </div>
+        <div id="toolbar">
+            <div class="toolbar-left">
+                <label for="zoom-slider">Zoom</label>
+                <input type="range" id="zoom-slider" min="0" max="100" value="0" />
+                <button id="grid-toggle-button" onclick="toggleGrid()">Grid</button>
+                <label for="grid-size-slider">Size</label>
+                <input type="range" id="grid-size-slider" min="50" max="200" value="100" disabled />
+                <label for="grid-vertical-offset-slider">V</label>
+                <input type="range" id="grid-vertical-offset-slider" min="0" max="100" value="0" disabled />
+                <label for="grid-horizontal-offset-slider">H</label>
+                <input type="range" id="grid-horizontal-offset-slider" min="0" max="100" value="0" disabled />
+                <button id="grayscale-button" onclick="toggleGrayscale()">B&W</button>
+            </div>
+            <button onclick="reset()">Reset</button>
+        </div>
+    </body>
+</html>

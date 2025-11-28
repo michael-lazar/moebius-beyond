@@ -212,15 +212,22 @@ async function open_reference_window(win, files = null) {
     }
 
     for (const file of files) {
-        await new_win(file, {
-            width: 480,
-            height: 340,
+        const refWin = await new_win("app/html/reference_window.html", {
+            width: 600,
+            height: 600,
+            minWidth: 200,
+            minHeight: 200,
             parent: win,
             maximizable: false,
             minimizable: false,
             fullscreenable: false,
             resizable: true,
         });
+        refWin.setTitle(path.basename(file));
+        refWin.send("image-path", file);
+        if (options.showDevTools) {
+            refWin.openDevTools({ mode: "detach" });
+        }
     }
 }
 menu.on("open_reference_window", open_reference_window);
