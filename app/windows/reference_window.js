@@ -22,7 +22,7 @@ let dragStartPanX = 0;
 let dragStartPanY = 0;
 let isGrayscale = false;
 let isGridVisible = false;
-let gridSize = 100;
+let gridMultiplier = 5;
 let gridVerticalOffset = 0;
 let gridHorizontalOffset = 0;
 
@@ -74,6 +74,12 @@ function calculateBaseScale() {
 
 function getCurrentScale() {
     return baseScale * zoomMultiplier;
+}
+
+function getGridSize() {
+    if (!imageElement || !imageElement.naturalWidth) return 0;
+    const smallerDimension = Math.min(imageElement.naturalWidth, imageElement.naturalHeight);
+    return smallerDimension / gridMultiplier;
 }
 
 function constrainPan() {
@@ -158,6 +164,7 @@ function drawGrid() {
     gridCtx.scale(getCurrentScale(), getCurrentScale());
     gridCtx.translate(-imageElement.naturalWidth / 2, -imageElement.naturalHeight / 2);
 
+    const gridSize = getGridSize();
     const offsetX = (gridHorizontalOffset / 100) * gridSize;
     const offsetY = (gridVerticalOffset / 100) * gridSize;
 
@@ -223,7 +230,7 @@ function toggleGrayscale() {
 }
 
 function handleGridSizeChange(e) {
-    gridSize = parseFloat(e.target.value);
+    gridMultiplier = parseFloat(e.target.value);
     drawGrid();
 }
 
@@ -243,13 +250,13 @@ function reset() {
     panY = 0;
     isGrayscale = false;
     isGridVisible = false;
-    gridSize = 100;
+    gridMultiplier = 5;
     gridVerticalOffset = 0;
     gridHorizontalOffset = 0;
     disablePanning();
     disableGrayscale();
     disableGrid();
-    gridSizeSlider.value = "100";
+    gridSizeSlider.value = "5";
     gridVerticalOffsetSlider.value = "0";
     gridHorizontalOffsetSlider.value = "0";
     updateZoomSlider();

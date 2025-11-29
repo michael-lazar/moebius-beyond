@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Improved the range slider for the reference window drawing grid.
+
 ## v3.6.0 (2025-11-28)
 
 ### Added
