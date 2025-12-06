@@ -6,6 +6,10 @@
 
 - Improved the range slider for the reference window drawing grid.
 
+### Fixed
+
+- Fixed alt+mouse wheel to only adjust the drawing grid opacity without scrolling vertically.
+
 ## v3.6.0 (2025-11-28)
 
 ### Added

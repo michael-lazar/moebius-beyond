@@ -316,6 +316,9 @@ class MouseListener extends events.EventEmitter {
     }
 
     handleGridOpacity(event) {
+        // Prevent browser's default alt+wheel scroll behavior
+        event.preventDefault();
+
         if (!this.listening_to_wheel) return;
 
         const gridElement = document.getElementById("drawing_grid");
