@@ -601,6 +601,7 @@ class TextModeDoc extends events.EventEmitter {
 
         this.init = false;
         this.mirror_mode = false;
+        this.grayscale_mode = false;
         this.edited = false;
 
         this.undo_history = new UndoHistory(this);
@@ -640,6 +641,11 @@ class TextModeDoc extends events.EventEmitter {
         );
         on("mirror_mode", (event, value) => {
             this.mirror_mode = value;
+        });
+        on("grayscale_mode", (event, value) => {
+            this.grayscale_mode = value;
+            this.render.font.grayscale_mode = value;
+            this.invalidate_color_cache();
         });
     }
 
@@ -885,10 +891,11 @@ class TextModeDoc extends events.EventEmitter {
      * @returns {void}
      */
     update_palette(index, rgb) {
+        // Note that this._tmdata.palette and this.render.font.palette
+        // are references to the same palette object
         this.palette[index] = rgb;
-        this.render.font.replace_cache_at(index, rgb);
+        this.render.font.refresh_cache_at(index);
 
-        // TODO: should this be undoable? it doesn't fit in nicely, but I think it should be.
         for (let y = 0; y <= this.rows - 1; y++) {
             for (let x = 0; x <= this.columns - 1; x++) {
                 const block = this.data[this.columns * y + x];
@@ -897,6 +904,27 @@ class TextModeDoc extends events.EventEmitter {
                 }
             }
         }
+    }
+
+    /**
+     * @returns {void}
+     */
+    invalidate_color_cache() {
+        // Regenerate all cached colored glyphs and backgrounds
+        for (let i = 0; i < this.palette.length; i++) {
+            this.render.font.refresh_cache_at(i);
+        }
+
+        // Re-render entire viewport
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.columns; x++) {
+                const block = this.data[this.columns * y + x];
+                libtextmode.render_at(this.render, x, y, block);
+            }
+        }
+
+        // Notify UI components to update
+        this.emit("grayscale_mode", this.grayscale_mode);
     }
 
     /**

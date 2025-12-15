@@ -64,6 +64,7 @@ declare global {
             width: number;
             length: number;
             use_9px_font: boolean;
+            grayscale_mode: boolean;
             canvas: HTMLCanvasElement;
             glyphs: HTMLCanvasElement[];
             backgrounds: HTMLCanvasElement[];
@@ -73,7 +74,7 @@ declare global {
                 bytes?: Uint8Array;
                 use_9px_font?: boolean;
             }): Promise<void>;
-            replace_cache_at(index: number, rgb: Color): void;
+            refresh_cache_at(index: number): void;
             draw(ctx: CanvasRenderingContext2D, block: Block, x: number, y: number): void;
             draw_raw(ctx: CanvasRenderingContext2D, block: Block, x: number, y: number): void;
             get_rgb(i: number): Color;

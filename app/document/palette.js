@@ -19,6 +19,7 @@ class PaletteChooser extends EventEmitter {
             this.bg = index;
         });
         doc.on("change_palette", (lospec_palette_name) => this.change_palette(lospec_palette_name));
+        doc.on("grayscale_mode", () => this.update_swatches());
 
         keyboard.on("previous_foreground_color", () => this.previous_foreground_color());
         keyboard.on("next_foreground_color", () => this.next_foreground_color());
@@ -48,7 +49,7 @@ class PaletteChooser extends EventEmitter {
         senders.send_sync("select_attribute", {
             fg: this.fg,
             bg: this.bg,
-            palette: doc.palette,
+            palette: Array.from({ length: doc.palette.length }, (_, i) => doc.font.get_rgb(i)),
         });
     }
 
@@ -126,12 +127,12 @@ class PaletteChooser extends EventEmitter {
         container.classList.add("base");
         this.swatch_container_el.appendChild(container);
 
-        doc.palette.map((rgb, i) => {
+        for (let i = 0; i < doc.palette.length; i++) {
             const div = document.createElement("div");
-            div.style.backgroundColor = rgb_to_hex(rgb);
+            div.style.backgroundColor = rgb_to_hex(doc.font.get_rgb(i));
             div.dataset.id = i.toString();
             container.appendChild(div);
-        });
+        }
 
         this.update_selected("bg");
         this.update_selected("fg");
@@ -152,7 +153,9 @@ class PaletteChooser extends EventEmitter {
         }
         // else we don't know about this color!
 
-        document.getElementById(level).style.backgroundColor = rgb_to_hex(doc.palette[this[level]]);
+        document.getElementById(level).style.backgroundColor = rgb_to_hex(
+            doc.font.get_rgb(this[level])
+        );
     }
 
     /**

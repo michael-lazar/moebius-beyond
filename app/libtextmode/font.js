@@ -149,6 +149,7 @@ class Font {
      */
     constructor(palette = [...palette_4bit]) {
         this.palette = palette;
+        this.grayscale_mode = false;
     }
 
     /**
@@ -199,12 +200,12 @@ class Font {
 
     /**
      * @param {number} index
-     * @param {App.Color} rgb
      * @returns {void}
      */
-    replace_cache_at(index, rgb) {
-        this.backgrounds[index] = coloured_background(this.width, this.height, rgb);
-        this.glyphs[index] = coloured_glyphs(this.canvas, rgb);
+    refresh_cache_at(index) {
+        const color = this.get_rgb(index);
+        this.backgrounds[index] = coloured_background(this.width, this.height, color);
+        this.glyphs[index] = coloured_glyphs(this.canvas, color);
     }
 
     /**
@@ -252,7 +253,13 @@ class Font {
      * @returns {App.Color}
      */
     get_rgb(i) {
-        return this.palette[i];
+        const rgb = this.palette[i];
+        if (this.grayscale_mode) {
+            // Luminosity method (ITU-R BT.601) - weighted by human perception
+            const gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
+            return { r: gray, g: gray, b: gray };
+        }
+        return rgb;
     }
 
     /**

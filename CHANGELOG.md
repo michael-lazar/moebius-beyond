@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added
+
+- Added a new "Grayscale Mode" which will toggle visualizing all of
+  the ANSI colors using their corresponding grayscale values. This
+  setting can be accessed from the "Color" submenu.
+
 ### Changed
 
 - Improved the range slider for the reference window drawing grid.

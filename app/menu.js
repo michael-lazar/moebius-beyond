@@ -3504,6 +3504,16 @@ function colors_menu_template(win) {
                 type: "checkbox",
                 checked: true,
             },
+            {
+                label: "Grayscale Mode",
+                id: "grayscale_mode",
+                accelerator: "CmdorCtrl+G",
+                click(item) {
+                    win.send("grayscale_mode", item.checked);
+                },
+                type: "checkbox",
+                checked: false,
+            },
             { type: "separator" },
             {
                 label: "Remove iCE Colors as New Document",

@@ -631,6 +631,13 @@ doc.on("new_document", () => {
 doc.on("ice_colors", (value) => ice_colors(value));
 doc.on("use_9px_font", (value) => use_9px_font(value));
 doc.on("change_font", (font_name) => change_font(font_name));
+doc.on("grayscale_mode", () => {
+    toolbar.set_color("fg", palette.fg, doc.font);
+    toolbar.set_color("bg", palette.bg, doc.font);
+    toolbar.draw_charlist();
+    toolbar.redraw_fkeys();
+    toolbar.draw_custom_block();
+});
 keyboard.on("insert", (value) => insert_mode(value));
 on("insert_mode", (event, value) => insert_mode(value));
 on("overwrite_mode", (event, value) => overwrite_mode(value));
