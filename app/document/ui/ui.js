@@ -9,6 +9,7 @@ let interval, guide_columns, guide_rows, grid_columns;
 
 let canvas_zoom = 1.0;
 let charlist_zoom_toggled = false;
+let preview_zoom_toggled = false;
 let preview_visible = true;
 let toolbar_visible = true;
 let statusbar_visible = true;
@@ -566,6 +567,32 @@ function charlist_zoom_toggle() {
     });
 }
 
+function get_preview_zoom_level() {
+    return preview_zoom_toggled ? 2 : 1;
+}
+
+function preview_zoom_toggle() {
+    preview_zoom_toggled = !preview_zoom_toggled;
+
+    // Update preview container width
+    const base_canvas_width = 260;
+    const margins = 40;
+    const scale = get_preview_zoom_level();
+    const new_width = base_canvas_width * scale + margins;
+    set_var("preview-width", `${new_width}px`);
+
+    // Reapply preview canvases using existing add() function
+    const canvas = require("./canvas");
+    if (canvas.get_render()) {
+        canvas.add(canvas.get_render());
+    }
+
+    // Sync menu checkbox
+    send("update_menu_checkboxes", {
+        preview_zoom_toggle: preview_zoom_toggled,
+    });
+}
+
 function ice_colors(value) {
     if (!value) {
         let vis_toggle = false;
@@ -652,6 +679,7 @@ on("set_canvas_zoom", (event, level) => set_canvas_zoom(level));
 on("zoom_out", (event) => zoom_out());
 on("actual_size", (event) => actual_size());
 on("charlist_zoom_toggle", (event) => charlist_zoom_toggle());
+on("preview_zoom_toggle", (event) => preview_zoom_toggle());
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -1429,6 +1457,8 @@ module.exports = {
     current_zoom_factor,
     zoom_with_anchor,
     charlist_zoom_toggle,
+    preview_zoom_toggle,
+    get_preview_zoom_level,
     increase_reference_image_opacity,
     decrease_reference_image_opacity,
     open_reference_image,

@@ -3206,6 +3206,15 @@ function view_menu_template(win) {
                 type: "checkbox",
                 checked: false,
             },
+            {
+                label: "View preview at 200%",
+                id: "preview_zoom_toggle",
+                click() {
+                    win.send("preview_zoom_toggle");
+                },
+                type: "checkbox",
+                checked: false,
+            },
             { type: "separator" },
             {
                 label: "Guides",
@@ -3833,6 +3842,7 @@ electron.ipcMain.on(
             font_name,
             lospec_palette_name,
             charlist_zoom_toggle,
+            preview_zoom_toggle,
             show_charlist,
             show_preview,
             show_toolbar,
@@ -3865,6 +3875,8 @@ electron.ipcMain.on(
         }
         if (charlist_zoom_toggle != undefined)
             set_check(id, "charlist_zoom_toggle", charlist_zoom_toggle);
+        if (preview_zoom_toggle != undefined)
+            set_check(id, "preview_zoom_toggle", preview_zoom_toggle);
         if (show_charlist != undefined) set_check(id, "show_charlist", show_charlist);
         if (show_preview != undefined) set_check(id, "show_preview", show_preview);
         if (show_toolbar != undefined) set_check(id, "show_toolbar", show_toolbar);

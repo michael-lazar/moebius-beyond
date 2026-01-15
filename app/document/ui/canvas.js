@@ -46,19 +46,29 @@ function get_zoom_level() {
     return current_zoom_factor();
 }
 
+function get_preview_zoom_level() {
+    const { get_preview_zoom_level } = require("./ui");
+    return get_preview_zoom_level();
+}
+
 function update_frame() {
     const viewport = $("viewport");
     const view_rect = viewport.getBoundingClientRect();
     const view_frame = $("view_frame");
 
     if (render) {
-        let scale_factor = render.width / 260;
-        scale_factor *= get_zoom_level();
+        const preview_scale = get_preview_zoom_level();
+        const base_width = 260;
+        const max_preview_width = base_width * preview_scale;
 
-        const width = Math.min(Math.ceil(view_rect.width / scale_factor), 260);
+        let scale_factor = render.width / base_width;
+        scale_factor *= get_zoom_level();
+        scale_factor /= preview_scale;
+
+        const width = Math.min(Math.ceil(view_rect.width / scale_factor), max_preview_width);
         const height = Math.min(
             Math.ceil(view_rect.height / scale_factor),
-            render.height / (render.width / 260)
+            render.height / (render.width / max_preview_width)
         );
         const top = Math.ceil(viewport.scrollTop / scale_factor);
         const left = Math.ceil(viewport.scrollLeft / scale_factor);
@@ -71,6 +81,11 @@ function update_frame() {
         const preview_height = preview.getBoundingClientRect().height;
         if (top > preview_height + preview.scrollTop - height - 2)
             preview.scrollTop = top - preview_height + height + 2;
+
+        // Update preview canvas widths based on zoom level
+        for (const canvas of render.preview_collection) {
+            canvas.style.width = `${max_preview_width}px`;
+        }
     }
 }
 
@@ -106,6 +121,7 @@ function update_with_mouse_pos(client_x, client_y) {
     const y = client_y - preview_rect.top + preview.scrollTop;
     let scale_factor = render.width / 260;
     scale_factor *= get_zoom_level();
+    scale_factor /= get_preview_zoom_level();
     const half_view_width = viewport_rect.width / scale_factor / 2;
     const half_view_height = viewport_rect.height / scale_factor / 2;
     viewport.scrollLeft = Math.floor((x - half_view_width) * scale_factor);
@@ -162,4 +178,4 @@ doc.on("use_9px_font", () => add(doc.render));
 doc.on("goto_row", (row_no) => goto_row(row_no));
 doc.on("goto_self", () => goto_row(cursor.y));
 
-module.exports = { update_frame };
+module.exports = { update_frame, add, get_render: () => render };
