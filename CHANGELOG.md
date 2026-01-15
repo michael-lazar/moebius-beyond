@@ -7,8 +7,8 @@
 - Added a new "Grayscale Mode" which will toggle visualizing all of
   the ANSI colors using their corresponding grayscale values. This
   setting can be accessed from the "Color" submenu.
-- Added a "View preview at 200%" menu option to toggle the preview
-  window between 1x and 2x zoom.
+- Added a "Preview Zoom" submenu with zoom levels from 100% to 400%
+  (100%, 150%, 200%, 300%, 400%).
 
 ### Changed
 

@@ -3207,13 +3207,44 @@ function view_menu_template(win) {
                 checked: false,
             },
             {
-                label: "View preview at 200%",
-                id: "preview_zoom_toggle",
-                click() {
-                    win.send("preview_zoom_toggle");
-                },
-                type: "checkbox",
-                checked: false,
+                label: "Preview Zoom",
+                submenu: [
+                    {
+                        label: "100%",
+                        id: "preview_zoom_100",
+                        click() {
+                            win.send("set_preview_zoom", 1.0);
+                        },
+                    },
+                    {
+                        label: "150%",
+                        id: "preview_zoom_150",
+                        click() {
+                            win.send("set_preview_zoom", 1.5);
+                        },
+                    },
+                    {
+                        label: "200%",
+                        id: "preview_zoom_200",
+                        click() {
+                            win.send("set_preview_zoom", 2.0);
+                        },
+                    },
+                    {
+                        label: "300%",
+                        id: "preview_zoom_300",
+                        click() {
+                            win.send("set_preview_zoom", 3.0);
+                        },
+                    },
+                    {
+                        label: "400%",
+                        id: "preview_zoom_400",
+                        click() {
+                            win.send("set_preview_zoom", 4.0);
+                        },
+                    },
+                ],
             },
             { type: "separator" },
             {
@@ -3842,7 +3873,6 @@ electron.ipcMain.on(
             font_name,
             lospec_palette_name,
             charlist_zoom_toggle,
-            preview_zoom_toggle,
             show_charlist,
             show_preview,
             show_toolbar,
@@ -3875,8 +3905,6 @@ electron.ipcMain.on(
         }
         if (charlist_zoom_toggle != undefined)
             set_check(id, "charlist_zoom_toggle", charlist_zoom_toggle);
-        if (preview_zoom_toggle != undefined)
-            set_check(id, "preview_zoom_toggle", preview_zoom_toggle);
         if (show_charlist != undefined) set_check(id, "show_charlist", show_charlist);
         if (show_preview != undefined) set_check(id, "show_preview", show_preview);
         if (show_toolbar != undefined) set_check(id, "show_toolbar", show_toolbar);
