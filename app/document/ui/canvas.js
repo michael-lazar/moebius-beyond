@@ -80,7 +80,9 @@ function update_frame() {
         if (top < preview.scrollTop) preview.scrollTop = top;
         const preview_height = preview.getBoundingClientRect().height;
         if (top > preview_height + preview.scrollTop - height - 2)
-            preview.scrollTop = top - preview_height + height + 2;
+            // Cap at `top` so we never scroll past the top of the view frame when
+            // the frame is taller than the preview window.
+            preview.scrollTop = Math.min(top - preview_height + height + 2, top);
 
         // Update preview canvas widths based on zoom level
         for (const canvas of render.preview_collection) {
