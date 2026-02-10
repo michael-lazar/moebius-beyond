@@ -440,13 +440,12 @@ function current_zoom_factor() {
     return canvas_zoom;
 }
 
-function set_canvas_zoom_without_frame_update(factor) {
-    // Clamp factor to valid range (0.1 to 5.0) with finer precision for smooth wheel zoom
-    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 100) / 100));
-
-    const cursor = require("../tools/cursor");
-    const mouse = require("../input/mouse");
-
+/**
+ * Applies the CSS scale transform and centering for the current canvas_zoom level.
+ * Can be called independently when canvas or viewport dimensions change without a
+ * zoom level change (e.g. after a canvas resize or window resize).
+ */
+function apply_canvas_zoom_transform() {
     const container = $("canvas_container");
 
     // Get viewport dimensions
@@ -484,6 +483,16 @@ function set_canvas_zoom_without_frame_update(factor) {
     container.style.left = positioning.left;
     container.style.top = positioning.top;
     container.style.transform = transforms.join(" ");
+}
+
+function set_canvas_zoom_without_frame_update(factor) {
+    // Clamp factor to valid range (0.1 to 5.0) with finer precision for smooth wheel zoom
+    canvas_zoom = Math.max(0.1, Math.min(5.0, Math.round(factor * 100) / 100));
+
+    apply_canvas_zoom_transform();
+
+    const cursor = require("../tools/cursor");
+    const mouse = require("../input/mouse");
 
     cursor.set_canvas_zoom(canvas_zoom);
     mouse.set_canvas_zoom(canvas_zoom);
@@ -1457,4 +1466,5 @@ module.exports = {
     decrease_reference_image_opacity,
     open_reference_image,
     toggle_off_guide,
+    apply_canvas_zoom_transform,
 };

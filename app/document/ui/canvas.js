@@ -1,5 +1,6 @@
 const doc = require("../doc");
 const cursor = require("../tools/cursor");
+const { apply_canvas_zoom_transform } = require("./ui");
 
 let interval, render;
 let mouse_button = false;
@@ -120,6 +121,9 @@ function add(new_render) {
     for (const canvas of render.blink_on_collection) blink_on_container.appendChild(canvas);
     for (const canvas of render.preview_collection) preview.appendChild(canvas);
     show("view_frame");
+
+    // Re-apply the zoom transform since canvas dimensions may have changed (e.g. resize).
+    apply_canvas_zoom_transform();
     update_frame();
 }
 
@@ -163,7 +167,15 @@ window.addEventListener(
     "DOMContentLoaded",
     (event) => {
         $("viewport").addEventListener("scroll", (event) => update_frame(), true);
-        window.addEventListener("resize", (event) => update_frame(), true);
+        window.addEventListener(
+            "resize",
+            (event) => {
+                // Re-apply zoom transform since centering depends on viewport dimensions.
+                apply_canvas_zoom_transform();
+                update_frame();
+            },
+            true
+        );
         $("preview").addEventListener("mousedown", mouse_down, true);
         $("preview").addEventListener("mousemove", mouse_move, true);
         $("preview").addEventListener("mouseup", unregister_button, true);
