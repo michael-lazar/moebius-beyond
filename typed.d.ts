@@ -100,6 +100,18 @@ declare global {
             font_bytes?: Uint8Array;
         };
 
+        type Brush = {
+            size: number;
+            custom_block_index: number;
+            half_block_line(sx: number, sy: number, dx: number, dy: number, col: number, skip_first?: boolean): void;
+            custom_block_line(sx: number, sy: number, dx: number, dy: number, fg: number, bg: number, skip_first?: boolean): void;
+            shading_block_line(sx: number, sy: number, dx: number, dy: number, fg: number, bg: number, reduce: boolean, skip_first?: boolean): void;
+            clear_block_line(sx: number, sy: number, dx: number, dy: number, skip_first?: boolean): void;
+            replace_color_line(sx: number, sy: number, dx: number, dy: number, to: number, from: number, skip_first?: boolean): void;
+            blink_line(sx: number, sy: number, dx: number, dy: number, unblink: boolean, skip_first?: boolean): void;
+            colorize_line(sx: number, sy: number, dx: number, dy: number, fg?: number, bg?: number, skip_first?: boolean): void;
+        };
+
         type HalfBlock = {
             x: number;
             y: number;

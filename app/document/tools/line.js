@@ -101,7 +101,7 @@ mouse.on("up", (x, y, half_y, button) => {
             );
         }
     } else if (clear) {
-        brushes.clear_block_line(mouse.start.x, mouse.start.y, x, y);
+        toolbar.brush.clear_block_line(mouse.start.x, mouse.start.y, x, y);
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:

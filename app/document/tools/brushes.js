@@ -1,5 +1,4 @@
 const doc = require("../doc");
-const { toolbar } = require("../ui/ui");
 
 function line(x0, y0, x1, y1, skip_first = false) {
     const dx = Math.abs(x1 - x0);
@@ -24,55 +23,6 @@ function line(x0, y0, x1, y1, skip_first = false) {
     }
     if (skip_first && coords.length > 1) coords.shift();
     return coords;
-}
-
-function single_half_block_line(sx, sy, dx, dy, col, skip_first) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) doc.set_half_block(coord.x, coord.y, col);
-}
-
-function half_block_line(sx, sy, dx, dy, col, skip_first) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        for (
-            let x = -Math.floor(toolbar.brush_size / 2);
-            x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            x++
-        ) {
-            for (
-                let y = -Math.floor(toolbar.brush_size / 2);
-                y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-                y++
-            ) {
-                doc.set_half_block(coord.x + x, coord.y + y, col);
-            }
-        }
-    }
-}
-
-function single_custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords)
-        doc.change_data(coord.x, coord.y, toolbar.custom_block_index, fg, bg);
-}
-
-function custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        for (
-            let x = -Math.floor(toolbar.brush_size / 2);
-            x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            x++
-        ) {
-            for (
-                let y = -Math.floor(toolbar.brush_size / 2);
-                y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-                y++
-            ) {
-                doc.change_data(coord.x + x, coord.y + y, toolbar.custom_block_index, fg, bg);
-            }
-        }
-    }
 }
 
 function shading_block(x, y, fg, bg, reduce) {
@@ -115,52 +65,199 @@ function shading_block(x, y, fg, bg, reduce) {
     }
 }
 
+class Brush {
+    /** @type {number} */
+    size;
+    /** @type {number} */
+    custom_block_index;
+
+    constructor(size = 1, custom_block_index = 176) {
+        this.size = size;
+        this.custom_block_index = custom_block_index;
+    }
+
+    half_block_line(sx, sy, dx, dy, col, skip_first) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            for (
+                let x = -Math.floor(this.size / 2);
+                x < -Math.floor(this.size / 2) + this.size;
+                x++
+            ) {
+                for (
+                    let y = -Math.floor(this.size / 2);
+                    y < -Math.floor(this.size / 2) + this.size;
+                    y++
+                ) {
+                    doc.set_half_block(coord.x + x, coord.y + y, col);
+                }
+            }
+        }
+    }
+
+    custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            for (
+                let x = -Math.floor(this.size / 2);
+                x < -Math.floor(this.size / 2) + this.size;
+                x++
+            ) {
+                for (
+                    let y = -Math.floor(this.size / 2);
+                    y < -Math.floor(this.size / 2) + this.size;
+                    y++
+                ) {
+                    doc.change_data(coord.x + x, coord.y + y, this.custom_block_index, fg, bg);
+                }
+            }
+        }
+    }
+
+    shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            for (
+                let brush_size_x = -Math.floor(this.size / 2);
+                brush_size_x < -Math.floor(this.size / 2) + this.size;
+                brush_size_x++
+            ) {
+                for (
+                    let brush_size_y = -Math.floor(this.size / 2);
+                    brush_size_y < -Math.floor(this.size / 2) + this.size;
+                    brush_size_y++
+                ) {
+                    shading_block(coord.x + brush_size_x, coord.y + brush_size_y, fg, bg, reduce);
+                }
+            }
+        }
+    }
+
+    clear_block_line(sx, sy, dx, dy, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            for (
+                let x = -Math.floor(this.size / 2);
+                x < -Math.floor(this.size / 2) + this.size;
+                x++
+            ) {
+                for (
+                    let y = -Math.floor(this.size / 2);
+                    y < -Math.floor(this.size / 2) + this.size;
+                    y++
+                ) {
+                    doc.change_data(coord.x + x, coord.y + y, 32, 7, 0);
+                }
+            }
+        }
+    }
+
+    replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            for (
+                let x = -Math.floor(this.size / 2);
+                x < -Math.floor(this.size / 2) + this.size;
+                x++
+            ) {
+                for (
+                    let y = -Math.floor(this.size / 2);
+                    y < -Math.floor(this.size / 2) + this.size;
+                    y++
+                ) {
+                    const block = doc.at(coord.x + x, coord.y + y);
+                    if (block && (block.fg == from || block.bg == from))
+                        doc.change_data(
+                            coord.x + x,
+                            coord.y + y,
+                            block.code,
+                            block.fg == from ? to : block.fg,
+                            block.bg == from ? to : block.bg
+                        );
+                }
+            }
+        }
+    }
+
+    blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            for (
+                let x = -Math.floor(this.size / 2);
+                x < -Math.floor(this.size / 2) + this.size;
+                x++
+            ) {
+                for (
+                    let y = -Math.floor(this.size / 2);
+                    y < -Math.floor(this.size / 2) + this.size;
+                    y++
+                ) {
+                    const block = doc.at(coord.x + x, coord.y + y);
+                    if (
+                        block &&
+                        ((!unblink && block.bg < 8) ||
+                            (unblink && block.bg > 7 && block.bg < 16)) &&
+                        block.code !== 0 &&
+                        block.code !== 32 &&
+                        block.code !== 255
+                    )
+                        doc.change_data(
+                            coord.x + x,
+                            coord.y + y,
+                            block.code,
+                            block.fg,
+                            unblink ? block.bg - 8 : block.bg + 8
+                        );
+                }
+            }
+        }
+    }
+
+    colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (let x = -Math.floor(this.size / 2); x < -Math.floor(this.size / 2) + this.size; x++) {
+            for (
+                let y = -Math.floor(this.size / 2);
+                y < -Math.floor(this.size / 2) + this.size;
+                y++
+            ) {
+                for (const coord of coords) {
+                    const block = doc.at(coord.x + x, coord.y + y);
+                    if (block)
+                        doc.change_data(
+                            coord.x + x,
+                            coord.y + y,
+                            block.code,
+                            fg != undefined ? fg : block.fg,
+                            bg != undefined ? bg : block.bg
+                        );
+                }
+            }
+        }
+    }
+}
+
+function single_half_block_line(sx, sy, dx, dy, col, skip_first) {
+    const coords = line(sx, sy, dx, dy, skip_first);
+    for (const coord of coords) doc.set_half_block(coord.x, coord.y, col);
+}
+
+function single_custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
+    // Inline require to avoid circular dependency with ui.js
+    const { toolbar } = require("../ui/ui");
+    const coords = line(sx, sy, dx, dy, skip_first);
+    for (const coord of coords)
+        doc.change_data(coord.x, coord.y, toolbar.brush.custom_block_index, fg, bg);
+}
+
 function single_shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
     const coords = line(sx, sy, dx, dy, skip_first);
     for (const coord of coords) shading_block(coord.x, coord.y, fg, bg, reduce);
 }
 
-function shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        for (
-            let brush_size_x = -Math.floor(toolbar.brush_size / 2);
-            brush_size_x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            brush_size_x++
-        ) {
-            for (
-                let brush_size_y = -Math.floor(toolbar.brush_size / 2);
-                brush_size_y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-                brush_size_y++
-            ) {
-                shading_block(coord.x + brush_size_x, coord.y + brush_size_y, fg, bg, reduce);
-            }
-        }
-    }
-}
-
 function single_clear_block_line(sx, sy, dx, dy, skip_first = false) {
     const coords = line(sx, sy, dx, dy, skip_first);
     for (const coord of coords) doc.change_data(coord.x, coord.y, 32, 7, 0);
-}
-
-function clear_block_line(sx, sy, dx, dy, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        for (
-            let x = -Math.floor(toolbar.brush_size / 2);
-            x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            x++
-        ) {
-            for (
-                let y = -Math.floor(toolbar.brush_size / 2);
-                y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-                y++
-            ) {
-                doc.change_data(coord.x + x, coord.y + y, 32, 7, 0);
-            }
-        }
-    }
 }
 
 function single_replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
@@ -175,33 +272,6 @@ function single_replace_color_line(sx, sy, dx, dy, to, from, skip_first = false)
                 block.fg == from ? to : block.fg,
                 block.bg == from ? to : block.bg
             );
-    }
-}
-
-function replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        for (
-            let x = -Math.floor(toolbar.brush_size / 2);
-            x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            x++
-        ) {
-            for (
-                let y = -Math.floor(toolbar.brush_size / 2);
-                y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-                y++
-            ) {
-                const block = doc.at(coord.x + x, coord.y + y);
-                if (block && (block.fg == from || block.bg == from))
-                    doc.change_data(
-                        coord.x + x,
-                        coord.y + y,
-                        block.code,
-                        block.fg == from ? to : block.fg,
-                        block.bg == from ? to : block.bg
-                    );
-            }
-        }
     }
 }
 
@@ -226,39 +296,6 @@ function single_blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
     }
 }
 
-function blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        for (
-            let x = -Math.floor(toolbar.brush_size / 2);
-            x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            x++
-        ) {
-            for (
-                let y = -Math.floor(toolbar.brush_size / 2);
-                y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-                y++
-            ) {
-                const block = doc.at(coord.x + x, coord.y + y);
-                if (
-                    block &&
-                    ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 16)) &&
-                    block.code !== 0 &&
-                    block.code !== 32 &&
-                    block.code !== 255
-                )
-                    doc.change_data(
-                        coord.x + x,
-                        coord.y + y,
-                        block.code,
-                        block.fg,
-                        unblink ? block.bg - 8 : block.bg + 8
-                    );
-            }
-        }
-    }
-}
-
 function single_colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
     const coords = line(sx, sy, dx, dy, skip_first);
     for (const coord of coords) {
@@ -274,48 +311,15 @@ function single_colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
     }
 }
 
-function colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (
-        let x = -Math.floor(toolbar.brush_size / 2);
-        x < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-        x++
-    ) {
-        for (
-            let y = -Math.floor(toolbar.brush_size / 2);
-            y < -Math.floor(toolbar.brush_size / 2) + toolbar.brush_size;
-            y++
-        ) {
-            for (const coord of coords) {
-                const block = doc.at(coord.x + x, coord.y + y);
-                if (block)
-                    doc.change_data(
-                        coord.x + x,
-                        coord.y + y,
-                        block.code,
-                        fg != undefined ? fg : block.fg,
-                        bg != undefined ? bg : block.bg
-                    );
-            }
-        }
-    }
-}
-
 module.exports = {
+    Brush,
     single_half_block_line,
-    half_block_line,
     single_custom_block_line,
-    custom_block_line,
     shading_block,
     single_shading_block_line,
-    shading_block_line,
     single_clear_block_line,
-    clear_block_line,
     single_replace_color_line,
-    replace_color_line,
     single_blink_line,
-    blink_line,
     single_colorize_line,
-    colorize_line,
     line,
 };

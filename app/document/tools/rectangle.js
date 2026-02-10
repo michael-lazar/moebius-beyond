@@ -2,7 +2,6 @@ const doc = require("../doc");
 const { tools, toolbar } = require("../ui/ui");
 const mouse = require("../input/mouse");
 const keyboard = require("../input/keyboard");
-const brushes = require("./brushes");
 const palette = require("../palette");
 const { Overlay } = require("./overlay");
 const { on } = require("../../senders");
@@ -78,34 +77,35 @@ mouse.on("up", (x, y, half_y, button) => {
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.half_y, x, half_y);
         if (clear) {
-            for (let y = sy; y <= dy; y++) brushes.half_block_line(sx, y, dx, y, 0);
+            for (let y = sy; y <= dy; y++) toolbar.brush.half_block_line(sx, y, dx, y, 0);
         } else {
             const col = button == mouse.buttons.LEFT ? fg : bg;
-            for (let y = sy; y <= dy; y++) brushes.half_block_line(sx, y, dx, y, col);
+            for (let y = sy; y <= dy; y++) toolbar.brush.half_block_line(sx, y, dx, y, col);
         }
         return;
     }
     const { sx, sy, dx, dy } = reorientate(mouse.start.x, mouse.start.y, x, y);
     if (clear || toolbar.mode == toolbar.modes.CLEAR_BLOCK) {
-        for (let y = sy; y <= dy; y++) brushes.clear_block_line(sx, y, dx, y);
+        for (let y = sy; y <= dy; y++) toolbar.brush.clear_block_line(sx, y, dx, y);
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.SHADING_BLOCK: {
                 const reduce = button != mouse.buttons.LEFT;
                 for (let y = sy; y <= dy; y++)
-                    brushes.shading_block_line(sx, y, dx, y, fg, bg, reduce);
+                    toolbar.brush.shading_block_line(sx, y, dx, y, fg, bg, reduce);
                 break;
             }
             case toolbar.modes.REPLACE_COLOR:
-                for (let y = sy; y <= dy; y++) brushes.replace_color_line(sx, y, dx, y, fg, bg);
+                for (let y = sy; y <= dy; y++)
+                    toolbar.brush.replace_color_line(sx, y, dx, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
                 for (let y = sy; y <= dy; y++)
-                    brushes.blink_line(sx, y, dx, y, button != mouse.buttons.LEFT);
+                    toolbar.brush.blink_line(sx, y, dx, y, button != mouse.buttons.LEFT);
                 break;
             case toolbar.modes.COLORIZE:
                 for (let y = sy; y <= dy; y++)
-                    brushes.colorize_line(
+                    toolbar.brush.colorize_line(
                         sx,
                         y,
                         dx,

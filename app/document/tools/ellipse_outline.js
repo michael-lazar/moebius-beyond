@@ -124,7 +124,7 @@ function draw_custom_block_ellipse(sx, sy, dx, dy, fg, bg) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (const coord of coords)
-        doc.change_data(coord.x, coord.y, toolbar.custom_block_index, fg, bg);
+        doc.change_data(coord.x, coord.y, toolbar.brush.custom_block_index, fg, bg);
 }
 
 function draw_shaded_block_ellipse(sx, sy, dx, dy, fg, bg, reduce) {
