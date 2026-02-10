@@ -1,6 +1,6 @@
 # Moebius Beyond ✈️
 
-<img width="1000" height="747" alt="screenshot" src="https://github.com/user-attachments/assets/2cb1fa85-431c-4060-b6c8-6ea9f0c033af" />
+<img alt="screenshot" src="example.png" />
 
 Moebius Beyond is an ASCII/ANSI Art Editor for MacOS, Linux and Windows.
 
