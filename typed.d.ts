@@ -103,6 +103,7 @@ declare global {
         type Brush = {
             size: number;
             custom_block_index: number;
+            readonly offsets: { x: number; y: number }[];
             half_block_line(sx: number, sy: number, dx: number, dy: number, col: number, skip_first?: boolean): void;
             custom_block_line(sx: number, sy: number, dx: number, dy: number, fg: number, bg: number, skip_first?: boolean): void;
             shading_block_line(sx: number, sy: number, dx: number, dy: number, fg: number, bg: number, reduce: boolean, skip_first?: boolean): void;

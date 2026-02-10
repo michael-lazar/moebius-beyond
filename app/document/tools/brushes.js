@@ -76,21 +76,22 @@ class Brush {
         this.custom_block_index = custom_block_index;
     }
 
+    get offsets() {
+        const half = Math.floor(this.size / 2);
+        const offsets = [];
+        for (let x = -half; x < -half + this.size; x++) {
+            for (let y = -half; y < -half + this.size; y++) {
+                offsets.push({ x, y });
+            }
+        }
+        return offsets;
+    }
+
     half_block_line(sx, sy, dx, dy, col, skip_first) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (
-                let x = -Math.floor(this.size / 2);
-                x < -Math.floor(this.size / 2) + this.size;
-                x++
-            ) {
-                for (
-                    let y = -Math.floor(this.size / 2);
-                    y < -Math.floor(this.size / 2) + this.size;
-                    y++
-                ) {
-                    doc.set_half_block(coord.x + x, coord.y + y, col);
-                }
+            for (const { x, y } of this.offsets) {
+                doc.set_half_block(coord.x + x, coord.y + y, col);
             }
         }
     }
@@ -98,18 +99,8 @@ class Brush {
     custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (
-                let x = -Math.floor(this.size / 2);
-                x < -Math.floor(this.size / 2) + this.size;
-                x++
-            ) {
-                for (
-                    let y = -Math.floor(this.size / 2);
-                    y < -Math.floor(this.size / 2) + this.size;
-                    y++
-                ) {
-                    doc.change_data(coord.x + x, coord.y + y, this.custom_block_index, fg, bg);
-                }
+            for (const { x, y } of this.offsets) {
+                doc.change_data(coord.x + x, coord.y + y, this.custom_block_index, fg, bg);
             }
         }
     }
@@ -117,18 +108,8 @@ class Brush {
     shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (
-                let brush_size_x = -Math.floor(this.size / 2);
-                brush_size_x < -Math.floor(this.size / 2) + this.size;
-                brush_size_x++
-            ) {
-                for (
-                    let brush_size_y = -Math.floor(this.size / 2);
-                    brush_size_y < -Math.floor(this.size / 2) + this.size;
-                    brush_size_y++
-                ) {
-                    shading_block(coord.x + brush_size_x, coord.y + brush_size_y, fg, bg, reduce);
-                }
+            for (const { x, y } of this.offsets) {
+                shading_block(coord.x + x, coord.y + y, fg, bg, reduce);
             }
         }
     }
@@ -136,18 +117,8 @@ class Brush {
     clear_block_line(sx, sy, dx, dy, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (
-                let x = -Math.floor(this.size / 2);
-                x < -Math.floor(this.size / 2) + this.size;
-                x++
-            ) {
-                for (
-                    let y = -Math.floor(this.size / 2);
-                    y < -Math.floor(this.size / 2) + this.size;
-                    y++
-                ) {
-                    doc.change_data(coord.x + x, coord.y + y, 32, 7, 0);
-                }
+            for (const { x, y } of this.offsets) {
+                doc.change_data(coord.x + x, coord.y + y, 32, 7, 0);
             }
         }
     }
@@ -155,26 +126,16 @@ class Brush {
     replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (
-                let x = -Math.floor(this.size / 2);
-                x < -Math.floor(this.size / 2) + this.size;
-                x++
-            ) {
-                for (
-                    let y = -Math.floor(this.size / 2);
-                    y < -Math.floor(this.size / 2) + this.size;
-                    y++
-                ) {
-                    const block = doc.at(coord.x + x, coord.y + y);
-                    if (block && (block.fg == from || block.bg == from))
-                        doc.change_data(
-                            coord.x + x,
-                            coord.y + y,
-                            block.code,
-                            block.fg == from ? to : block.fg,
-                            block.bg == from ? to : block.bg
-                        );
-                }
+            for (const { x, y } of this.offsets) {
+                const block = doc.at(coord.x + x, coord.y + y);
+                if (block && (block.fg == from || block.bg == from))
+                    doc.change_data(
+                        coord.x + x,
+                        coord.y + y,
+                        block.code,
+                        block.fg == from ? to : block.fg,
+                        block.bg == from ? to : block.bg
+                    );
             }
         }
     }
@@ -182,56 +143,39 @@ class Brush {
     blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (
-                let x = -Math.floor(this.size / 2);
-                x < -Math.floor(this.size / 2) + this.size;
-                x++
-            ) {
-                for (
-                    let y = -Math.floor(this.size / 2);
-                    y < -Math.floor(this.size / 2) + this.size;
-                    y++
-                ) {
-                    const block = doc.at(coord.x + x, coord.y + y);
-                    if (
-                        block &&
-                        ((!unblink && block.bg < 8) ||
-                            (unblink && block.bg > 7 && block.bg < 16)) &&
-                        block.code !== 0 &&
-                        block.code !== 32 &&
-                        block.code !== 255
-                    )
-                        doc.change_data(
-                            coord.x + x,
-                            coord.y + y,
-                            block.code,
-                            block.fg,
-                            unblink ? block.bg - 8 : block.bg + 8
-                        );
-                }
+            for (const { x, y } of this.offsets) {
+                const block = doc.at(coord.x + x, coord.y + y);
+                if (
+                    block &&
+                    ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 16)) &&
+                    block.code !== 0 &&
+                    block.code !== 32 &&
+                    block.code !== 255
+                )
+                    doc.change_data(
+                        coord.x + x,
+                        coord.y + y,
+                        block.code,
+                        block.fg,
+                        unblink ? block.bg - 8 : block.bg + 8
+                    );
             }
         }
     }
 
     colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
-        for (let x = -Math.floor(this.size / 2); x < -Math.floor(this.size / 2) + this.size; x++) {
-            for (
-                let y = -Math.floor(this.size / 2);
-                y < -Math.floor(this.size / 2) + this.size;
-                y++
-            ) {
-                for (const coord of coords) {
-                    const block = doc.at(coord.x + x, coord.y + y);
-                    if (block)
-                        doc.change_data(
-                            coord.x + x,
-                            coord.y + y,
-                            block.code,
-                            fg != undefined ? fg : block.fg,
-                            bg != undefined ? bg : block.bg
-                        );
-                }
+        for (const coord of coords) {
+            for (const { x, y } of this.offsets) {
+                const block = doc.at(coord.x + x, coord.y + y);
+                if (block)
+                    doc.change_data(
+                        coord.x + x,
+                        coord.y + y,
+                        block.code,
+                        fg != undefined ? fg : block.fg,
+                        bg != undefined ? bg : block.bg
+                    );
             }
         }
     }
