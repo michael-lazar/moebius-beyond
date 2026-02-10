@@ -55,14 +55,23 @@ function update_frame() {
     const viewport = $("viewport");
     const view_rect = viewport.getBoundingClientRect();
     const view_frame = $("view_frame");
+    const container = $("canvas_container");
+    const zoom = get_zoom_level();
 
     if (render) {
+        // Fix scroll bounds at zoom < 1: shrink the container's margin box to match
+        // the visually-scaled canvas size so the user can't scroll past the canvas edge.
+        const h_margin = render.height * (zoom - 1);
+        const w_margin = render.width * (zoom - 1);
+        container.style.marginBottom = h_margin < 0 ? `${Math.floor(h_margin)}px` : "";
+        container.style.marginRight = w_margin < 0 ? `${Math.floor(w_margin)}px` : "";
+
         const preview_scale = get_preview_zoom_level();
         const base_width = 260;
         const max_preview_width = base_width * preview_scale;
 
         let scale_factor = render.width / base_width;
-        scale_factor *= get_zoom_level();
+        scale_factor *= zoom;
         scale_factor /= preview_scale;
 
         const width = Math.min(Math.ceil(view_rect.width / scale_factor), max_preview_width);

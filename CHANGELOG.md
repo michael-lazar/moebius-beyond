@@ -17,6 +17,7 @@
 ### Fixed
 
 - Fixed alt+mouse wheel to only adjust the drawing grid opacity without scrolling vertically.
+- Fixed scrolling off the bottom of the canvas when zoomed out in a tall picture.
 
 ## v3.6.0 (2025-11-28)
 
