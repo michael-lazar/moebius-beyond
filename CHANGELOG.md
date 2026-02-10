@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+- Improved image rendering of characters in the charlist selector
+  and toolbar.
+
 ## v3.7.0 (2026-02-10)
 
 ### Added
