@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.7.0 (2026-02-10)
+
 ### Added
 
 - Added a new "Grayscale Mode" which will toggle visualizing all of
@@ -18,7 +20,7 @@
 
 - Fixed alt+mouse wheel to only adjust the drawing grid opacity without scrolling vertically.
 - Fixed scrolling off the bottom of the canvas when zoomed out in a tall picture.
-- Fix zoom being broken after resizing the canvas when zoomed in.
+- Fixed zoom sometimes breaking after resizing the canvas.
 
 ## v3.6.0 (2025-11-28)
 
