@@ -19,13 +19,23 @@
 }
 
 #fkey_chooser,
-#brush_size_chooser {
-    float: right;
+#brush_controls {
+    display: flex;
+    align-items: center;
 }
 
-#fkey_chooser > div,
+#fkey_chooser > div {
+    line-height: 48px;
+    text-align: center;
+}
+
+#colorize_container,
+#brush_size_chooser {
+    display: flex;
+    align-items: center;
+}
+
 #brush_size_chooser > div {
-    float: left;
     line-height: 48px;
     text-align: center;
 }
@@ -104,7 +114,6 @@
     width: 8px;
 }
 .button {
-    float: left;
     line-height: 30px;
     color: rgba(255, 255, 255, 0.3);
     padding: 0px 12px;
@@ -116,7 +125,6 @@
 }
 
 .select {
-    float: right;
     color: rgba(255, 255, 255, 0.3);
     padding: 0px 4px;
     height: 30px;
@@ -131,7 +139,6 @@
 }
 
 .label {
-    float: left;
     line-height: 1.1em;
     text-align: center !important;
     margin: 8px;
@@ -143,7 +150,6 @@
 }
 
 .number-input {
-    float: left;
     gap: 10px;
     margin: 8px 0;
     padding: 1px;

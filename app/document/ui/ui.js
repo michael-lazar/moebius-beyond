@@ -891,7 +891,7 @@ class Tools extends events.EventEmitter {
     start(new_mode) {
         if (new_mode == this.mode) return;
         if (this.mode != undefined) {
-            $("brush_size_chooser").classList.remove("hidden");
+            $("brush_controls").classList.remove("hidden");
             const div = this.get_tool_div(this.mode);
             div.classList.remove("selected");
             switch (this.mode) {
@@ -913,15 +913,15 @@ class Tools extends events.EventEmitter {
             case this.modes.RECTANGLE_OUTLINE:
             case this.modes.ELLIPSE_OUTLINE:
                 div.classList.add("outline");
-                $("brush_size_chooser").classList.add("hidden");
+                $("brush_controls").classList.add("hidden");
                 break;
             case this.modes.RECTANGLE_FILLED:
             case this.modes.ELLIPSE_FILLED:
                 div.classList.add("filled");
-                $("brush_size_chooser").classList.add("hidden");
+                $("brush_controls").classList.add("hidden");
                 break;
             case this.modes.LINE:
-                $("brush_size_chooser").classList.add("hidden");
+                $("brush_controls").classList.add("hidden");
                 break;
         }
         this.emit("start", this.mode);
