@@ -8,6 +8,8 @@
 }
 
 .panel > div {
+    display: flex;
+    align-items: center;
     width: fit-content;
     min-width: max-content;
     margin: 0px auto;
@@ -61,6 +63,7 @@
     font-size: 20px;
 }
 
+
 .panel > div > canvas {
     display: inline-block;
     border: 1px solid black;
@@ -110,6 +113,21 @@
     border: 1px solid rgba(0, 0, 0, 0.6);
     background-image: -webkit-linear-gradient(top, rgb(34, 37, 43), rgb(30, 31, 35));
     cursor: pointer;
+}
+
+.select {
+    float: right;
+    color: rgba(255, 255, 255, 0.3);
+    padding: 0px 4px;
+    height: 30px;
+    margin: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    background-image: -webkit-linear-gradient(top, rgb(34, 37, 43), rgb(30, 31, 35));
+    cursor: pointer;
+    outline: none;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 11px;
 }
 
 .label {

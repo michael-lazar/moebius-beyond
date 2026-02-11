@@ -41,6 +41,17 @@ function compute_outline_segments(offsets, half) {
 
 // prettier-ignore
 const BRUSH_SHAPES = {
+    round: [
+        "#",
+        "##\n##",
+        " # \n###\n # ",
+        " ## \n####\n####\n ## ",
+        " ### \n#####\n#####\n#####\n ### ",
+        " #### \n######\n######\n######\n######\n #### ",
+        "  ###  \n #####\n#######\n#######\n#######\n #####\n  ###  ",
+        "  ####  \n ######\n########\n########\n########\n########\n ######\n  ####  ",
+        "  #####  \n #######\n#########\n#########\n#########\n#########\n#########\n #######\n  #####  ",
+    ],
     square: [
         "#",
         "##\n##",
@@ -52,17 +63,12 @@ const BRUSH_SHAPES = {
         "########\n########\n########\n########\n########\n########\n########\n########",
         "#########\n#########\n#########\n#########\n#########\n#########\n#########\n#########\n#########",
     ],
-    circle: [
-        "#",
-        "##\n##",
-        " # \n###\n # ",
-        " ## \n####\n####\n ## ",
-        " ### \n#####\n#####\n#####\n ### ",
-        " #### \n######\n######\n######\n######\n #### ",
-        "  ###  \n #####\n#######\n#######\n#######\n #####\n  ###  ",
-        "  ####  \n ######\n########\n########\n########\n########\n ######\n  ####  ",
-        "  #####  \n #######\n#########\n#########\n#########\n#########\n#########\n #######\n  #####  ",
-    ],
 };
 
-module.exports = { BRUSH_SHAPES, parse_brush_shape, compute_outline_segments };
+/** @type {Record<keyof typeof BRUSH_SHAPES, string>} */
+const BRUSH_SHAPE_NAMES = {
+    round: "Round",
+    square: "Square",
+};
+
+module.exports = { BRUSH_SHAPES, BRUSH_SHAPE_NAMES, parse_brush_shape, compute_outline_segments };

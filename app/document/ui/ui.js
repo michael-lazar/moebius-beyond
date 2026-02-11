@@ -5,6 +5,7 @@ const keyboard = require("../input/keyboard");
 const events = require("events");
 const { pathToFileURL } = require("url");
 const { Brush } = require("../tools/brushes");
+const { BRUSH_SHAPE_NAMES } = require("../tools/brush_shapes");
 
 let interval, guide_columns, guide_rows, grid_columns;
 
@@ -1179,6 +1180,12 @@ class Toolbar extends events.EventEmitter {
         $("brush_size_num").innerText = String(this.brush.size);
     }
 
+    /** @param {string} shape */
+    change_brush_shape(shape) {
+        this.brush.shape = shape;
+        $("brush_shape").value = shape;
+    }
+
     default_character_set() {
         this.change_fkeys(this.default_fkeys);
     }
@@ -1385,6 +1392,16 @@ class Toolbar extends events.EventEmitter {
                     true
                 );
                 $("brush_size_num").innerText = String(this.brush.size);
+                for (const [value, label] of Object.entries(BRUSH_SHAPE_NAMES)) {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.innerText = label;
+                    $("brush_shape").appendChild(option);
+                }
+                $("brush_shape").value = this.brush.shape;
+                $("brush_shape").addEventListener("change", (event) =>
+                    this.change_brush_shape(/** @type {HTMLSelectElement} */ (event.target).value)
+                );
                 $("half_block").addEventListener("mousedown", (event) =>
                     this.change_mode(this.modes.HALF_BLOCK)
                 );
