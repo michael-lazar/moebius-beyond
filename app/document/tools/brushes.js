@@ -1,4 +1,5 @@
 const doc = require("../doc");
+const { BRUSH_SHAPES, parse_brush_shape, compute_outline_segments } = require("./brush_shapes");
 
 function line(x0, y0, x1, y1, skip_first = false) {
     const dx = Math.abs(x1 - x0);
@@ -67,24 +68,63 @@ function shading_block(x, y, fg, bg, reduce) {
 
 class Brush {
     /** @type {number} */
-    size;
-    /** @type {number} */
     custom_block_index;
 
-    constructor(size = 1, custom_block_index = 176) {
-        this.size = size;
+    /**
+     * @param {number} [size=1]
+     * @param {number} [custom_block_index=176]
+     * @param {string} [shape="circle"]
+     */
+    constructor(size = 1, custom_block_index = 176, shape = "circle") {
+        this._size = size;
+        this._shape = shape;
         this.custom_block_index = custom_block_index;
     }
 
+    /** @returns {number} */
+    get size() {
+        return this._size;
+    }
+
+    /** @param {number} v */
+    set size(v) {
+        this._size = v;
+        this._offsets = null;
+        this._outline_segments = null;
+    }
+
+    /** @returns {string} */
+    get shape() {
+        return this._shape;
+    }
+
+    /** @param {string} v */
+    set shape(v) {
+        this._shape = v;
+        this._offsets = null;
+        this._outline_segments = null;
+    }
+
+    /** @returns {void} */
+    _recompute() {
+        const ascii = BRUSH_SHAPES[this._shape][this._size - 1];
+        this._offsets = parse_brush_shape(ascii);
+        this._outline_segments = compute_outline_segments(
+            this._offsets,
+            Math.floor(this._size / 2)
+        );
+    }
+
+    /** @returns {{ x: number, y: number }[]} */
     get offsets() {
-        const half = Math.floor(this.size / 2);
-        const offsets = [];
-        for (let x = -half; x < -half + this.size; x++) {
-            for (let y = -half; y < -half + this.size; y++) {
-                offsets.push({ x, y });
-            }
-        }
-        return offsets;
+        if (!this._offsets) this._recompute();
+        return this._offsets;
+    }
+
+    /** @returns {[number, number, number, number][]} */
+    get outline_segments() {
+        if (!this._outline_segments) this._recompute();
+        return this._outline_segments;
     }
 
     half_block_line(sx, sy, dx, dy, col, skip_first) {

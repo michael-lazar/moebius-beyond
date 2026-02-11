@@ -30,6 +30,30 @@ function destroy_overlay() {
     }
 }
 
+/**
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {[number, number, number, number][]} segments
+ * @param {number} font_width
+ * @param {number} cell_height
+ * @returns {void}
+ */
+function draw_brush_outline(ctx, segments, font_width, cell_height) {
+    ctx.beginPath();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+    ctx.lineWidth = 1;
+    for (const [x1, y1, x2, y2] of segments) {
+        ctx.moveTo(x1 * font_width + 0.5, y1 * cell_height + 0.5);
+        ctx.lineTo(x2 * font_width + 0.5, y2 * cell_height + 0.5);
+    }
+    ctx.stroke();
+}
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} half_y
+ * @returns {void}
+ */
 function draw_cursor_outline(x, y, half_y) {
     const font = doc.font;
     const { fg, bg } = palette;
@@ -55,28 +79,30 @@ function draw_cursor_outline(x, y, half_y) {
     if (!overlay) {
         overlay = new Overlay();
         overlay.canvas.style.opacity = "1";
-        overlay.canvas.style.outline = "1px solid rgba(255, 255, 255, 0.8)";
     }
 
+    const cell_height = font.height / height_scalar;
     let sx = (x - Math.floor(toolbar.brush.size / 2)) * font.width;
-    let sy = (y - Math.floor(toolbar.brush.size / 2)) * (font.height / height_scalar);
+    let sy = (y - Math.floor(toolbar.brush.size / 2)) * cell_height;
     let width = toolbar.brush.size * font.width;
-    let height = (toolbar.brush.size * font.height) / height_scalar;
+    let height = toolbar.brush.size * cell_height;
 
-    overlay.update(sx, sy, width, height);
+    // +1 on each dimension so the right/bottom outline strokes aren't clipped
+    overlay.update(sx, sy, width + 1, height + 1);
 
     if (toolbar.mode === toolbar.modes.CUSTOM_BLOCK) {
-        for (let x = 0; x < toolbar.brush.size; x++) {
-            for (let y = 0; y < toolbar.brush.size; y++) {
-                font.draw(
-                    overlay.ctx,
-                    { code: toolbar.brush.custom_block_index, fg, bg },
-                    x * font.width,
-                    y * font.height
-                );
-            }
+        const half = Math.floor(toolbar.brush.size / 2);
+        for (const { x, y } of toolbar.brush.offsets) {
+            font.draw(
+                overlay.ctx,
+                { code: toolbar.brush.custom_block_index, fg, bg },
+                (x + half) * font.width,
+                (y + half) * font.height
+            );
         }
     }
+
+    draw_brush_outline(overlay.ctx, toolbar.brush.outline_segments, font.width, cell_height);
 }
 
 function mouse_move(x, y, half_y, is_legal, button, shift_key) {
