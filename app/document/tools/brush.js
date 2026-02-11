@@ -102,7 +102,11 @@ function draw_cursor_outline(x, y, half_y) {
         }
     }
 
-    draw_brush_outline(overlay.ctx, toolbar.brush.outline_segments, font.width, cell_height);
+    const segments =
+        toolbar.mode === toolbar.modes.HALF_BLOCK
+            ? toolbar.brush.half_block_outline_segments
+            : toolbar.brush.outline_segments;
+    draw_brush_outline(overlay.ctx, segments, font.width, cell_height);
 }
 
 function mouse_move(x, y, half_y, is_legal, button, shift_key) {

@@ -79,6 +79,16 @@ class Brush {
         this._size = size;
         this._shape = shape;
         this.custom_block_index = custom_block_index;
+        this._recompute();
+    }
+
+    /** @returns {void} */
+    _recompute() {
+        const half = Math.floor(this._size / 2);
+        this.offsets = parse_brush_shape(BRUSH_SHAPES[this._shape].full[this._size - 1]);
+        this.half_block_offsets = parse_brush_shape(BRUSH_SHAPES[this._shape].half[this._size - 1]);
+        this.outline_segments = compute_outline_segments(this.offsets, half);
+        this.half_block_outline_segments = compute_outline_segments(this.half_block_offsets, half);
     }
 
     /** @returns {number} */
@@ -89,8 +99,7 @@ class Brush {
     /** @param {number} v */
     set size(v) {
         this._size = v;
-        this._offsets = null;
-        this._outline_segments = null;
+        this._recompute();
     }
 
     /** @returns {string} */
@@ -101,36 +110,13 @@ class Brush {
     /** @param {string} v */
     set shape(v) {
         this._shape = v;
-        this._offsets = null;
-        this._outline_segments = null;
-    }
-
-    /** @returns {void} */
-    _recompute() {
-        const ascii = BRUSH_SHAPES[this._shape][this._size - 1];
-        this._offsets = parse_brush_shape(ascii);
-        this._outline_segments = compute_outline_segments(
-            this._offsets,
-            Math.floor(this._size / 2)
-        );
-    }
-
-    /** @returns {{ x: number, y: number }[]} */
-    get offsets() {
-        if (!this._offsets) this._recompute();
-        return this._offsets;
-    }
-
-    /** @returns {[number, number, number, number][]} */
-    get outline_segments() {
-        if (!this._outline_segments) this._recompute();
-        return this._outline_segments;
+        this._recompute();
     }
 
     half_block_line(sx, sy, dx, dy, col, skip_first) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
-            for (const { x, y } of this.offsets) {
+            for (const { x, y } of this.half_block_offsets) {
                 doc.set_half_block(coord.x + x, coord.y + y, col);
             }
         }
