@@ -41,7 +41,7 @@ function compute_outline_segments(offsets, half) {
 
 // prettier-ignore
 const BRUSH_SHAPES = {
-    round: [
+    round_1x1: [
         "#",
         "##\n##",
         " # \n###\n # ",
@@ -51,6 +51,18 @@ const BRUSH_SHAPES = {
         "  ###  \n #####\n#######\n#######\n#######\n #####\n  ###  ",
         "  ####  \n ######\n########\n########\n########\n########\n ######\n  ####  ",
         "  #####  \n #######\n#########\n#########\n#########\n#########\n#########\n #######\n  #####  ",
+    ],
+    // Ellipse compressed vertically so it appears circular with 2:1 aspect-ratio cells
+    round_2x1: [
+        "#",
+        "##\n##",
+        "   \n###\n   ",
+        "    \n####\n####\n    ",
+        "     \n ### \n#####\n ### \n     ",
+        "      \n      \n #### \n######\n #### \n      ",
+        "       \n       \n ##### \n#######\n ##### \n       \n       ",
+        "        \n        \n  ####  \n ######\n ######\n  ####  \n        \n        ",
+        "         \n         \n  #####  \n #######\n#########\n #######\n  #####  \n         \n         ",
     ],
     square: [
         "#",
@@ -67,7 +79,8 @@ const BRUSH_SHAPES = {
 
 /** @type {Record<keyof typeof BRUSH_SHAPES, string>} */
 const BRUSH_SHAPE_NAMES = {
-    round: "Round",
+    round_1x1: "Round 1x1",
+    round_2x1: "Round 2x1",
     square: "Square",
 };
 

@@ -73,9 +73,9 @@ class Brush {
     /**
      * @param {number} [size=1]
      * @param {number} [custom_block_index=176]
-     * @param {string} [shape="round"]
+     * @param {string} [shape="square"]
      */
-    constructor(size = 1, custom_block_index = 176, shape = "round") {
+    constructor(size = 1, custom_block_index = 176, shape = "square") {
         this._size = size;
         this._shape = shape;
         this.custom_block_index = custom_block_index;

@@ -29,21 +29,13 @@
     text-align: center;
 }
 
-#colorize_container,
-#brush_size_chooser {
+#colorize_container {
     display: flex;
     align-items: center;
 }
 
-#brush_size_chooser > div {
-    line-height: 48px;
-    text-align: center;
-}
-
 #fkey_chooser_left,
-#fkey_chooser_right,
-#brush_size_left,
-#brush_size_right {
+#fkey_chooser_right {
     opacity: 0.7;
     color: rgba(255, 255, 255, 0.6);
     height: 48px;
@@ -55,18 +47,15 @@
     background-size: 15px 24px;
 }
 
-#fkey_chooser_left,
-#brush_size_left {
+#fkey_chooser_left {
     background-image: url("../img/arrow_left.png");
 }
 
-#fkey_chooser_right,
-#brush_size_right {
+#fkey_chooser_right {
     background-image: url("../img/arrow_right.png");
 }
 
-#fkey_chooser_num,
-#brush_size_num {
+#fkey_chooser_num {
     text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
     color: rgba(255, 255, 255, 0.3);
     width: 30px;
@@ -262,15 +251,6 @@
     border-bottom-right-radius: 4px;
 }
 
-#brush_size {
-    border: none;
-    outline: none;
-    vertical-align: top;
-    margin-top: 12px;
-    height: 16px;
-    width: 48px;
-    display: inline-block;
-}
 
 .brush_mode_selected {
     border-color: rgba(255, 255, 255, 0.4);

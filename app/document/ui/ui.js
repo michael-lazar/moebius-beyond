@@ -1167,17 +1167,23 @@ class Toolbar extends events.EventEmitter {
 
     increase_brush_size() {
         this.brush.size = Math.min(this.brush.size + 1, 9);
-        $("brush_size_num").innerText = String(this.brush.size);
+        $("brush_size").value = String(this.brush.size);
     }
 
     decrease_brush_size() {
         this.brush.size = Math.max(this.brush.size - 1, 1);
-        $("brush_size_num").innerText = String(this.brush.size);
+        $("brush_size").value = String(this.brush.size);
     }
 
     reset_brush_size() {
         this.brush.size = 1;
-        $("brush_size_num").innerText = String(this.brush.size);
+        $("brush_size").value = String(this.brush.size);
+    }
+
+    /** @param {number} size */
+    change_brush_size(size) {
+        this.brush.size = size;
+        $("brush_size").value = String(size);
     }
 
     /** @param {string} shape */
@@ -1381,17 +1387,18 @@ class Toolbar extends events.EventEmitter {
                     (event) => this.next_character_set(),
                     true
                 );
-                $("brush_size_left").addEventListener(
-                    "mousedown",
-                    (event) => this.decrease_brush_size(),
-                    true
+                for (let size = 1; size <= 9; size++) {
+                    const option = document.createElement("option");
+                    option.value = String(size);
+                    option.innerText = `Size: ${size}`;
+                    $("brush_size").appendChild(option);
+                }
+                $("brush_size").value = String(this.brush.size);
+                $("brush_size").addEventListener("change", (event) =>
+                    this.change_brush_size(
+                        Number(/** @type {HTMLSelectElement} */ (event.target).value)
+                    )
                 );
-                $("brush_size_right").addEventListener(
-                    "mousedown",
-                    (event) => this.increase_brush_size(),
-                    true
-                );
-                $("brush_size_num").innerText = String(this.brush.size);
                 for (const [value, label] of Object.entries(BRUSH_SHAPE_NAMES)) {
                     const option = document.createElement("option");
                     option.value = value;
