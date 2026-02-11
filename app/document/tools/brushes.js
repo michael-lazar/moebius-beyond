@@ -1,6 +1,14 @@
 const doc = require("../doc");
 const { BRUSH_SHAPES, parse_brush_shape, compute_outline_segments } = require("./brush_shapes");
 
+/**
+ * @param {number} x0
+ * @param {number} y0
+ * @param {number} x1
+ * @param {number} y1
+ * @param {boolean} [skip_first=false]
+ * @returns {{ x: number, y: number }[]}
+ */
 function line(x0, y0, x1, y1, skip_first = false) {
     const dx = Math.abs(x1 - x0);
     const sx = x0 < x1 ? 1 : -1;
@@ -26,6 +34,13 @@ function line(x0, y0, x1, y1, skip_first = false) {
     return coords;
 }
 
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} fg
+ * @param {number} bg
+ * @param {boolean} reduce
+ */
 function shading_block(x, y, fg, bg, reduce) {
     const block = doc.at(x, y);
     if (block) {
@@ -67,18 +82,13 @@ function shading_block(x, y, fg, bg, reduce) {
 }
 
 class Brush {
-    /** @type {number} */
-    custom_block_index;
-
     /**
      * @param {number} [size=1]
-     * @param {number} [custom_block_index=176]
      * @param {string} [shape="square"]
      */
-    constructor(size = 1, custom_block_index = 176, shape = "square") {
+    constructor(size = 1, shape = "square") {
         this._size = size;
         this._shape = shape;
-        this.custom_block_index = custom_block_index;
         this._recompute();
     }
 
@@ -113,6 +123,14 @@ class Brush {
         this._recompute();
     }
 
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} col
+     * @param {boolean} [skip_first]
+     */
     half_block_line(sx, sy, dx, dy, col, skip_first) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
@@ -122,15 +140,35 @@ class Brush {
         }
     }
 
-    custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} code
+     * @param {number} fg
+     * @param {number} bg
+     * @param {boolean} [skip_first=false]
+     */
+    custom_block_line(sx, sy, dx, dy, code, fg, bg, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
             for (const { x, y } of this.offsets) {
-                doc.change_data(coord.x + x, coord.y + y, this.custom_block_index, fg, bg);
+                doc.change_data(coord.x + x, coord.y + y, code, fg, bg);
             }
         }
     }
 
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} fg
+     * @param {number} bg
+     * @param {boolean} reduce
+     * @param {boolean} [skip_first=false]
+     */
     shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
@@ -140,6 +178,13 @@ class Brush {
         }
     }
 
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {boolean} [skip_first=false]
+     */
     clear_block_line(sx, sy, dx, dy, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
@@ -149,6 +194,15 @@ class Brush {
         }
     }
 
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} to
+     * @param {number} from
+     * @param {boolean} [skip_first=false]
+     */
     replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
@@ -166,6 +220,14 @@ class Brush {
         }
     }
 
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {boolean} unblink
+     * @param {boolean} [skip_first=false]
+     */
     blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
@@ -189,6 +251,15 @@ class Brush {
         }
     }
 
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} [fg]
+     * @param {number} [bg]
+     * @param {boolean} [skip_first=false]
+     */
     colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
         const coords = line(sx, sy, dx, dy, skip_first);
         for (const coord of coords) {
@@ -205,91 +276,142 @@ class Brush {
             }
         }
     }
-}
 
-function single_half_block_line(sx, sy, dx, dy, col, skip_first) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) doc.set_half_block(coord.x, coord.y, col);
-}
-
-function single_custom_block_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
-    // Inline require to avoid circular dependency with ui.js
-    const { toolbar } = require("../ui/ui");
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords)
-        doc.change_data(coord.x, coord.y, toolbar.brush.custom_block_index, fg, bg);
-}
-
-function single_shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) shading_block(coord.x, coord.y, fg, bg, reduce);
-}
-
-function single_clear_block_line(sx, sy, dx, dy, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) doc.change_data(coord.x, coord.y, 32, 7, 0);
-}
-
-function single_replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        const block = doc.at(coord.x, coord.y);
-        if (block && (block.fg == from || block.bg == from))
-            doc.change_data(
-                coord.x,
-                coord.y,
-                block.code,
-                block.fg == from ? to : block.fg,
-                block.bg == from ? to : block.bg
-            );
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} col
+     * @param {boolean} [skip_first]
+     */
+    single_half_block_line(sx, sy, dx, dy, col, skip_first) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) doc.set_half_block(coord.x, coord.y, col);
     }
-}
 
-function single_blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        const block = doc.at(coord.x, coord.y);
-        if (
-            block &&
-            ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 15)) &&
-            block.code !== 0 &&
-            block.code !== 32 &&
-            block.code !== 255
-        )
-            doc.change_data(
-                coord.x,
-                coord.y,
-                block.code,
-                block.fg,
-                unblink ? block.bg - 8 : block.bg + 8
-            );
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} code
+     * @param {number} fg
+     * @param {number} bg
+     * @param {boolean} [skip_first=false]
+     */
+    single_custom_block_line(sx, sy, dx, dy, code, fg, bg, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) doc.change_data(coord.x, coord.y, code, fg, bg);
     }
-}
 
-function single_colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
-    const coords = line(sx, sy, dx, dy, skip_first);
-    for (const coord of coords) {
-        const block = doc.at(coord.x, coord.y);
-        if (block)
-            doc.change_data(
-                coord.x,
-                coord.y,
-                block.code,
-                fg != undefined ? fg : block.fg,
-                bg != undefined ? bg : block.bg
-            );
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} fg
+     * @param {number} bg
+     * @param {boolean} reduce
+     * @param {boolean} [skip_first=false]
+     */
+    single_shading_block_line(sx, sy, dx, dy, fg, bg, reduce, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) shading_block(coord.x, coord.y, fg, bg, reduce);
+    }
+
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {boolean} [skip_first=false]
+     */
+    single_clear_block_line(sx, sy, dx, dy, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) doc.change_data(coord.x, coord.y, 32, 7, 0);
+    }
+
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} to
+     * @param {number} from
+     * @param {boolean} [skip_first=false]
+     */
+    single_replace_color_line(sx, sy, dx, dy, to, from, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            const block = doc.at(coord.x, coord.y);
+            if (block && (block.fg == from || block.bg == from))
+                doc.change_data(
+                    coord.x,
+                    coord.y,
+                    block.code,
+                    block.fg == from ? to : block.fg,
+                    block.bg == from ? to : block.bg
+                );
+        }
+    }
+
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {boolean} unblink
+     * @param {boolean} [skip_first=false]
+     */
+    single_blink_line(sx, sy, dx, dy, unblink, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            const block = doc.at(coord.x, coord.y);
+            if (
+                block &&
+                ((!unblink && block.bg < 8) || (unblink && block.bg > 7 && block.bg < 15)) &&
+                block.code !== 0 &&
+                block.code !== 32 &&
+                block.code !== 255
+            )
+                doc.change_data(
+                    coord.x,
+                    coord.y,
+                    block.code,
+                    block.fg,
+                    unblink ? block.bg - 8 : block.bg + 8
+                );
+        }
+    }
+
+    /**
+     * @param {number} sx
+     * @param {number} sy
+     * @param {number} dx
+     * @param {number} dy
+     * @param {number} [fg]
+     * @param {number} [bg]
+     * @param {boolean} [skip_first=false]
+     */
+    single_colorize_line(sx, sy, dx, dy, fg, bg, skip_first = false) {
+        const coords = line(sx, sy, dx, dy, skip_first);
+        for (const coord of coords) {
+            const block = doc.at(coord.x, coord.y);
+            if (block)
+                doc.change_data(
+                    coord.x,
+                    coord.y,
+                    block.code,
+                    fg != undefined ? fg : block.fg,
+                    bg != undefined ? bg : block.bg
+                );
+        }
     }
 }
 
 module.exports = {
     Brush,
-    single_half_block_line,
-    single_custom_block_line,
     shading_block,
-    single_shading_block_line,
-    single_clear_block_line,
-    single_replace_color_line,
-    single_blink_line,
-    single_colorize_line,
     line,
 };

@@ -95,7 +95,7 @@ function draw_cursor_outline(x, y, half_y) {
         for (const { x, y } of toolbar.brush.offsets) {
             font.draw(
                 overlay.ctx,
-                { code: toolbar.brush.custom_block_index, fg, bg },
+                { code: toolbar.custom_block_index, fg, bg },
                 (x + half) * font.width,
                 (y + half) * font.height
             );
@@ -140,7 +140,16 @@ function mouse_handler(skip_first) {
         } else {
             switch (toolbar.mode) {
                 case toolbar.modes.CUSTOM_BLOCK:
-                    toolbar.brush.custom_block_line(mouse.x, mouse.y, x, y, fg, bg, skip_first);
+                    toolbar.brush.custom_block_line(
+                        mouse.x,
+                        mouse.y,
+                        x,
+                        y,
+                        toolbar.custom_block_index,
+                        fg,
+                        bg,
+                        skip_first
+                    );
                     break;
                 case toolbar.modes.SHADING_BLOCK:
                     toolbar.brush.shading_block_line(
@@ -198,7 +207,15 @@ function mouse_up(x, y, half_y, button, single_point, shift_key) {
                 );
                 break;
             case toolbar.modes.CUSTOM_BLOCK:
-                toolbar.brush.custom_block_line(last_xy.x, last_xy.y, x, y, fg, bg);
+                toolbar.brush.custom_block_line(
+                    last_xy.x,
+                    last_xy.y,
+                    x,
+                    y,
+                    toolbar.custom_block_index,
+                    fg,
+                    bg
+                );
                 break;
             case toolbar.modes.SHADING_BLOCK:
                 toolbar.brush.shading_block_line(

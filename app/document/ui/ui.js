@@ -1091,7 +1091,7 @@ class Toolbar extends events.EventEmitter {
         const widthReduction = offsetLeft > left ? 2 : 0;
         selector.style.height = `${font.height * scale - heightReduction}px`;
         selector.style.width = `${font.width * scale - widthReduction}px`;
-        this.brush.custom_block_index = this.char_index;
+        this.custom_block_index = this.char_index;
         this.draw_custom_block();
     }
 
@@ -1149,7 +1149,7 @@ class Toolbar extends events.EventEmitter {
         canvas.width = font.width;
         canvas.height = font.height;
         const ctx = canvas.getContext("2d");
-        font.draw(ctx, { code: this.brush.custom_block_index, fg, bg }, 0, 0);
+        font.draw(ctx, { code: this.custom_block_index, fg, bg }, 0, 0);
     }
 
     change_fkeys(num) {
@@ -1302,7 +1302,7 @@ class Toolbar extends events.EventEmitter {
 
     change_custom_brush(num) {
         if (this.mode != this.modes.CUSTOM_BLOCK) this.change_mode(this.modes.CUSTOM_BLOCK);
-        this.brush.custom_block_index = this.fkeys[this.fkey_index][num];
+        this.custom_block_index = this.fkeys[this.fkey_index][num];
         this.draw_custom_block();
     }
 
@@ -1321,7 +1321,7 @@ class Toolbar extends events.EventEmitter {
             this.fkey_index = value;
         });
         on("set_custom_block", (event, value) => {
-            this.brush.custom_block_index = value;
+            this.custom_block_index = value;
             this.draw_custom_block();
         });
         on("next_character_set", () => this.next_character_set());
@@ -1342,6 +1342,7 @@ class Toolbar extends events.EventEmitter {
         this.colorize_fg = true;
         this.colorize_bg = false;
         this.brush = new Brush();
+        this.custom_block_index = 176;
         on("show_toolbar", (event, visible) => show_toolbar(visible));
         palette.on("set_fg", () => {
             this.redraw_fkeys();
