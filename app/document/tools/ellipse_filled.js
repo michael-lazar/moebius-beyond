@@ -2,7 +2,6 @@ const doc = require("../doc");
 const { tools, toolbar } = require("../ui/ui");
 const mouse = require("../input/mouse");
 const keyboard = require("../input/keyboard");
-const brushes = require("./brushes");
 const palette = require("../palette");
 const { Overlay } = require("./overlay");
 const { on } = require("../../senders");
@@ -119,7 +118,7 @@ function draw_half_block_ellipse(sx, sy, dx, dy, col) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_half_block_line(
+        toolbar.brush.single_half_block_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,
@@ -133,7 +132,7 @@ function draw_clear_block_ellipse(sx, sy, dx, dy) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_clear_block_line(
+        toolbar.brush.single_clear_block_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,
@@ -146,11 +145,12 @@ function draw_custom_block_ellipse(sx, sy, dx, dy, fg, bg) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_custom_block_line(
+        toolbar.brush.single_custom_block_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,
             coords[i + 1].y,
+            toolbar.custom_block_index,
             fg,
             bg
         );
@@ -161,7 +161,7 @@ function draw_shaded_block_ellipse(sx, sy, dx, dy, fg, bg, reduce) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_shading_block_line(
+        toolbar.brush.single_shading_block_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,
@@ -177,7 +177,7 @@ function draw_replace_color_block_ellipse(sx, sy, dx, dy, to, from) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_replace_color_line(
+        toolbar.brush.single_replace_color_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,
@@ -192,7 +192,7 @@ function draw_blink_ellipse(sx, sy, dx, dy, unblink) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_blink_line(
+        toolbar.brush.single_blink_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,
@@ -206,7 +206,7 @@ function draw_colorize_block_ellipse(sx, sy, dx, dy, fg, bg) {
     const coords = ellipse_coords(sx, sy, dx, dy);
     if (!coords) return;
     for (let i = 0; i < coords.length; i += 2) {
-        brushes.single_colorize_line(
+        toolbar.brush.single_colorize_line(
             coords[i].x - 1,
             coords[i].y,
             coords[i + 1].x,

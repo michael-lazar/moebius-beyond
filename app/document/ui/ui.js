@@ -4,6 +4,8 @@ const palette = require("../palette");
 const keyboard = require("../input/keyboard");
 const events = require("events");
 const { pathToFileURL } = require("url");
+const { Brush } = require("../tools/brushes");
+const { BRUSH_SHAPE_NAMES } = require("../tools/brush_shapes");
 
 let interval, guide_columns, guide_rows, grid_columns;
 
@@ -889,7 +891,7 @@ class Tools extends events.EventEmitter {
     start(new_mode) {
         if (new_mode == this.mode) return;
         if (this.mode != undefined) {
-            $("brush_size_chooser").classList.remove("hidden");
+            $("brush_controls").classList.remove("hidden");
             const div = this.get_tool_div(this.mode);
             div.classList.remove("selected");
             switch (this.mode) {
@@ -911,15 +913,15 @@ class Tools extends events.EventEmitter {
             case this.modes.RECTANGLE_OUTLINE:
             case this.modes.ELLIPSE_OUTLINE:
                 div.classList.add("outline");
-                $("brush_size_chooser").classList.add("hidden");
+                $("brush_controls").classList.add("hidden");
                 break;
             case this.modes.RECTANGLE_FILLED:
             case this.modes.ELLIPSE_FILLED:
                 div.classList.add("filled");
-                $("brush_size_chooser").classList.add("hidden");
+                $("brush_controls").classList.add("hidden");
                 break;
             case this.modes.LINE:
-                $("brush_size_chooser").classList.add("hidden");
+                $("brush_controls").classList.add("hidden");
                 break;
         }
         this.emit("start", this.mode);
@@ -1164,18 +1166,30 @@ class Toolbar extends events.EventEmitter {
     }
 
     increase_brush_size() {
-        this.brush_size = Math.min(this.brush_size + 1, 9);
-        $("brush_size_num").innerText = String(this.brush_size);
+        this.brush.size = Math.min(this.brush.size + 1, 9);
+        $("brush_size").value = String(this.brush.size);
     }
 
     decrease_brush_size() {
-        this.brush_size = Math.max(this.brush_size - 1, 1);
-        $("brush_size_num").innerText = String(this.brush_size);
+        this.brush.size = Math.max(this.brush.size - 1, 1);
+        $("brush_size").value = String(this.brush.size);
     }
 
     reset_brush_size() {
-        this.brush_size = 1;
-        $("brush_size_num").innerText = String(this.brush_size);
+        this.brush.size = 1;
+        $("brush_size").value = String(this.brush.size);
+    }
+
+    /** @param {number} size */
+    change_brush_size(size) {
+        this.brush.size = size;
+        $("brush_size").value = String(size);
+    }
+
+    /** @param {string} shape */
+    change_brush_shape(shape) {
+        this.brush.shape = shape;
+        $("brush_shape").value = shape;
     }
 
     default_character_set() {
@@ -1327,7 +1341,7 @@ class Toolbar extends events.EventEmitter {
         };
         this.colorize_fg = true;
         this.colorize_bg = false;
-        this.brush_size = 1;
+        this.brush = new Brush();
         this.custom_block_index = 176;
         on("show_toolbar", (event, visible) => show_toolbar(visible));
         palette.on("set_fg", () => {
@@ -1374,17 +1388,28 @@ class Toolbar extends events.EventEmitter {
                     (event) => this.next_character_set(),
                     true
                 );
-                $("brush_size_left").addEventListener(
-                    "mousedown",
-                    (event) => this.decrease_brush_size(),
-                    true
+                for (let size = 1; size <= 9; size++) {
+                    const option = document.createElement("option");
+                    option.value = String(size);
+                    option.innerText = `Size: ${size}`;
+                    $("brush_size").appendChild(option);
+                }
+                $("brush_size").value = String(this.brush.size);
+                $("brush_size").addEventListener("change", (event) =>
+                    this.change_brush_size(
+                        Number(/** @type {HTMLSelectElement} */ (event.target).value)
+                    )
                 );
-                $("brush_size_right").addEventListener(
-                    "mousedown",
-                    (event) => this.increase_brush_size(),
-                    true
+                for (const [value, label] of Object.entries(BRUSH_SHAPE_NAMES)) {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.innerText = label;
+                    $("brush_shape").appendChild(option);
+                }
+                $("brush_shape").value = this.brush.shape;
+                $("brush_shape").addEventListener("change", (event) =>
+                    this.change_brush_shape(/** @type {HTMLSelectElement} */ (event.target).value)
                 );
-                $("brush_size_num").innerText = String(this.brush_size);
                 $("half_block").addEventListener("mousedown", (event) =>
                     this.change_mode(this.modes.HALF_BLOCK)
                 );

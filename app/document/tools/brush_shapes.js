@@ -1,0 +1,219 @@
+/**
+ * Splits a `%`-delimited multiline template string into an array of shape strings.
+ * @param {string} template
+ * @returns {string[]}
+ */
+function parse_shape_sizes(template) {
+    return template
+        .split("\n%\n")
+        .map((s) => s.replace(/^\n|\n$/g, ""))
+        .filter((s) => s.length > 0);
+}
+
+/**
+ * @param {string} line
+ * @returns {{ x: number, y: number }[]}
+ */
+function parse_brush_shape(line) {
+    const rows = line.split("\n");
+    const num_rows = rows.length;
+    const num_cols = Math.max(...rows.map((r) => r.length));
+    const center_col = Math.floor(num_cols / 2);
+    const center_row = Math.floor(num_rows / 2);
+    const offsets = [];
+    for (let row = 0; row < num_rows; row++) {
+        for (let col = 0; col < num_cols; col++) {
+            if (rows[row][col] === "#") {
+                offsets.push({ x: col - center_col, y: row - center_row });
+            }
+        }
+    }
+    return offsets;
+}
+
+/**
+ * @param {{ x: number, y: number }[]} offsets
+ * @param {number} half
+ * @returns {[number, number, number, number][]}
+ */
+function compute_outline_segments(offsets, half) {
+    const active = new Set(offsets.map(({ x, y }) => `${x},${y}`));
+    /** @type {[number, number, number, number][]} */
+    const segments = [];
+    for (const { x, y } of offsets) {
+        const bx = x + half; // bounding-box cell coordinates
+        const by = y + half;
+        if (!active.has(`${x},${y - 1}`)) segments.push([bx, by, bx + 1, by]); // top
+        if (!active.has(`${x},${y + 1}`)) segments.push([bx, by + 1, bx + 1, by + 1]); // bottom
+        if (!active.has(`${x - 1},${y}`)) segments.push([bx, by, bx, by + 1]); // left
+        if (!active.has(`${x + 1},${y}`)) segments.push([bx + 1, by, bx + 1, by + 1]); // right
+    }
+    return segments;
+}
+
+const ROUND_HALF_BRUSH = parse_shape_sizes(`
+#
+%
+##
+##
+%
+ #
+###
+ #
+%
+ ##
+####
+####
+ ##
+%
+ ###
+#####
+#####
+#####
+ ###
+%
+ ####
+######
+######
+######
+######
+ ####
+%
+  ###
+ #####
+#######
+#######
+#######
+ #####
+  ###
+%
+  ####
+ ######
+########
+########
+########
+########
+ ######
+  ####
+%
+  #####
+ #######
+#########
+#########
+#########
+#########
+#########
+ #######
+  #####
+`);
+
+const ROUND_FULL_BRUSH = parse_shape_sizes(`
+#
+%
+##
+##
+%
+###
+%
+####
+####
+%
+ ###
+#####
+ ###
+%
+ ####
+######
+ ####
+%
+ #####
+#######
+ #####
+%
+  ####
+ ######
+ ######
+  ####
+%
+  #####
+ #######
+#########
+ #######
+  #####
+`);
+
+const SQUARE_BRUSH = parse_shape_sizes(`
+#
+%
+##
+##
+%
+###
+###
+###
+%
+####
+####
+####
+####
+%
+#####
+#####
+#####
+#####
+#####
+%
+######
+######
+######
+######
+######
+######
+%
+#######
+#######
+#######
+#######
+#######
+#######
+#######
+%
+########
+########
+########
+########
+########
+########
+########
+########
+%
+#########
+#########
+#########
+#########
+#########
+#########
+#########
+#########
+#########
+`);
+
+// prettier-ignore
+const BRUSH_SHAPES = {
+    round: {
+        half: ROUND_HALF_BRUSH,
+        full: ROUND_HALF_BRUSH,
+    },
+    square: {
+        half: SQUARE_BRUSH,
+        full: SQUARE_BRUSH,
+    },
+};
+
+/** @type {Record<keyof typeof BRUSH_SHAPES, string>} */
+const BRUSH_SHAPE_NAMES = {
+    round: "Round",
+    square: "Square",
+};
+
+module.exports = { BRUSH_SHAPES, BRUSH_SHAPE_NAMES, parse_brush_shape, compute_outline_segments };

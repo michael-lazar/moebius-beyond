@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- Added support for different brush shapes. Currently "Square"
+  and "Round" are supported with the intention to add more brushes
+  in the future.
+
+### Fixed
+
+- Improved image rendering of characters in the charlist selector
+  and toolbar.
+
 ## v3.7.0 (2026-02-10)
 
 ### Added

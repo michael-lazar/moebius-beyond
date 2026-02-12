@@ -90,9 +90,9 @@ mouse.on("up", (x, y, half_y, button) => {
     const { fg, bg } = palette;
     if (toolbar.mode == toolbar.modes.HALF_BLOCK) {
         if (clear) {
-            brushes.single_half_block_line(mouse.start.x, mouse.start.half_y, x, half_y, 0);
+            toolbar.brush.single_half_block_line(mouse.start.x, mouse.start.half_y, x, half_y, 0);
         } else {
-            brushes.single_half_block_line(
+            toolbar.brush.single_half_block_line(
                 mouse.start.x,
                 mouse.start.half_y,
                 x,
@@ -101,14 +101,22 @@ mouse.on("up", (x, y, half_y, button) => {
             );
         }
     } else if (clear) {
-        brushes.clear_block_line(mouse.start.x, mouse.start.y, x, y);
+        toolbar.brush.clear_block_line(mouse.start.x, mouse.start.y, x, y);
     } else {
         switch (toolbar.mode) {
             case toolbar.modes.CUSTOM_BLOCK:
-                brushes.single_custom_block_line(mouse.start.x, mouse.start.y, x, y, fg, bg);
+                toolbar.brush.single_custom_block_line(
+                    mouse.start.x,
+                    mouse.start.y,
+                    x,
+                    y,
+                    toolbar.custom_block_index,
+                    fg,
+                    bg
+                );
                 break;
             case toolbar.modes.SHADING_BLOCK:
-                brushes.single_shading_block_line(
+                toolbar.brush.single_shading_block_line(
                     mouse.start.x,
                     mouse.start.y,
                     x,
@@ -119,10 +127,10 @@ mouse.on("up", (x, y, half_y, button) => {
                 );
                 break;
             case toolbar.modes.REPLACE_COLOR:
-                brushes.single_replace_color_line(mouse.start.x, mouse.start.y, x, y, fg, bg);
+                toolbar.brush.single_replace_color_line(mouse.start.x, mouse.start.y, x, y, fg, bg);
                 break;
             case toolbar.modes.BLINK:
-                brushes.single_blink_line(
+                toolbar.brush.single_blink_line(
                     mouse.start.x,
                     mouse.start.y,
                     x,
@@ -131,7 +139,7 @@ mouse.on("up", (x, y, half_y, button) => {
                 );
                 break;
             case toolbar.modes.COLORIZE:
-                brushes.single_colorize_line(
+                toolbar.brush.single_colorize_line(
                     mouse.start.x,
                     mouse.start.y,
                     x,

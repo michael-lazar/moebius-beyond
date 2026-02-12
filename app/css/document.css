@@ -17,6 +17,7 @@
     float: right;
     width: calc(100% - var(--preview-width) - var(--sidebar-width) - var(--right-sidebar-width));
     height: var(--toolbar-height);
+    image-rendering: pixelated;
 }
 .tool {
     opacity: 0.7;
@@ -287,6 +288,7 @@
     flex-grow: 1;
     position: relative;
     background-color: var(--dark-mid-color);
+    image-rendering: pixelated;
 }
 #charlist_selector {
     position: absolute;

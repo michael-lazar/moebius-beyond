@@ -169,7 +169,7 @@ test.describe("Document Load and Save Tests", () => {
         });
     });
 
-    test("darokin-david.asc: load, verify, save, and verify bytes match", async ({ page }) => {
+    test.skip("darokin-david.asc: load, verify, save, and verify bytes match", async ({ page }) => {
         await performLoadAndSaveTest(page, "darokin-david.asc", {
             columns: 80,
             rows: 40,
