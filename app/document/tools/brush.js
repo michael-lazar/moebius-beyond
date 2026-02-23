@@ -88,7 +88,23 @@ function draw_cursor_outline(x, y, half_y) {
     let height = toolbar.brush.size * cell_height;
 
     // +1 on each dimension so the right/bottom outline strokes aren't clipped
-    overlay.update(sx, sy, width + 1, height + 1);
+    width += 1;
+    height += 1;
+
+    // Clip overlay bounds to prevent the overlay from being drawn outside of the
+    // viewport, which could cause scrollbars to appear on the viewport.
+    const viewport = document.getElementById("viewport");
+    const canvas_container = document.getElementById("canvas_container");
+    const viewport_rect = viewport.getBoundingClientRect();
+    const container_rect = canvas_container.getBoundingClientRect();
+
+    const max_right = viewport_rect.right - container_rect.left;
+    const max_bottom = viewport_rect.bottom - container_rect.top;
+
+    const clipped_width = Math.min(width, max_right - sx);
+    const clipped_height = Math.min(height, max_bottom - sy);
+
+    overlay.update(sx, sy, clipped_width, clipped_height);
 
     if (toolbar.mode === toolbar.modes.CUSTOM_BLOCK) {
         const half = Math.floor(toolbar.brush.size / 2);

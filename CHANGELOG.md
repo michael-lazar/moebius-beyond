@@ -10,6 +10,8 @@
 
 ### Fixed
 
+- Fixed brush outline causing scrollbars to appear when moving cursor
+  to the bottom of the viewport.
 - Improved image rendering of characters in the charlist selector
   and toolbar.
 
