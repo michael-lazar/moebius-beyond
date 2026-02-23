@@ -326,7 +326,10 @@ electron.ipcMain.on("show_rendering_modal", async (event, { id }) => {
 });
 
 electron.ipcMain.on("close_modal", (event, { id }) => {
-    if (docs[id].modal && !docs[id].modal.isDestroyed()) docs[id].modal.close();
+    if (docs[id].modal && !docs[id].modal.isDestroyed()) {
+        docs[id].modal.close();
+        docs[id].win.focus();
+    }
 });
 
 electron.ipcMain.on("set_modal_menu", (event, { id }) => {
