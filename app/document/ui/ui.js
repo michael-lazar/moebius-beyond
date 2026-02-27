@@ -345,7 +345,11 @@ function show_statusbar(visible) {
 
 function show_preview(visible) {
     preview_visible = visible;
-    set_var("preview-width", visible ? "300px" : "1px");
+    if (visible) {
+        set_preview_zoom(preview_zoom);
+    } else {
+        set_var("preview-width", "1px");
+    }
 
     // Update the preview toggle button visual state
     const previewToggle = $("preview_toggle_button");
@@ -585,16 +589,18 @@ function get_preview_zoom_level() {
 function set_preview_zoom(factor) {
     preview_zoom = factor;
 
-    // Update preview container width
-    const base_canvas_width = 260;
-    const margins = 40;
-    const new_width = base_canvas_width * factor + margins;
-    set_var("preview-width", `${new_width}px`);
+    if (preview_visible) {
+        // Update preview container width
+        const base_canvas_width = 260;
+        const margins = 40;
+        const new_width = base_canvas_width * factor + margins;
+        set_var("preview-width", `${new_width}px`);
 
-    // Reapply preview canvases using existing add() function
-    const canvas = require("./canvas");
-    if (canvas.get_render()) {
-        canvas.add(canvas.get_render());
+        // Reapply preview canvases using existing add() function
+        const canvas = require("./canvas");
+        if (canvas.get_render()) {
+            canvas.add(canvas.get_render());
+        }
     }
 }
 

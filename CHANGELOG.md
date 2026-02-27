@@ -10,6 +10,8 @@
 
 ### Fixed
 
+- Fixed preview panel width not matching zoom level after collapsing
+  and expanding the panel.
 - Fixed focus shifting to reference window when closing the attribute
   picker modal.
 - Fixed brush outline causing scrollbars to appear when moving cursor

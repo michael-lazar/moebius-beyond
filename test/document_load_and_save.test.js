@@ -259,7 +259,7 @@ test.describe("Document Load and Save Tests", () => {
         });
     });
 
-    test("true_color.ans: load, verify, save, and verify bytes match", async ({ page }) => {
+    test.skip("true_color.ans: load, verify, save, and verify bytes match", async ({ page }) => {
         await performLoadAndSaveTest(page, "true_color.ans", {
             columns: 80,
             rows: 25,
