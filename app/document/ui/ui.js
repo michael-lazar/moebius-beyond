@@ -670,12 +670,13 @@ doc.on("new_document", () => {
 doc.on("ice_colors", (value) => ice_colors(value));
 doc.on("use_9px_font", (value) => use_9px_font(value));
 doc.on("change_font", (font_name) => change_font(font_name));
-doc.on("grayscale_mode", () => {
+doc.on("grayscale_mode", (value) => {
     palette.update_selected("fg");
     palette.update_selected("bg");
     toolbar.draw_charlist();
     toolbar.redraw_fkeys();
     toolbar.draw_custom_block();
+    $("reference_image").classList.toggle("grayscale", value);
 });
 keyboard.on("insert", (value) => insert_mode(value));
 on("insert_mode", (event, value) => insert_mode(value));

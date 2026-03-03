@@ -528,6 +528,10 @@
     display: none;
 }
 
+#reference_image.grayscale {
+    filter: grayscale(100%);
+}
+
 #guide.hidden {
     display: none;
 }

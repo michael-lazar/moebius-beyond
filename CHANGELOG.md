@@ -7,6 +7,7 @@
 - Added support for different brush shapes. Currently "Square"
   and "Round" are supported with the intention to add more brushes
   in the future.
+- Grayscale mode now also applies to the reference picture.
 
 ### Fixed
 
