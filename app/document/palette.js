@@ -19,7 +19,6 @@ class PaletteChooser extends EventEmitter {
             this.bg = index;
         });
         doc.on("change_palette", (lospec_palette_name) => this.change_palette(lospec_palette_name));
-        doc.on("grayscale_mode", () => this.update_swatches());
 
         keyboard.on("previous_foreground_color", () => this.previous_foreground_color());
         keyboard.on("next_foreground_color", () => this.next_foreground_color());

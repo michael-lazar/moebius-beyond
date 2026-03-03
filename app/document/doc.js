@@ -644,8 +644,7 @@ class TextModeDoc extends events.EventEmitter {
         });
         on("grayscale_mode", (event, value) => {
             this.grayscale_mode = value;
-            this.render.font.grayscale_mode = value;
-            this.invalidate_color_cache();
+            this.emit("grayscale_mode", value);
         });
     }
 
@@ -904,27 +903,6 @@ class TextModeDoc extends events.EventEmitter {
                 }
             }
         }
-    }
-
-    /**
-     * @returns {void}
-     */
-    invalidate_color_cache() {
-        // Regenerate all cached colored glyphs and backgrounds
-        for (let i = 0; i < this.palette.length; i++) {
-            this.render.font.refresh_cache_at(i);
-        }
-
-        // Re-render entire viewport
-        for (let y = 0; y < this.rows; y++) {
-            for (let x = 0; x < this.columns; x++) {
-                const block = this.data[this.columns * y + x];
-                libtextmode.render_at(this.render, x, y, block);
-            }
-        }
-
-        // Notify UI components to update
-        this.emit("grayscale_mode", this.grayscale_mode);
     }
 
     /**

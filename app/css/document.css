@@ -528,7 +528,31 @@
     display: none;
 }
 
-#reference_image.grayscale {
+body.grayscale-mode #ice_color_container,
+body.grayscale-mode #blink_off_container,
+body.grayscale-mode #blink_on_container,
+body.grayscale-mode #preview,
+body.grayscale-mode #swatches,
+body.grayscale-mode #charlist,
+body.grayscale-mode #fg,
+body.grayscale-mode #bg,
+body.grayscale-mode #f1,
+body.grayscale-mode #f2,
+body.grayscale-mode #f3,
+body.grayscale-mode #f4,
+body.grayscale-mode #f5,
+body.grayscale-mode #f6,
+body.grayscale-mode #f7,
+body.grayscale-mode #f8,
+body.grayscale-mode #f9,
+body.grayscale-mode #f10,
+body.grayscale-mode #f11,
+body.grayscale-mode #f12,
+body.grayscale-mode #custom_block_canvas,
+body.grayscale-mode #sample_block,
+body.grayscale-mode #sample_fg,
+body.grayscale-mode #sample_bg,
+body.grayscale-mode #reference_image {
     filter: grayscale(100%);
 }
 

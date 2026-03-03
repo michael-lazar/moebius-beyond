@@ -64,7 +64,6 @@ declare global {
             width: number;
             length: number;
             use_9px_font: boolean;
-            grayscale_mode: boolean;
             canvas: HTMLCanvasElement;
             glyphs: HTMLCanvasElement[];
             backgrounds: HTMLCanvasElement[];

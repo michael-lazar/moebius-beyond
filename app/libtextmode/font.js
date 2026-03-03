@@ -149,7 +149,6 @@ class Font {
      */
     constructor(palette = [...palette_4bit]) {
         this.palette = palette;
-        this.grayscale_mode = false;
     }
 
     /**
@@ -253,13 +252,7 @@ class Font {
      * @returns {App.Color}
      */
     get_rgb(i) {
-        const rgb = this.palette[i];
-        if (this.grayscale_mode) {
-            // Luminosity method (ITU-R BT.601) - weighted by human perception
-            const gray = Math.round(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
-            return { r: gray, g: gray, b: gray };
-        }
-        return rgb;
+        return this.palette[i];
     }
 
     /**

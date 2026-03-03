@@ -9,6 +9,10 @@
   in the future.
 - Grayscale mode now also applies to the reference picture.
 
+### Changed
+
+- Grayscale mode now uses CSS filters instead of manual color conversion.
+
 ### Fixed
 
 - Allow dragging selection outside of top/left of canvas to clip when pasting.
