@@ -10,6 +10,7 @@
 
 ### Fixed
 
+- Allow dragging selection outside of top/left of canvas to clip when pasting.
 - Fixed preview panel width not matching zoom level after collapsing
   and expanding the panel.
 - Fixed focus shifting to reference window when closing the attribute

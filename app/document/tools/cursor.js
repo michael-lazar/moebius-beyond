@@ -497,6 +497,9 @@ class Cursor {
             this.x = this.selection.sx;
             this.y = this.selection.sy;
         }
+        // Clamp cursor to valid canvas bounds
+        this.x = Math.max(0, Math.min(this.x, doc.columns - 1));
+        this.y = Math.max(0, Math.min(this.y, doc.rows - 1));
         send("enable_editing_shortcuts");
         this.mode = modes.EDITING;
         if (this.canvas.classList.contains("selection")) this.canvas.classList.remove("selection");

@@ -100,8 +100,8 @@ function mouse_to(x, y) {
         pending_move_start = false;
         cursor.start_move();
         // Move to position that maintains the offset from the original click
-        const target_x = Math.max(0, pending_move_x - drag_offset_x);
-        const target_y = Math.max(0, pending_move_y - drag_offset_y);
+        const target_x = pending_move_x - drag_offset_x;
+        const target_y = pending_move_y - drag_offset_y;
         cursor.move_to(target_x, target_y, false);
         auto_place_on_release = true;
     }
@@ -116,8 +116,8 @@ function mouse_to(x, y) {
             break;
         case cursor.modes.OPERATION: {
             // Apply offset during drag to keep selection under cursor
-            const target_x = Math.max(0, x - drag_offset_x);
-            const target_y = Math.max(0, y - drag_offset_y);
+            const target_x = x - drag_offset_x;
+            const target_y = y - drag_offset_y;
             cursor.move_to(target_x, target_y, false);
             break;
         }

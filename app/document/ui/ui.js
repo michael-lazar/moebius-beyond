@@ -314,7 +314,8 @@ class StatusBar {
     set_cursor_position(x, y) {
         set_text("cursor_x", `${x + 1}`);
         set_text("cursor_y", `${y + 1}`);
-        set_text("ascii_value", doc.at(x, y).code);
+        const block = doc.at(x, y);
+        set_text("ascii_value", block ? block.code : "");
     }
 
     hide_cursor_position() {
