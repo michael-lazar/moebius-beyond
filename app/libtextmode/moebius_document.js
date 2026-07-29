@@ -81,9 +81,9 @@ function fromMBD(bytes) {
     const font_bytes = document.font_bytes ? Buffer.from(document.font_bytes, "base64") : null;
 
     const data = document.data.map((block) => ({
-        code: block.code || 32,
-        fg: block.fg || 7,
-        bg: block.bg || 0,
+        code: block.code ?? 32,
+        fg: block.fg ?? 7,
+        bg: block.bg ?? 0,
     }));
 
     return new TextModeData({

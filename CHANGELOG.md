@@ -15,6 +15,8 @@
 
 ### Fixed
 
+- Fixed black (0) foreground attribute being reset to the default color
+  when loading MBD files.
 - Allow dragging selection outside of top/left of canvas to clip when pasting.
 - Fixed preview panel width not matching zoom level after collapsing
   and expanding the panel.

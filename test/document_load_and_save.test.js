@@ -8,7 +8,7 @@ test.describe("Document Load and Save Tests", () => {
 
     async function performLoadAndSaveTest(page, filename, expectedValues) {
         const testFile = path.join(testDataDir, filename);
-        const tempFile = path.join(testDataDir, `temp_${filename}`);
+        const tempFile = test.info().outputPath(filename);
 
         expect(fs.existsSync(testFile)).toBe(true);
 
@@ -77,9 +77,6 @@ test.describe("Document Load and Save Tests", () => {
         // 4. Verify the bytes match (with special handling for different formats)
         expect(fs.existsSync(tempFile)).toBe(true);
         const savedBytes = fs.readFileSync(tempFile);
-
-        // Clean up temp file
-        fs.unlinkSync(tempFile);
 
         function normalizeSauceDate(buffer) {
             // SAUCE record is always the last 128 bytes if present
@@ -258,6 +255,41 @@ test.describe("Document Load and Save Tests", () => {
             paletteLength: 16,
         });
     });
+
+    // https://github.com/michael-lazar/moebius-beyond/issues/59
+    for (const ext of ["mbd", "xb"]) {
+        test(`fg=0 and code=0 survive a .${ext} save/load round trip`, async ({ page }) => {
+            const tempFile = test.info().outputPath(`issue59.${ext}`);
+
+            const result = await page.evaluate(
+                async ({ tempFile }) => {
+                    const doc = require("../document/doc");
+
+                    doc.data[0].code = 219; // full block
+                    doc.data[0].fg = 0;
+                    doc.data[0].bg = 0;
+                    doc.data[1].code = 223; // upper half block
+                    doc.data[1].fg = 0;
+                    doc.data[1].bg = 4;
+                    doc.data[2].code = 0;
+                    doc.data[2].fg = 0;
+                    doc.data[2].bg = 0;
+
+                    const before = doc.data.slice(0, 3).map((block) => ({ ...block }));
+
+                    doc.file = tempFile;
+                    await doc.save();
+                    await doc.open(tempFile);
+
+                    const after = doc.data.slice(0, 3).map((block) => ({ ...block }));
+                    return { before, after };
+                },
+                { tempFile }
+            );
+
+            expect(result.after).toEqual(result.before);
+        });
+    }
 
     test.skip("true_color.ans: load, verify, save, and verify bytes match", async ({ page }) => {
         await performLoadAndSaveTest(page, "true_color.ans", {
