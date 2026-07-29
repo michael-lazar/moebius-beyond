@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.8.0 (2026-07-29)
+
 ### Added
 
 - Added support for different brush shapes. Currently "Square"
