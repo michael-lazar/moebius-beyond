@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Linux packages are now built for both x86_64 and arm64.
+
 ## v3.8.1 (2026-07-30)
 
 ### Fixed

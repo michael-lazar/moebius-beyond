@@ -74,10 +74,12 @@ portable:
     artifactName: MoebiusBeyond.exe
 
 linux:
-    artifactName: MoebiusBeyond.${ext}
+    artifactName: MoebiusBeyond-${arch}.${ext}
     target:
         - target: rpm
+          arch: [x64, arm64]
         - target: deb
+          arch: [x64, arm64]
     description: MoebiusBeyond is an ANSI and ASCII Editor for Linux, MacOS, and Windows.
     category: Graphics
 
