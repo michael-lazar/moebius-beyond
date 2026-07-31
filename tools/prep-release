@@ -16,10 +16,12 @@ fi
 
 # Files to copy from dist/
 FILES=(
-    "MoebiusBeyond.deb"
+    "MoebiusBeyond-aarch64.rpm"
+    "MoebiusBeyond-amd64.deb"
+    "MoebiusBeyond-arm64.deb"
+    "MoebiusBeyond-x86_64.rpm"
     "MoebiusBeyond.dmg"
     "MoebiusBeyond.exe"
-    "MoebiusBeyond.rpm"
     "MoebiusBeyond.Setup.exe"
 )
 
