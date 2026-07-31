@@ -125,7 +125,6 @@ function fromXBin(bytes) {
         data,
         palette,
         font_bytes,
-        font_height,
     });
 }
 
@@ -147,7 +146,7 @@ function encode_as_xbin(tmdata, font, save_without_sauce) {
         tmdata.columns >> 8,
         tmdata.rows & 255,
         tmdata.rows >> 8,
-        tmdata.font_height,
+        font.height,
         0,
     ];
     if (tmdata.palette) {
@@ -160,7 +159,7 @@ function encode_as_xbin(tmdata, font, save_without_sauce) {
     }
 
     // Extract the font bytes from the Font. Note that
-    // we can't grab them from tmdata.font_bytes becase
+    // we can't grab them from tmdata.font_bytes because
     // that only gets set if we load from an xbin. In
     // other contexts, for example if we open a new document
     // and select a custom font from the menu, doc.font_bytes

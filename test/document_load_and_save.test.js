@@ -291,6 +291,36 @@ test.describe("Document Load and Save Tests", () => {
         });
     }
 
+    // https://github.com/michael-lazar/moebius-beyond/issues/60
+    test("font height is written to the .xb header after changing fonts", async ({ page }) => {
+        const tempFile = test.info().outputPath("issue60.xb");
+
+        const result = await page.evaluate(
+            async ({ tempFile }) => {
+                const doc = require("../document/doc");
+
+                // IBM VGA50 is an 8px font, so a stale or missing font
+                // height would be caught by the assertions below.
+                doc.font_name = "IBM VGA50";
+                await new Promise((resolve) => doc.once("change_font", resolve));
+
+                doc.file = tempFile;
+                await doc.save();
+                await doc.open(tempFile);
+
+                return { font_name: doc.font_name, font_height: doc.font_height };
+            },
+            { tempFile }
+        );
+
+        // Byte 9 of the XBin header holds the height of the embedded font
+        const savedBytes = fs.readFileSync(tempFile);
+        expect(savedBytes[9]).toBe(8);
+
+        expect(result.font_name).toBe("Custom");
+        expect(result.font_height).toBe(8);
+    });
+
     test.skip("true_color.ans: load, verify, save, and verify bytes match", async ({ page }) => {
         await performLoadAndSaveTest(page, "true_color.ans", {
             columns: 80,

@@ -319,7 +319,6 @@ class TextModeData {
      * @param {boolean} [params.use_9px_font]
      * @param {string} [params.font_name]
      * @param {Uint8Array} [params.font_bytes]
-     * @param {number} [params.font_height]
      * @param {string} [params.comments]
      * @param {App.Block[]} [params.data]
      * @param {App.Color[]} [params.palette]
@@ -336,7 +335,6 @@ class TextModeData {
         use_9px_font = false,
         font_name = "Default",
         font_bytes = null,
-        font_height = null,
         comments = "",
         data = [],
         palette = [],
@@ -352,7 +350,6 @@ class TextModeData {
         this.use_9px_font = use_9px_font;
         this.font_name = font_name;
         this.font_bytes = font_bytes;
-        this.font_height = font_height;
         this.comments = comments;
         this.data = data;
         this.palette = palette;

@@ -40,7 +40,9 @@ function encode_as_mbd(tmdata) {
             font_bytes: tmdata.font_bytes
                 ? Buffer.from(tmdata.font_bytes).toString("base64")
                 : null,
-            font_height: tmdata.font_height,
+            // Derived from font_bytes; kept in the format for backwards
+            // compatibility with older readers.
+            font_height: tmdata.font_bytes ? tmdata.font_bytes.length / 256 : null,
             use_9px_font: tmdata.use_9px_font,
             ice_colors: tmdata.ice_colors,
             data: tmdata.data.map((block) => ({
@@ -99,7 +101,6 @@ function fromMBD(bytes) {
         font_name: document.font_name,
         use_9px_font: document.use_9px_font,
         ice_colors: document.ice_colors,
-        font_height: document.font_height,
         font_bytes,
         data,
     });

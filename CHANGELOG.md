@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed font height not being saved in the XBin header with custom fonts.
+- Fixed missing or stale font height being written to MBD files.
+
 ## v3.8.0 (2026-07-29)
 
 ### Added
