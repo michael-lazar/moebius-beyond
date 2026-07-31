@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v3.8.1 (2026-07-30)
+
 ### Fixed
 
 - Fixed font height not being saved in the XBin header with custom fonts.
