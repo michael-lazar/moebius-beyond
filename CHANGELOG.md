@@ -4,6 +4,11 @@
 
 ## v3.8.2 (2026-07-31)
 
+### Added
+
+- Added AppImage packages for Linux.
+- Added Windows arm64 support to the installer and portable exe.
+
 ### Changed
 
 - Linux packages are now built for both x86_64 and arm64.

@@ -66,9 +66,9 @@ win:
     artifactName: MoebiusBeyond.Setup.exe
     target:
         - target: nsis
-          arch: [x64]
+          arch: [x64, arm64]
         - target: portable
-          arch: [x64]
+          arch: [x64, arm64]
 
 portable:
     artifactName: MoebiusBeyond.exe
@@ -79,6 +79,8 @@ linux:
         - target: rpm
           arch: [x64, arm64]
         - target: deb
+          arch: [x64, arm64]
+        - target: AppImage
           arch: [x64, arm64]
     description: MoebiusBeyond is an ANSI and ASCII Editor for Linux, MacOS, and Windows.
     category: Graphics

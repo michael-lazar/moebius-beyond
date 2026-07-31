@@ -18,7 +18,9 @@ fi
 FILES=(
     "MoebiusBeyond-aarch64.rpm"
     "MoebiusBeyond-amd64.deb"
+    "MoebiusBeyond-arm64.AppImage"
     "MoebiusBeyond-arm64.deb"
+    "MoebiusBeyond-x86_64.AppImage"
     "MoebiusBeyond-x86_64.rpm"
     "MoebiusBeyond.dmg"
     "MoebiusBeyond.exe"
