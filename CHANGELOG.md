@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed ANSI files without a SAUCE record opening as blank documents.
+
 ## v3.8.2 (2026-07-31)
 
 ### Added

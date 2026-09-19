@@ -321,6 +321,46 @@ test.describe("Document Load and Save Tests", () => {
         expect(result.font_height).toBe(8);
     });
 
+    // https://github.com/michael-lazar/moebius-beyond/issues/63
+    test("a document saved without SAUCE can be reopened", async ({ page }) => {
+        const tempFile = test.info().outputPath("issue63.ans");
+
+        const result = await page.evaluate(
+            async ({ tempFile }) => {
+                const doc = require("../document/doc");
+
+                doc.data[0].code = 219; // full block
+                doc.data[0].fg = 4;
+                doc.data[0].bg = 0;
+
+                const before = doc.data.slice(0, 3).map((block) => ({ ...block }));
+
+                doc.file = tempFile;
+                await doc.save(true); // save without SAUCE
+                await doc.open(tempFile);
+
+                return {
+                    before,
+                    after: doc.data.slice(0, 3).map((block) => ({ ...block })),
+                    columns: doc.columns,
+                    rows: doc.rows,
+                    dataLength: doc.data.length,
+                };
+            },
+            { tempFile }
+        );
+
+        // The saved file must not contain a SAUCE record
+        const savedBytes = fs.readFileSync(tempFile);
+        const trailer = savedBytes.slice(-128, -121).toString("ascii");
+        expect(trailer).not.toBe("SAUCE00");
+
+        expect(result.after).toEqual(result.before);
+        expect(result.columns).toBe(80);
+        expect(result.dataLength).toBeGreaterThan(0);
+        expect(result.dataLength).toBe(result.rows * result.columns);
+    });
+
     test.skip("true_color.ans: load, verify, save, and verify bytes match", async ({ page }) => {
         await performLoadAndSaveTest(page, "true_color.ans", {
             columns: 80,

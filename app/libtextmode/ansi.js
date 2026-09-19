@@ -418,11 +418,13 @@ function fromAnsi(bytes) {
         }
     }
 
+    // Without a SAUCE record sauce.rows is null, and the rendered screen
+    // must not be clamped to it (null coerces to 0, truncating all data).
     let rows = sauce.rows || screen.rows;
-    if (sauce.rows > screen.rows) {
-        screen.fill(sauce.rows - screen.rows);
-        screen.rows = sauce.rows;
-    } else if (sauce.rows < screen.rows) {
+    if (sauce.rows) {
+        if (sauce.rows > screen.rows) {
+            screen.fill(sauce.rows - screen.rows);
+        }
         screen.rows = sauce.rows;
     }
 
